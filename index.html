@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tonezzer’s Arts — Giochi</title>
+<meta name="description" content="Tonezzer’s Arts, la celeberrima casa di produzione di Giacomo Tonezzer, presenta Tonezzer Racers: corse off-road in voxel art HD, 10 circuiti di montagna, cronoscalate e 2 giocatori. Gratis nel browser.">
+<meta name="author" content="Giacomo Tonezzer">
+<meta name="theme-color" content="#140c06">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://geppytonezzerarts.github.io/tonezzers-arts/">
+<meta property="og:site_name" content="Tonezzer’s Arts">
+<meta property="og:locale" content="it_IT">
+<meta property="og:title" content="Tonezzer Racers — gioca gratis nel browser">
+<meta property="og:description" content="Corse off-road in voxel art HD: 10 circuiti di montagna, cronoscalate contro il tuo fantasma, 2 giocatori sullo stesso schermo. Da sempre, i migliori giochi del mondo.">
+<meta property="og:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tonezzer’s Arts presenta Tonezzer Racers">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Tonezzer Racers — gioca gratis nel browser">
+<meta name="twitter:description" content="Corse off-road in voxel art HD by Tonezzer’s Arts.">
+<meta name="twitter:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="img/icon-512.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,600&display=swap">
+<link rel="preload" as="image" href="img/c-falco-vetta.webp" fetchpriority="high">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Salta al contenuto</a>
+
+<header class="top" id="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="Tonezzer’s Arts, torna all’inizio">
+      <img src="img/crest-sm.png" width="40" height="47" alt="">
+      <span>Tonezzer’s <b>Arts</b></span>
+    </a>
+    <nav class="nav" aria-label="Sezioni">
+      <a href="#racers">Tonezzer Racers</a>
+      <a href="#giochi">Giochi</a>
+      <a href="#studio">Lo studio</a>
+      <a href="#crediti">Riconoscimenti</a>
+      <a href="#comandi">Comandi</a>
+    </nav>
+    <a class="btn go sm" href="games/tonezzer-racers/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>Gioca ora</a>
+  </div>
+</header>
+
+<main id="main">
+<!-- ============ HERO ============ -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="slides" id="slides" role="group" aria-roledescription="carosello" aria-label="Immagini di gioco di Tonezzer Racers">
+    <figure class="slide on"><img src="img/c-falco-vetta.webp" width="1280" height="720" alt="Cronoscalata del Colle del Falco: il pick-up taglia il traguardo in vetta tra il pubblico, con boschi e montagne sullo sfondo" fetchpriority="high"><figcaption>Colle del Falco · arrivo in vetta</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-falco-bosco.webp" width="1280" height="720" alt="Cronoscalata del Colle del Falco: il pick-up rosso sale tra gli abeti, con la montagna sullo sfondo"><figcaption>Colle del Falco · cronoscalata</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-ring-neon.webp" width="1280" height="720" alt="Tonezzer Ring di notte: quattro pick-up in derapata sotto la Torre dei Neon e le tribune piene"><figcaption>Tonezzer Ring · stadio di notte</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-bosco-ponte.webp" width="1280" height="720" alt="Bosco del Lupo: pick-up sul ponte di legno tra abeti e larici in voxel"><figcaption>Bosco del Lupo · bosco alpino</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-neve-cima.webp" width="1280" height="720" alt="Salita al Passo della Neve: curva innevata con abeti e tribune"><figcaption>Passo della Neve · neve</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-mesa-viadotto.webp" width="1280" height="720" alt="Mesa Grande: pick-up sul viadotto nel deserto rosso"><figcaption>Mesa Grande · deserto</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-fuoco-spirale.webp" width="1280" height="720" alt="Canyon del Fuoco: i pick-up scendono nella Spirale scavata nella roccia rossa"><figcaption>Canyon del Fuoco · canyon al tramonto</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-palude-lago.webp" width="1280" height="720" alt="Palude Nera: due pick-up in derapata sulla pista di fango tra i cipressi"><figcaption>Palude Nera · palude</figcaption></figure>
+  </div>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="wrap hero-in">
+    <p class="presents"><img src="img/crest.png" width="278" height="326" alt=""><span><b>Tonezzer’s Arts</b> presenta</span></p>
+    <h1 class="logo" id="hero-title">
+      <img class="lg1" src="img/logo-tonezzer.png" width="1254" height="198" alt="Tonezzer">
+      <img class="lg2" src="img/logo-racers.png" width="946" height="198" alt="Racers">
+    </h1>
+    <p class="tagline">Fango, salti e nitro in <b>voxel art HD</b>. Dieci circuiti di montagna, cronoscalate contro il tuo fantasma e sfide a due sullo stesso schermo.</p>
+    <div class="cta">
+      <a class="btn go xl" href="games/tonezzer-racers/">
+        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+        <span><b>Gioca ora</b><small>gratis nel browser</small></span>
+      </a>
+      <button class="btn ghost music-btn" type="button" data-music aria-pressed="false">
+        <svg class="ic i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+        <svg class="ic i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+        <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span class="lbl">Ascolta la colonna sonora</span>
+      </button>
+    </div>
+    <p class="hint">Nessuna installazione, nessuna registrazione. Consiglio della casa: <span class="desk"><kbd>F11</kbd> per lo schermo intero, e il volume alto.</span><span class="mob">telefono in orizzontale, e il volume alto.</span></p>
+  </div>
+  <div class="wrap hero-ctrl">
+    <p class="cap" id="slide-cap">Colle del Falco · arrivo in vetta</p>
+    <div class="dots" id="dots"></div>
+    <button class="pp" id="slide-pp" type="button" aria-label="Metti in pausa le immagini" aria-pressed="false">
+      <svg class="ic i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      <svg class="ic i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+    </button>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div class="ticker-in">
+  <span>Da sempre, i migliori giochi del mondo</span><span>Tonezzer Racers</span><span>Gioca gratis nel browser</span><span>Coppa Tonezzer</span><span>Da sempre, i migliori giochi del mondo</span><span>Tonezzer Racers</span><span>Gioca gratis nel browser</span><span>Coppa Tonezzer</span>
+</div></div>
+
+<!-- ============ TONEZZER RACERS ============ -->
+<section class="sec" id="racers" aria-labelledby="racers-h">
+  <div class="wrap">
+    <header class="sec-h">
+      <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg>Il gioco</p>
+      <h2 id="racers-h">Il miglior gioco off-road del mondo<sup>*</sup></h2>
+      <p class="lead">Quattro pick-up, una pista di fango e nessuna pietà. <b>Tonezzer Racers</b> è l’erede spirituale delle corse off-road da sala giochi di una volta, ricostruito voxel per voxel in alta definizione. Si gioca subito, nel browser, gratis.</p>
+      <p class="fine"><sup>*</sup> Secondo uno studio indipendente condotto da Giacomo Tonezzer.</p>
+    </header>
+
+    <div class="feats">
+      <article class="feat big">
+        <img src="img/c-falco-vetta-640.webp" srcset="img/c-falco-vetta-640.webp 640w, img/c-falco-vetta.webp 1280w" sizes="(min-width: 1080px) 760px, 100vw" width="1280" height="720" loading="lazy" alt="Cronoscalata: il traguardo in vetta al Colle del Falco, con la valle e le montagne lontane sullo sfondo">
+        <div class="feat-t">
+          <p class="tag"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg>Modalità</p>
+          <h3>Cronoscalata</h3>
+          <p>Dalla valle alla vetta contro il cronometro: sei salite di montagna, tempi intermedi, il <b>fantasma</b> del tuo record da battere e medaglie da Bronzo fino al <b>Platino</b>. Sbagli una curva? <kbd>R</kbd> e si riparte.</p>
+        </div>
+      </article>
+      <article class="feat">
+        <img src="img/c-mesa-viadotto-640.webp" width="640" height="360" loading="lazy" alt="Pick-up sul viadotto di Mesa Grande nel deserto rosso">
+        <div class="feat-t">
+          <h3>10 piste di montagna</h3>
+          <p>Deserti, canyon al tramonto, paludi, boschi alpini, neve e stadi illuminati a giorno. Salti, guadi, ponti di legno e tornanti a strapiombo.</p>
+        </div>
+      </article>
+      <article class="feat">
+        <img src="img/g-falco-2p-640.webp" width="640" height="360" loading="lazy" alt="Schermo diviso a due giocatori: pick-up rosso e blu affiancati in salita">
+        <div class="feat-t">
+          <h3>2 giocatori</h3>
+          <p>Schermo diviso sullo stesso computer: tastiera condivisa o due gamepad. Le amicizie più solide finiscono qui, al primo tornante.</p>
+        </div>
+      </article>
+      <article class="feat">
+        <img src="img/c-bosco-ponte-640.webp" width="640" height="360" loading="lazy" alt="Pick-up sul ponte di legno tra gli abeti del Bosco del Lupo">
+        <div class="feat-t">
+          <h3>Voxel art HD</h3>
+          <p>Boschi rigogliosi di abeti e larici, laghi neri, fango che schizza, polvere e luci al neon. Ogni singolo voxel è stato approvato personalmente da Tonezzer.</p>
+        </div>
+      </article>
+      <article class="feat">
+        <img src="img/c-ring-neon-640.webp" width="640" height="360" loading="lazy" alt="Gara notturna nello stadio del Tonezzer Ring">
+        <div class="feat-t">
+          <h3>Gran Premio Tonezzer’s Arts</h3>
+          <p>Gare in fila contro il Barone, premi in denaro e un gettone in meno a chi arriva ultimo. Chi incassa di più alza la <b>Coppa Tonezzer</b>.</p>
+        </div>
+      </article>
+      <article class="feat">
+        <img src="img/g-officina-640.webp" width="640" height="360" loading="lazy" alt="L’Officina Tonezzer: nitro, accelerazione, velocità massima, pneumatici e ammortizzatori in vendita">
+        <div class="feat-t">
+          <h3>Officina Tonezzer</h3>
+          <p>Tra una gara e l’altra spendi i premi in nitro, accelerazione, velocità, gomme e ammortizzatori. I meccanici di Tonezzer lavorano anche di notte.</p>
+        </div>
+      </article>
+      <article class="feat song" id="colonna">
+        <div class="disc" aria-hidden="true"><img src="img/crest.png" width="278" height="326" alt=""></div>
+        <div class="feat-t">
+          <p class="tag"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg>Colonna sonora</p>
+          <h3>“Toh-NAY-tser Racers”</h3>
+          <p>La canzone ufficiale del gioco, scritta da <b>Giacomo Tonezzer</b> e creata con Suno. Si consiglia l’ascolto a finestrini abbassati.</p>
+          <button class="btn ghost music-btn" type="button" data-music aria-pressed="false">
+            <svg class="ic i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+            <svg class="ic i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+            <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+            <span class="lbl">Ascolta</span>
+          </button>
+          <div class="bar" aria-hidden="true"><i id="music-bar"></i></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="tracks">
+      <div class="tcol">
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg>I 10 circuiti</h3>
+        <ol class="chips">
+          <li>Mesa Grande <small>Deserto</small></li><li>Tonezzer Ring <small>Notte</small></li><li>Palude Nera <small>Palude</small></li><li>Bosco del Lupo <small>Bosco alpino</small></li><li>Gola del Diavolo <small>Canyon</small></li>
+          <li>Valle della Morte <small>Deserto</small></li><li>Tre Archi <small>Canyon</small></li><li>Rodeo di Mezzanotte <small>Notte</small></li><li>Passo della Neve <small>Neve</small></li><li>Canyon del Fuoco <small>Canyon</small></li>
+        </ol>
+      </div>
+      <div class="tcol">
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg>Le 6 cronoscalate</h3>
+        <ol class="chips">
+          <li>Colle del Falco</li><li>Passo dello Stambecco</li><li>Rampa del Condor</li><li>Strada del Vulcano</li><li>Salita al Passo della Neve</li><li>Salita della Gola del Diavolo</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="sec gal-sec" id="galleria" aria-labelledby="gal-h">
+  <div class="wrap">
+    <header class="sec-h row">
+      <div><p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg>Galleria</p>
+      <h2 id="gal-h">Cartoline dal fango</h2></div>
+      <p class="lead sm">Immagini catturate dal gioco vero, senza ritocchi. Il fango è tutto originale.</p>
+    </header>
+    <ul class="gallery" id="gallery">
+      <li><button type="button" data-full="img/g-titolo.webp"><img src="img/g-titolo-640.webp" width="640" height="360" loading="lazy" alt="La schermata del titolo di Tonezzer Racers con il menu principale"></button></li>
+      <li><button type="button" data-full="img/g-falco-tornante.webp"><img src="img/g-falco-tornante-640.webp" width="640" height="360" loading="lazy" alt="Cronoscalata del Colle del Falco: tornante tra gli abeti"></button></li>
+      <li><button type="button" data-full="img/g-ring-neon.webp"><img src="img/g-ring-neon-640.webp" width="640" height="360" loading="lazy" alt="Tonezzer Ring di notte sotto la Torre dei Neon"></button></li>
+      <li><button type="button" data-full="img/g-falco-2p.webp"><img src="img/g-falco-2p-640.webp" width="640" height="360" loading="lazy" alt="Cronoscalata a due giocatori a schermo diviso"></button></li>
+      <li><button type="button" data-full="img/g-neve-tornanti.webp"><img src="img/g-neve-tornanti-640.webp" width="640" height="360" loading="lazy" alt="Quattro pick-up in derapata sui tornanti innevati del Passo della Neve"></button></li>
+      <li><button type="button" data-full="img/g-fuoco-spirale.webp"><img src="img/g-fuoco-spirale-640.webp" width="640" height="360" loading="lazy" alt="La Spirale nel Canyon del Fuoco"></button></li>
+      <li><button type="button" data-full="img/g-mesa-viadotto.webp"><img src="img/g-mesa-viadotto-640.webp" width="640" height="360" loading="lazy" alt="Il viadotto di Mesa Grande"></button></li>
+      <li><button type="button" data-full="img/g-palude-lago.webp"><img src="img/g-palude-lago-640.webp" width="640" height="360" loading="lazy" alt="Palude Nera: pick-up in derapata sulla curva tra i cipressi"></button></li>
+      <li><button type="button" data-full="img/g-falco-vetta.webp"><img src="img/g-falco-vetta-640.webp" width="640" height="360" loading="lazy" alt="Il traguardo in vetta al Colle del Falco"></button></li>
+      <li><button type="button" data-full="img/g-gola-ponte.webp"><img src="img/g-gola-ponte-640.webp" width="640" height="360" loading="lazy" alt="Il ponte sulla Gola del Diavolo"></button></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ CATALOGUE ============ -->
+<section class="sec" id="giochi" aria-labelledby="giochi-h">
+  <div class="wrap">
+    <header class="sec-h">
+      <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="11" rx="4"/><path d="M7 11v3M5.5 12.5h3"/><circle cx="16" cy="11.5" r="1"/><circle cx="18" cy="13.5" r="1"/></svg>Il catalogo</p>
+      <h2 id="giochi-h">I giochi di Tonezzer’s Arts</h2>
+      <p class="lead">Un catalogo piccolo ma perfetto: per ora contiene esclusivamente capolavori.</p>
+    </header>
+    <div class="games">
+      <article class="game live">
+        <a class="cover" href="games/tonezzer-racers/" tabindex="-1" aria-hidden="true"><img src="img/g-titolo-640.webp" width="640" height="360" loading="lazy" alt=""></a>
+        <div class="game-t">
+          <p class="badge ok">Disponibile · Gratis</p>
+          <h3>Tonezzer Racers</h3>
+          <p class="meta">Corse off-road · 1–2 giocatori · Browser</p>
+          <p>Il gioco di bandiera: pick-up, fango, nitro, dieci circuiti e sei cronoscalate. La Coppa Tonezzer non si vince da sola.</p>
+          <div class="game-a"><a class="btn go" href="games/tonezzer-racers/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>Gioca ora</a><a class="txt" href="#racers">Scopri di più</a></div>
+        </div>
+      </article>
+      <article class="game soon">
+        <div class="cover farm"><img src="img/cover-trattori.png" width="408" height="282" loading="lazy" alt="Un trattore rosso in voxel art"><span class="stamp">Top secret</span></div>
+        <div class="game-t">
+          <p class="badge">Prossimamente<sup>*</sup></p>
+          <h3>Tonezzer Trattori Turbo</h3>
+          <p class="meta">Agricoltura agonistica · 1–4 giocatori</p>
+          <p>Il primo simulatore di aratura a 140 km/h. Stessa fisica del fango, ma con le zolle. La Federazione Agraria ha già chiesto di vietarlo.</p>
+        </div>
+      </article>
+      <article class="game soon">
+        <div class="cover space"><img src="img/cover-spazio.png" width="189" height="321" loading="lazy" alt="Un razzo bianco e rosso in voxel art"><span class="stamp">Top secret</span></div>
+        <div class="game-t">
+          <p class="badge">Prossimamente<sup>*</sup></p>
+          <h3>Tonezzer Spazio Profondo</h3>
+          <p class="meta">Corse lunari · gravità ridotta</p>
+          <p>Il primo pick-up sulla Luna. Salti da quaranta secondi, crateri come paraboliche e nessun posto dove nascondersi dal Barone.</p>
+        </div>
+      </article>
+    </div>
+    <p class="fine"><sup>*</sup> “Prossimamente” è un’unità di misura temporale brevettata da Tonezzer’s Arts. Corrisponde a: quando Giacomo dice che è pronto.</p>
+  </div>
+</section>
+
+<!-- ============ STUDIO ============ -->
+<section class="sec studio" id="studio" aria-labelledby="studio-h">
+  <div class="wrap studio-in">
+    <div class="studio-t">
+      <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9l4 3 5-7 5 7 4-3-2 10H5z"/></svg>Lo studio</p>
+      <h2 id="studio-h">Una casa di produzione celeberrima</h2>
+      <p class="lead"><b>Tonezzer’s Arts</b> è la celeberrima casa di produzione di videogiochi fondata da <b>Giacomo Tonezzer</b>. Gli storici non concordano sulla data di fondazione; concordano però sul fatto che esista, semplicemente, <i>da sempre</i>.</p>
+      <p>Si narra che il giovane Giacomo abbia imparato a sterzare prima di camminare, a disegnare circuiti prima di scrivere e a vincere la Coppa Tonezzer prima ancora di inventarla. Il suo primo pick-up era un carrello della spesa. Ha vinto lo stesso.</p>
+      <p>Da allora la missione dello studio non è mai cambiata: fare i migliori giochi del mondo, uno alla volta, senza fretta e senza la minima modestia. Ogni progetto nasce da un’idea di Giacomo, cresce sotto la sua direzione artistica, viene collaudato personalmente (con il record su ogni pista, ovviamente) e arriva a voi <b>gratis</b>, perché la grandezza va condivisa.</p>
+      <blockquote class="quote">
+        <p>«Un gioco è finito quando il fango schizza nel modo giusto.»</p>
+        <footer>Giacomo Tonezzer, fondatore, direttore e collaudatore capo</footer>
+      </blockquote>
+    </div>
+    <aside class="sheet" aria-label="Scheda dello studio">
+      <img class="sheet-crest" src="img/crest.png" width="278" height="326" alt="Lo stemma di Tonezzer’s Arts: corona d’oro sopra uno scudo rosso e blu con le lettere TA e una banda a scacchi">
+      <dl>
+        <div><dt>Fondazione</dt><dd>Da sempre</dd></div>
+        <div><dt>Fondatore</dt><dd>Giacomo Tonezzer</dd></div>
+        <div><dt>Sede</dt><dd>Ovunque ci sia fango</dd></div>
+        <div><dt>Giochi pubblicati</dt><dd>1 <small>(capolavoro)</small></dd></div>
+        <div><dt>Pick-up maltrattati</dt><dd>0 <small>(tranne quelli del Barone)</small></dd></div>
+        <div><dt>Budget</dt><dd>Illimitato</dd></div>
+        <div><dt>Motto</dt><dd>Da sempre, i migliori giochi del mondo</dd></div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ CREDITS ============ -->
+<section class="sec" id="crediti" aria-labelledby="crediti-h">
+  <div class="wrap">
+    <header class="sec-h">
+      <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z"/></svg>Riconoscimenti</p>
+      <h2 id="crediti-h">Chi c’è dietro il fango</h2>
+    </header>
+    <div class="credits">
+      <article class="cr">
+        <h3>Giacomo Tonezzer</h3>
+        <p class="role">Ideazione, direzione e produzione</p>
+        <p>Ideazione e direzione, direzione artistica, produzione esecutiva, collaudo piloti, collaudatore capo dei salti e detentore del record su ogni pista.</p>
+      </article>
+      <article class="cr">
+        <h3>Claude <small>(Anthropic)</small></h3>
+        <p class="role">Sviluppo e programmazione</p>
+        <p>Sviluppo, programmazione, fisica dei pick-up, motori e cori sintetizzati e ogni singolo voxel: Claude, l’assistente AI di Anthropic, sotto la direzione di Giacomo Tonezzer.</p>
+      </article>
+      <article class="cr">
+        <h3>Colonna sonora</h3>
+        <p class="role">“Toh-NAY-tser Racers”</p>
+        <p>Canzone di Giacomo Tonezzer, creata con Suno. Approvazione del rombo dei motori: Giacomo Tonezzer.</p>
+      </article>
+      <article class="cr">
+        <h3>Grazie a</h3>
+        <p class="role">Strumenti e ispirazione</p>
+        <p>three.js (motore 3D, licenza MIT), i caratteri Bungee e Barlow Condensed, il Fan Club Ufficiale Tonezzer, le sale giochi di una volta e il fango del sabato sera.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTROLS / REQUIREMENTS ============ -->
+<section class="sec" id="comandi" aria-labelledby="comandi-h">
+  <div class="wrap">
+    <header class="sec-h">
+      <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>Come si gioca</p>
+      <h2 id="comandi-h">Comandi e requisiti</h2>
+    </header>
+    <div class="ctrls">
+      <article class="cc">
+        <h3>Tastiera · Giocatore 1</h3>
+        <ul>
+          <li><span><kbd>↑</kbd></span>accelera</li>
+          <li><span><kbd>↓</kbd></span>freno / retromarcia</li>
+          <li><span><kbd>←</kbd><kbd>→</kbd></span>sterza</li>
+          <li><span><kbd>Spazio</kbd></span>nitro</li>
+          <li><span><kbd>R</kbd></span>riposiziona</li>
+        </ul>
+        <p class="note">Da solo guidi anche con <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>P</kbd> pausa, <kbd>C</kbd> telecamera, <kbd>M</kbd> audio.</p>
+      </article>
+      <article class="cc">
+        <h3>Tastiera · Giocatore 2</h3>
+        <ul>
+          <li><span><kbd>W</kbd></span>accelera</li>
+          <li><span><kbd>S</kbd></span>freno / retromarcia</li>
+          <li><span><kbd>A</kbd><kbd>D</kbd></span>sterza</li>
+          <li><span><kbd>Q</kbd></span>nitro</li>
+          <li><span><kbd>E</kbd></span>riposiziona</li>
+        </ul>
+      </article>
+      <article class="cc">
+        <h3>Gamepad</h3>
+        <ul>
+          <li><span>Levetta</span>sterza</li>
+          <li><span><kbd>A</kbd><kbd>RT</kbd></span>accelera</li>
+          <li><span><kbd>X</kbd><kbd>LT</kbd></span>freno</li>
+          <li><span><kbd>B</kbd><kbd>RB</kbd></span>nitro</li>
+          <li><span><kbd>Y</kbd></span>riposiziona</li>
+        </ul>
+        <p class="note">Con due gamepad, uno per giocatore.</p>
+      </article>
+      <article class="cc">
+        <h3>Touch</h3>
+        <ul>
+          <li><span>Pad sinistro</span>sterza</li>
+          <li><span>Pedali destri</span>gas e freno</li>
+          <li><span>Tasti a schermo</span>nitro, riposiziona, pausa</li>
+        </ul>
+        <p class="note">Su telefono e tablet si gioca in orizzontale.</p>
+      </article>
+    </div>
+    <div class="req">
+      <h3>Requisiti</h3>
+      <ul>
+        <li><b>Un browser moderno</b> con WebGL: Chrome, Edge, Firefox o Safari aggiornati.</li>
+        <li><b>Meglio su computer</b>, con tastiera o gamepad. Gira anche su tablet e telefoni recenti.</li>
+        <li><b>Connessione internet</b> all’avvio: il motore 3D e i caratteri arrivano dalla rete.</li>
+        <li><b>Niente da installare</b>: record e progressi restano salvati nel tuo browser.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="final" aria-labelledby="final-h">
+  <div class="wrap final-in">
+    <img src="img/crest.png" width="278" height="326" alt="">
+    <div>
+      <h2 id="final-h">Pronto a sporcarti le ruote?</h2>
+      <p>Il Barone ti aspetta sulla linea di partenza. La Coppa Tonezzer pure.</p>
+    </div>
+    <a class="btn go xl" href="games/tonezzer-racers/">
+      <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
+      <span><b>Gioca ora</b><small>gratis nel browser</small></span>
+    </a>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div class="foot-b"><img src="img/crest-sm.png" width="40" height="47" alt=""><p><b>Tonezzer’s Arts</b><span>Da sempre, i migliori giochi del mondo</span></p></div>
+    <p class="copy">© <span id="year">2026</span> Tonezzer’s Arts · Tutti i diritti riservati a Giacomo Tonezzer.<br>Nessun pick-up è stato maltrattato durante la produzione. Tranne quelli del Barone.</p>
+    <a class="up" href="#top">Torna su ↑</a>
+  </div>
+</footer>
+
+<dialog class="lightbox" id="lightbox" aria-label="Immagine ingrandita">
+  <img id="lb-img" src="data:," alt="">
+  <p id="lb-cap"></p>
+  <button class="lb-x" type="button" data-lb="close" aria-label="Chiudi">×</button>
+  <button class="lb-p" type="button" data-lb="prev" aria-label="Immagine precedente">‹</button>
+  <button class="lb-n" type="button" data-lb="next" aria-label="Immagine successiva">›</button>
+</dialog>
+<audio id="theme" preload="none" src="games/tonezzer-racers/music/theme.mp3"></audio>
+<script src="js/site.js" defer></script>
+</body>
+</html>
