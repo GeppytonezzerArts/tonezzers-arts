@@ -926,7 +926,18 @@ window.ORS = window.ORS || {};
     // target nudge toward the view (m), summit distance (m), fog reduction at full weight, max pitch the terrain clearance may raise,
     // cost per radian of a look direction away from the view (vs the pitch the terrain / canopy would force), published viewK floor (the world's coarse
     // ground and the props' zone LOD switch on as in a wide zone view)
-    CAM_LOOK: { on: 0.3, off: 0.08, slew: 0.24, slewFin: 0.45, dirRate: 0.5, yawK: 1.5, yawRate: 0.55, pitch: 0.54, pitch2P: 0.62, pitchFin: 0.5, pitchFin2P: 0.56, fov: 8, fovLow: 3, lowK: 0.28, dLo: 1.1, dHi: 1.32, dHi2P: 1.2, dHiLow: 1.15, nudge: 5, finD: 72, fog: 0.55, pMax: 1.2, offK: 0.22, viewK: 1.5 },
+    // v6.1 hotfix (docs/HILLCLIMB.md §3.4; the look-out camera jerked: it re-picked its direction every 0.25 s and stepped its pitch /
+    // lift to raw clearance samples): wantHold = s the on/off condition must hold; the weight follows a spring (lwW, top speed slew /
+    // slewFin, lowered so the swing turns the view at ≤ swing / swingFin rad/s, accel lwAcc); the direction plan (every `plan` s)
+    // scores the candidates (cand step, ±candMax rad) at the truck and on the road `ahead` m, and switches only when a challenger
+    // beats the committed direction by `margin` for `sustain` s, at most once per `dwell` s (committed view blocked, i.e. needing
+    // more pitch than pMax: `sustainB` s, no dwell); yaw = critically damped spring (yawW rad/s, soft top speed yawRate rad/s, accel
+    // ≤ yawAcc rad/s²); clearance pitch and lift: max-hold `hold` / `liftHold` s of the requirement (pitch: now and `pAhead` s
+    // ahead), then springs ×2 when far behind (pW, pRate, pAcc; liftW, liftRate m/s, liftAcc m/s²); hill-climb output springs
+    // (outW rad/s) on pitch (outPR rad/s, outPA rad/s²), distance (outDR, outDA × base /s, /s²) and lens (outFR °/s, outFA °/s²)
+    CAM_LOOK: { on: 0.3, off: 0.08, slew: 0.24, slewFin: 0.45, dirRate: 0.5, yawRate: 0.4, pitch: 0.54, pitch2P: 0.62, pitchFin: 0.5, pitchFin2P: 0.56, fov: 8, fovLow: 3, lowK: 0.28, dLo: 1.1, dHi: 1.32, dHi2P: 1.2, dHiLow: 1.15, nudge: 5, finD: 72, fog: 0.55, pMax: 1.2, offK: 0.22, viewK: 1.5,
+      wantHold: 1.0, lwW: 1.6, lwAcc: 0.3, swing: 0.7, swingFin: 1.0, plan: 0.25, cand: 0.2, candMax: 1.6, ahead: [0, 18, 36], margin: 0.12, sustain: 1.25, sustainB: 0.5, dwell: 4, yawW: 0.9, yawAcc: 0.35,
+      hold: 1.2, pAhead: [0.7, 1.4, 2.1], pW: 2.5, pRate: 0.5, pAcc: 1.3, liftHold: 0.5, liftW: 2.4, liftRate: 8, liftAcc: 14, outW: 2.6, outPR: 0.35, outPA: 0.9, outDR: 0.45, outDA: 0.9, outFR: 6, outFA: 16 },
     /* v6 camera feel (docs/ARCHITECTURE.md "v6 camera"; game.js CamRig): speed (v0..v1 m/s) pulls the camera back ×(1 + spK) and
        lengthens the look-ahead ×(1 + leadK), widens the lens by fovSp° (+fovNit° on nitro); the grade along the travel direction
        (next 25 m) projected on the screen's up axis tilts the pitch by −tilt·grade (≤ tiltMax: a slope facing the camera is seen
@@ -17331,9 +17342,17 @@ void main(){
   const ZCAP = { low: [1.5, 1.25, 0.90], medium: [1.8, 1.40, 0.84], high: [2.0, 1.40, 0.82] }; // v5: high 2P 1.5 -> 1.4 (viewport 0 of a 2P frame draws ~1.7x viewport 1 in the world/props per-camera LOD: 262 calls at 1.5 on the new mountains) // [1P zoom, 2P zoom, min pitch] (SCENIC §6.1; low fits 250k with the Phase 2 world LOD)
   const worldCap = () => (S.world && S.world.caps && S.world.caps.viewK) || 1.5;               // 1.5 until the voxel LOD lands
   const ZS = { w: 0, zoom: 1, pitch: 0.98, px: 0, pz: 0, frame: 0, zone: -1 }, VS = { alt: 0, x: 0, z: 1, w: 0 }, camTS = {}, camLoc = {}, vNDC = new THREE.Vector3();
-  const CF = CONST.CAM_FEEL, CA = CONST.CAM_ALT, LO = CONST.CAM_LOOK, VS2 = { alt: 0, x: 0, z: 1, w: 0 }, LO_CAND = [0, 0.6, -0.6, 1.15, -1.15, 1.6, -1.6], LIFT_T = [];
+  const CF = CONST.CAM_FEEL, CA = CONST.CAM_ALT, LO = CONST.CAM_LOOK, VS2 = { alt: 0, x: 0, z: 1, w: 0 }, LO_CAND = [0], LIFT_T = [];
+  for (let c = LO.cand; c <= LO.candMax + 1e-6; c += LO.cand) LO_CAND.push(+c.toFixed(3), -c.toFixed(3)); // look-out direction candidates (rad from the view)
+  /* v6.1: critically damped spring with a soft top speed (the error is clamped so the chase settles at vMax) and an acceleration
+     limit: a step in the target becomes an S-curve (no velocity step, no overshoot), a moving target is followed with a short lag.
+     sp = {x, v}; returns the new x. Every hill-climb camera channel goes through one (docs/HILLCLIMB.md §3.4). */
+  const spring = (sp, x1, w, vMax, aMax, dt) => { const E = (2 * vMax) / w, e = x1 - sp.x, a = clamp(w * w * (e < -E ? -E : e > E ? E : e) - 2 * w * sp.v, -aMax, aMax); sp.v += a * dt; sp.x += sp.v * dt; return sp.x; };
+  const springSet = (sp, x) => { sp.x = x; sp.v = 0; return x; };
+  const softMax = (a, b, k) => (a + b + Math.sqrt((a - b) * (a - b) + k * k)) * 0.5; // max without a corner (≤ k/2 above it)
   // what a look-out camera must clear at (x, z): the voxel ground top, or the tree canopy where props publish it (canopyY)
   const obstY = (x, z) => { const g = S.world && S.world.topY ? S.world.topY(x, z) : S.track.terrainSample(x, z, camTS).y; const c = S.props && S.props.canopyY ? S.props.canopyY(x, z) : -1e4; return c > g ? c : g; }; for (let q = 1; q < 24; q++) LIFT_T.push(q / 24);
+  const liftTop = (x, z) => (S.world && S.world.topY ? S.world.topY(x, z) : S.track.terrainSample(x, z, camTS).y); // voxel ground top (clearance lifts)
   /* ==== altitude framing + hill-climb summit view (docs/HILLCLIMB.md §Camera) ====
      Altitude framing (every track, with "Inquadrature panoramiche"): the road's exposure (track.vistaAt: height above the low ground
      around it) eases the camera back ×(1 + CA.k·w) (lead shortened by CA.lead·w) and tilts toward the open side (pitch − CA.pitchN·w
@@ -17353,12 +17372,41 @@ void main(){
       this.aw = 0; this.ow = 0; this.oyaw = 0; this.vx = 0; this.vz = 1; this.altForce = null;
       this.fov0 = cam.fov; this.lw = 0; this.lWant = 0; this.lyaw = 0; this.ldx = 0; this.ldz = -1; this.yawF = 0; this.lookForce = null; this.yawForce = null; this.pReq = 0; // look-out (hill climb)
       this.gT = 0; this.gN = 0; this.rel = 0; this.cw = 0; this.ew = 0; this.ex = 0; this.ez = 0; this.kick = 0; this.kickV = 0; this.fovS = 0; this.fov = cam.fov; this.liftF = 0; // v6 camera feel (CONST.CAM_FEEL)
+      // v6.1 look-out plan + springs (yaw, clearance pitch, lift; hill-climb output pitch / distance / lens)
+      this.lTh = 0; this.lCh = 0; this.lChT = 0; this.lDwell = 0; this.lEvalT = 0; this.lOrb = false; this.lWHold = 0; this.lTgt = 0;
+      this.sYaw = { x: 0, v: 0 }; this.sLw = { x: 0, v: 0 }; this.sPC = { x: 0, v: 0 }; this.sLift = { x: 0, v: 0 }; this.sP = { x: 0.98, v: 0 }; this.sD = { x: 42, v: 0 }; this.sF = { x: cam.fov, v: 0 };
+      this.pHold = 0; this.pHoldT = 0; this.lHold = 0; this.lHoldT = 0; this.outOn = false;
     }
     // v6: landing kick (game: stepCar) — the camera dips by up to CAM_FEEL.kick × distance and springs back
     kickFor(imp) { const a = clamp((imp - 7) / 15, 0, 1) * CF.kick * this.dist; if (a > 0.05) this.kickV = Math.min(this.kickV, -a * 9); }
     snap() { this.init = false; }
+    /* v6.1 hill-climb clearance lift (look-out lift and the fixed camera's sightline lift share it): max-hold LO.liftHold s of the raw
+       need, then a spring; a need well above the current lift (the truck about to be hidden) doubles the spring. from != null:
+       restart the spring at that height (the branch changed). Returns the lift (m, >= 0). */
+    liftTo(need, from, dt) {
+      need = Math.max(0, need); const L = this.sLift;
+      if (from != null) { springSet(L, from); this.lHold = need; this.lHoldT = LO.liftHold; }
+      if (need > this.lHold) { this.lHold = need; this.lHoldT = LO.liftHold; } else if ((this.lHoldT -= dt) <= 0) this.lHold = damp(this.lHold, need, 2.0, dt);
+      const u = this.lHold - L.x > 3 ? 2 : 1;
+      return Math.max(0, spring(L, this.lHold, LO.liftW * u, LO.liftRate * u, LO.liftAcc * u, dt));
+    }
+    /* v6.1 look-out plan: mean clearance cost of a camera at yaw yc (horizontal distance D, pitch pL) seen from the truck and from the
+       road LO.ahead m on (the summit: the truck only): 3 × the pitch the terrain / canopy would force beyond pL (+0.06 slack) */
+    lookCost(car, tr, s, dir, yc, pL, D, fin) {
+      const ux2 = -Math.sin(yc), uz2 = Math.cos(yc), A = LO.ahead, n = fin ? 1 : A.length;
+      let sum = 0;
+      for (let p = 0; p < n; p++) {
+        let x0 = car.x, z0 = car.z, Ty = car.y + 1.2;
+        if (A[p] > 0) { const i = ((Math.round((s + dir * A[p]) / tr.ds) % tr.N) + tr.N) % tr.N; x0 = tr.cx[i]; z0 = tr.cz[i]; Ty = liftTop(x0, z0) + 1.2; }
+        let aReq = -1;
+        for (let qd = 1; qd <= 10; qd++) { const d = (D * qd) / 10, a = Math.atan2(obstY(x0 + ux2 * d, z0 + uz2 * d) + 1.0 + 0.15 * qd - Ty, d); if (a > aReq) aReq = a; }
+        sum += 3 * Math.max(0, aReq - pL - 0.06);
+      }
+      return sum / n;
+    }
     update(car, dt) {
       if (!car) return;
+      const first = !this.init; // (init turns true below, before the camera is placed)
       const tr = S.track, split = S.viewports.length > 1, att = S.state === 'attract', q = qualityKey();
       /* Look-ahead: the fixed 3/4 frustum reaches ~26 m up-screen but only ~15 m down-screen, so the lead depends on the
          travel direction (more when driving toward the camera), grows with speed (0.55 s, capped), and adds the 0.2 s
@@ -17402,8 +17450,8 @@ void main(){
         this.cw = clamp(damp(this.cw, crestT, crestT > this.cw ? 3 : 0.9, dt), this.cw - 0.8 * dt, this.cw + 1.4 * dt); // ≤ 0.28 base/s (story: ≤ 0.5)
       }
       this.fovS = !this.init ? 0 : damp(this.fovS, (CF.fovSp * spF + (car.nitroT > 0 ? CF.fovNit : 0)) * kS, car.nitroT > 0 ? 5 : 2, dt); // speed / nitro lens
-      if (!this.init || this.zw < 0.02) { this.zZoom = Z.zoom; this.zPitch = Z.pitch; this.zPX = Z.px; this.zPZ = Z.pz; this.zFrame = Z.frame; }
-      else if (Z.w > 0.02) { this.zZoom = damp(this.zZoom, Z.zoom, 3, dt); this.zPitch = damp(this.zPitch, Z.pitch, 3, dt); this.zPX = damp(this.zPX, Z.px, 3, dt); this.zPZ = damp(this.zPZ, Z.pz, 3, dt); this.zFrame = damp(this.zFrame, Z.frame, 3, dt); } // held while the weight falls
+      if (!this.init || this.zw < 0.002) { this.zZoom = Z.zoom; this.zPitch = Z.pitch; this.zPX = Z.px; this.zPZ = Z.pz; this.zFrame = Z.frame; }
+      else if (Z.w > 0.02) { this.zZoom = damp(this.zZoom, Z.zoom, 3, dt); this.zPitch = damp(this.zPitch, Z.pitch, 3, dt); this.zPX = damp(this.zPX, Z.px, 3, dt); this.zPZ = damp(this.zPZ, Z.pz, 3, dt); this.zFrame = damp(this.zFrame, Z.frame, 3, dt); } // held while the weight falls (v6.1: snapped below 0.002, not 0.02: the snap moved the camera up to 0.6 m in a frame)
       const zw = this.zw;
       // 2b. altitude framing: exposure weight (scenic 0: none, 1: half), eased like a crane (slew-limited)
       let aWant = 0;
@@ -17426,33 +17474,53 @@ void main(){
       if (this.lookForce != null) { this.lWant = this.lookForce; if (aWant <= 0 && tr.vistaAt) tr.vistaAt(s, VS); lx = VS.x; lz = VS.z; }
       else if (!lookOn || S.state === 'countdown') this.lWant = 0;
       else if (orbitOn) { tr.vistaAt(tr.finishS, VS2); lx = VS2.x; lz = VS2.z; this.lWant = 1; }
-      else { const wv = aWant; if (wv >= LO.on) this.lWant = 1; else if (wv <= LO.off) this.lWant = 0; if (wv > 0.02) { lx = VS.x; lz = VS.z; } }
-      if (!this.init) { this.ldx = lx; this.ldz = lz; this.lw = this.lWant; this.lyaw = Math.atan2(lx, -lz); }
+      else { // v6.1: the on/off condition must hold LO.wantHold s (a brief dip of the exposure no longer swings the camera out and back)
+        const wv = aWant, tW = wv >= LO.on ? 1 : wv <= LO.off ? 0 : this.lWant;
+        this.lWHold = tW !== this.lWant ? this.lWHold + dt : 0;
+        if (!this.init || this.lWHold >= LO.wantHold) { this.lWant = tW; this.lWHold = 0; }
+        if (wv > 0.02) { lx = VS.x; lz = VS.z; }
+      }
+      if (!this.init) { this.ldx = lx; this.ldz = lz; this.lw = springSet(this.sLw, this.lWant); this.lyaw = Math.atan2(lx, -lz); }
       else {
         this.ldx = damp(this.ldx, lx, LO.dirRate, dt); this.ldz = damp(this.ldz, lz, LO.dirRate, dt);
-        const sl = orbitOn ? LO.slewFin : LO.slew; this.lw = clamp(damp(this.lw, this.lWant, 1.2, dt), this.lw - sl * dt, this.lw + sl * dt);
+        // v6.1: a spring (top speed = the v6 slew): v6's ease + slew reversed the swing at full speed when the weight turned mid-way
+        const L = this.sLw, sw = (orbitOn ? LO.swingFin : LO.swing) / (1.5 * Math.max(0.5, Math.abs(this.lyaw))); // the swing turns the view at ≤ LO.swing rad/s
+        this.lw = spring(L, this.lWant, LO.lwW, Math.min(orbitOn ? LO.slewFin : LO.slew, sw), LO.lwAcc, dt); if (this.lw <= 0 || this.lw >= 1) { this.lw = L.x = clamp(this.lw, 0, 1); L.v = 0; }
       }
       { const dl = Math.hypot(this.ldx, this.ldz) || 1, Yv = Math.atan2(this.ldx / dl, -this.ldz / dl);
-        /* the most open direction near the view (every 0.25 s): candidate yaws around the vista direction, each scored by how far
-           the terrain + tree canopy between the truck and that camera position would force the pitch up, plus the angle away
-           from the view; facing straight downhill over a forested switchback stack loses to a view along the contour (the camera
-           stays over the road's own level, the valley fills one side of the screen) */
-        this.lEvalT = (this.lEvalT || 0) - dt;
-        if (this.lWant > 0 && (this.lEvalT <= 0 || !this.init || this.lw < 0.03)) {
-          this.lEvalT = 0.25;
-          const pL = q === 'low' ? LO.pitch + LO.lowK : LO.pitch, D = Math.cos(pL) * (orbitOn ? LO.finD : (ZOOMS[settings.zoom] || 42) * LO.dHi), Ty = car.y + 1.2;
-          let best = 1e9, bY = Yv;
-          for (let c = 0; c < LO_CAND.length; c++) {
-            const th = LO_CAND[c], yc = Yv + th, ux2 = -Math.sin(yc), uz2 = Math.cos(yc); let aReq = -1;
-            for (let qd = 1; qd <= 10; qd++) { const d = (D * qd) / 10, x = car.x + ux2 * d, z = car.z + uz2 * d; aReq = Math.max(aReq, Math.atan2(obstY(x, z) + 1.0 + 0.15 * qd - Ty, d)); }
-            const cost = 3 * Math.max(0, aReq - pL - 0.06) + LO.offK * Math.abs(th) + (this.init && this.lw > 0.03 && Math.abs(wrapA(yc - this.lTgt)) > 0.3 ? 0.12 : 0);
-            if (cost < best) { best = cost; bY = yc; }
+        /* the most open direction near the view: candidate yaws around the vista direction, each scored by how far the terrain + tree
+           canopy between the truck and that camera position would force the pitch up, plus the angle away from the view; facing
+           straight downhill over a forested switchback stack loses to a view along the contour (the camera stays over the road's
+           own level, the valley fills one side of the screen).
+           v6.1 (hotfix): v6 re-picked the winner every 0.25 s at the truck's position alone and swung toward it at once: near-equal
+           scores flip-flopped (Colle del Falco: 80 target changes in 50 s, 67 straight back) and every change started a swing at full
+           speed. Now the plan scores the truck's position and the road ahead (LO.ahead), keeps a committed offset from the view
+           (lTh) and changes it only for a challenger that wins by LO.margin for LO.sustain s, at most once per LO.dwell s (sooner
+           only when the committed view is blocked); the yaw follows on a critically damped spring (no velocity steps). */
+        const fresh = !this.init || this.lw < 0.002, replan = orbitOn !== this.lOrb; this.lOrb = orbitOn;
+        this.lEvalT -= dt; this.lDwell += dt;
+        if (this.lWant > 0 && (this.lEvalT <= 0 || fresh || replan)) {
+          this.lEvalT = LO.plan;
+          const pL = q === 'low' ? LO.pitch + LO.lowK : LO.pitch, D = Math.cos(pL) * (orbitOn ? LO.finD : (ZOOMS[settings.zoom] || 42) * LO.dHi);
+          let best = 1e9, bTh = 0, cCur = 1e9;
+          for (let c = 0; c <= LO_CAND.length; c++) {
+            const th = c < LO_CAND.length ? LO_CAND[c] : this.lTh, cost = this.lookCost(car, tr, s, dir, Yv + th, pL, D, orbitOn) + LO.offK * Math.abs(th);
+            if (c === LO_CAND.length) cCur = cost; else if (cost < best) { best = cost; bTh = th; }
           }
-          this.lTgt = this.init && this.lw > 0.03 ? this.lyaw + wrapA(bY - this.lyaw) : wrapA(bY);
+          if (fresh || replan) { this.lTh = bTh; this.lChT = 0; this.lDwell = 0; }
+          else {
+            const blocked = cCur - LO.offK * Math.abs(this.lTh) > 3 * (LO.pMax - pL); // the committed view would need more than pMax
+            if (cCur - best > LO.margin && Math.abs(bTh - this.lTh) > LO.cand * 0.75) {
+              this.lChT = this.lChT > 0 && Math.abs(bTh - this.lCh) <= LO.cand * 1.5 ? this.lChT + LO.plan : LO.plan; this.lCh = bTh; // same challenger (±1.5 steps) or a new one
+            } else this.lChT = 0;
+            if (this.lChT >= (blocked ? LO.sustainB : LO.sustain) && (blocked || this.lDwell >= LO.dwell)) { this.lTh = this.lCh; this.lChT = 0; this.lDwell = 0; }
+          }
         }
-        const Y = this.lTgt != null ? this.lTgt : Yv;
-        if (this.lw < 0.03 || !this.init) this.lyaw = wrapA(Y); // the side of the swing is chosen when it starts
-        else this.lyaw += clamp(wrapA(Y - this.lyaw) * (1 - Math.exp(-LO.yawK * dt)), -LO.yawRate * dt, LO.yawRate * dt); }
+        if (fresh) { this.lyaw = wrapA(Yv + this.lTh); springSet(this.sYaw, this.lyaw); } // the side of the swing is chosen when it starts (the yaw is lyaw × lw)
+        else {
+          if (this.lw >= 0.9995 && Math.abs(this.lyaw) > Math.PI) this.lyaw -= Math.round(this.lyaw / TAU) * TAU; // at full weight a turn is invisible: the swing back takes the short way
+          this.sYaw.x = this.lyaw; spring(this.sYaw, this.lyaw + wrapA(Yv + this.lTh - this.lyaw), LO.yawW, LO.yawRate, LO.yawAcc, dt); this.lyaw = this.sYaw.x; }
+        this.lTgt = Yv + this.lTh; }
       const lw = this.lw * this.lw * (3 - 2 * this.lw), lyaw = this.yawForce != null ? this.yawForce : this.lyaw * lw; // yawForce: debug (harness sweeps)
       const cy = Math.cos(this.yawF), syw = Math.sin(this.yawF), uxs = ux * cy + uz * syw, uzs = -ux * syw + uz * cy; // velocity in screen axes (right, down)
       // 2. look-ahead lead shrinks while zoomed out (zones and altitude framing)
@@ -17489,9 +17557,10 @@ void main(){
         tx += this.vx * 18 * ow; tz += this.vz * 18 * ow;
       }
       if (lw > 0) { // look-out: lower pitch, a little more distance (capped: the far ground costs), target nudged toward the view
-        const pL = (orbitOn ? (split ? LO.pitchFin2P : LO.pitchFin) : split ? LO.pitch2P : LO.pitch) + (q === 'low' ? LO.lowK : 0);
+        // v6.1: the run's framing hands over to the summit's by the summit weight (v6 switched at the finish line: +16 m in a frame)
+        const pRun = split ? LO.pitch2P : LO.pitch, pL = pRun + ((split ? LO.pitchFin2P : LO.pitchFin) - pRun) * ow + (q === 'low' ? LO.lowK : 0), kL = lw * (1 - ow);
         pitch += (pL - pitch) * lw;
-        if (!orbitOn) { dist += (clamp(dist, base0 * LO.dLo, base0 * (split ? LO.dHi2P : q === 'low' ? LO.dHiLow : LO.dHi)) - dist) * lw; tx += this.ldx * LO.nudge * lw; tz += this.ldz * LO.nudge * lw; }
+        dist += (clamp(dist, base0 * LO.dLo, base0 * (split ? LO.dHi2P : q === 'low' ? LO.dHiLow : LO.dHi)) - dist) * kL; tx += this.ldx * LO.nudge * kL; tz += this.ldz * LO.nudge * kL;
       }
       /* v6 feel (fixed camera; the look-out and the summit view keep their own framing): the grade tilts the pitch (climb: lower,
          looking up the hill; descent: higher, looking down into it) and the distance (descent: back), a crest pulls back and tilts
@@ -17522,6 +17591,14 @@ void main(){
       this.tgt.x = damp(this.tgt.x, tx, 5, dt); this.tgt.z = damp(this.tgt.z, tz, 5, dt); this.tgt.y = this.groundY + 1.2 + (this.vLook < 0 ? this.vLook * (0.4 + 0.6 * this.sf) : this.vLook);
       // 7. place the camera (fixed: no yaw; chase: behind the truck, shorter pull-back, terrain/deck clearance)
       let ox, oy, oz;
+      /* v6.1 (hotfix): on a hill climb (fixed camera) the framing's pitch, distance and lens reach the camera through critically
+         damped springs with speed / acceleration limits, so no weight, hand-over or clearance step can jerk the view (a calm drone);
+         the circuits keep the v6 rig unchanged */
+      const hillOut = S.mode === 'hill' && !chase && !att;
+      if (hillOut) {
+        if (first || !this.outOn) { springSet(this.sP, pitch); springSet(this.sD, dist); }
+        else { pitch = spring(this.sP, pitch, LO.outW, LO.outPR, LO.outPA, dt); dist = spring(this.sD, dist, LO.outW, LO.outDR * base0, LO.outDA * base0, dt); }
+      }
       if (chase) {
         dist = Math.min(base * 1.4, base * (1 + 0.45 * (dZ / base - 1) * zw)); pitch = 0.5 + 0.10 * zw - clamp(0.6 * gT, -0.12, 0.14); // v6: chase looks up a climb, down a descent
         const want2 = Math.atan2(-car.vx, -car.vz);
@@ -17541,33 +17618,58 @@ void main(){
         // downhill puts the camera over the slope (and the road leg above): the pitch first rises to clear the terrain profile
         // between the truck and the camera (elevation angle of every sample + a margin), then a lift keeps the camera itself and
         // the sightline clear (lifting by h raises the sightline point at fraction t by h·(1 - t))
-        const yaw = lyaw, top = (x, z) => (S.world && S.world.topY ? S.world.topY(x, z) : tr.terrainSample(x, z, camTS).y), Ty = car.y + 1.2;
-        { const ux2 = -Math.sin(yaw), uz2 = Math.cos(yaw), D = Math.cos(pitch) * dist; let aReq = -1;
-          for (let qq = 1; qq <= 16; qq++) { const d = (D * qq) / 16, h = obstY(car.x + ux2 * d, car.z + uz2 * d) + 1.0 + (1.5 * qq) / 16 - Ty; aReq = Math.max(aReq, Math.atan2(h, d)); }
-          this.pReq = !this.init || aReq > this.pReq ? aReq : damp(this.pReq, aReq, 1.5, dt);
-          pitch = Math.max(pitch, Math.min(LO.pMax, this.pReq)); }
+        // v6.1 (hotfix): v6 raised the pitch and the lift to the raw requirement in a single frame (Falco: +0.135 rad, Vulcano: +0.63 m)
+        // and let them fall back, a saw-tooth on every tree / rock the sightline crossed. Now the requirement is taken now and
+        // LO.pAhead s ahead on the road (rising early instead of late), held LO.hold s (no pumping), and followed by springs; the
+        // lift (what the pitch leaves) likewise (liftTo).
+        const yaw = lyaw, Ty = car.y + 1.2, enter = first || !this.lookPrev;
+        { const D = Math.cos(pitch) * dist, A = LO.pAhead, yT = this.lyaw + wrapA(this.lTgt - this.lyaw); let aReq = -1;
+          /* the requirement now and where the truck will be on the road LO.pAhead s on, seen from where the camera will be by then
+             (yaw and swing weight run on toward their targets): the pitch rises before the camera gets there */
+          for (let h = 0; h <= A.length; h++) {
+            const tau = h ? A[h - 1] : 0; let x0 = car.x, z0 = car.z, y0 = Ty, yr = yaw;
+            if (h) {
+              if (sp <= 2) break;
+              const i = ((Math.round((s + dir * sp * tau) / tr.ds) % tr.N) + tr.N) % tr.N; x0 = tr.cx[i]; z0 = tr.cz[i]; y0 = liftTop(x0, z0) + 1.2;
+              if (this.yawForce == null) {
+                const yv = this.lyaw + this.sYaw.v * tau, lv = this.lw + this.sLw.v * tau, yP = this.sYaw.v >= 0 ? Math.min(yv, Math.max(yT, this.lyaw)) : Math.max(yv, Math.min(yT, this.lyaw));
+                const lP = clamp(this.sLw.v >= 0 ? Math.min(lv, Math.max(this.lWant, this.lw)) : Math.max(lv, Math.min(this.lWant, this.lw)), 0, 1); yr = yP * lP * lP * (3 - 2 * lP);
+              }
+            }
+            for (let r = 0; r < (h ? 2 : 1); r++) { const yy = r ? yr : yaw, ux2 = -Math.sin(yy), uz2 = Math.cos(yy);
+              for (let qq = 1; qq <= 16; qq++) { const d = (D * qq) / 16, a = Math.atan2(obstY(x0 + ux2 * d, z0 + uz2 * d) + 1.0 + (1.5 * qq) / 16 - y0, d); if (a > aReq) aReq = a; } }
+          }
+          if (enter || aReq > this.pHold) { this.pHold = aReq; this.pHoldT = LO.hold; } else if ((this.pHoldT -= dt) <= 0) this.pHold = damp(this.pHold, aReq, 1.0, dt);
+          const pT = Math.min(LO.pMax, this.pHold), u = pT - this.sPC.x > 0.15 ? 2 : 1; // capped before the spring (it eases into pMax); far behind (the truck about to be hidden): stiffer
+          this.pReq = enter ? springSet(this.sPC, pT) : spring(this.sPC, pT, LO.pW * u, LO.pRate * u, LO.pAcc * u, dt);
+          pitch += (softMax(pitch, this.pReq, 0.1) - pitch) * smooth(0, 0.1, Math.max(this.lw, this.ow)); }
         const hz = Math.cos(pitch) * dist;
         ox = -Math.sin(yaw) * hz; oz = Math.cos(yaw) * hz; oy = Math.sin(pitch) * dist;
-        const Px = this.tgt.x + ox, Pz = this.tgt.z + oz, Py = this.tgt.y + oy;
-        let need = top(Px, Pz) + 4 - Py;
-        for (let q = 0; q < LIFT_T.length; q++) { const t = LIFT_T[q], x = Px + (car.x - Px) * t, z = Pz + (car.z - Pz) * t, y = Py + (Ty - Py) * t; need = Math.max(need, (top(x, z) + 0.8 + 2.0 * (1 - t) - y) / (1 - t)); }
-        need = Math.max(0, need);
-        this.lift = need > this.lift ? need : damp(this.lift, need, 3, dt);
+        const Px = this.tgt.x + ox, Pz = this.tgt.z + oz, Py = this.tgt.y + oy; // the lift: what the (anticipating) pitch leaves to clear
+        let need = liftTop(Px, Pz) + 4 - Py;
+        for (let q = 0; q < LIFT_T.length; q++) { const t = LIFT_T[q], x = Px + (car.x - Px) * t, z = Pz + (car.z - Pz) * t, y = Py + (Ty - Py) * t; need = Math.max(need, (liftTop(x, z) + 0.8 + 2.0 * (1 - t) - y) / (1 - t)); }
+        this.lift = this.liftTo(need, first || !this.outOn ? need : enter && !hillOut ? this.liftF : null, dt);
         oy += this.lift;
       } else {
-        this.lift = 0;
-        ox = 0; oy = Math.sin(pitch) * dist; oz = Math.cos(pitch) * dist; // pitch 0.98 = ~56° looking down, the classic arcade 3/4 view
+        // pitch 0.98 = ~56° looking down, the classic arcade 3/4 view (v6.1: the look-out's last 0.001 of yaw kept, no 0.15 m step at the hand-over; 0 on circuits)
+        ox = -Math.sin(lyaw) * Math.cos(pitch) * dist; oy = Math.sin(pitch) * dist; oz = Math.cos(lyaw) * Math.cos(pitch) * dist;
         /* v6: the grade tilt can lower the camera (climbing toward the camera = rising ground between it and the truck): keep the
            sightline clear like the look-out does (only ever lifts; 0 on the default framing, which the camera audit covers) */
         if (pitch < 0.96 && S.world && S.world.topY) {
           const Px = this.tgt.x + ox, Pz = this.tgt.z + oz, Py = this.tgt.y + oy, Ty = car.y + 1.2;
           let need = S.world.topY(Px, Pz) + 3 - Py;
           for (let q = 1; q < 12; q++) { const t = q / 12, x = Px + (car.x - Px) * t, z = Pz + (car.z - Pz) * t, y = Py + (Ty - Py) * t; need = Math.max(need, (S.world.topY(x, z) + 0.8 + 1.5 * (1 - t) - y) / (1 - t)); }
-          this.liftF = Math.max(0, need) > this.liftF ? Math.max(0, need) : damp(this.liftF, Math.max(0, need), 2, dt);
-        } else this.liftF = damp(this.liftF, 0, 2, dt);
+          if (hillOut) this.liftF = this.liftTo(need, first || !this.outOn ? need : null, dt); // v6.1: hill climbs ease it (springs)
+          else this.liftF = Math.max(0, need) > this.liftF ? Math.max(0, need) : damp(this.liftF, Math.max(0, need), 2, dt);
+        } else this.liftF = hillOut ? this.liftTo(0, first || !this.outOn ? 0 : null, dt) : damp(this.liftF, 0, 2, dt);
+        this.lift = 0;
         oy += this.liftF;
       }
-      { const fv = this.fov0 + (q === 'low' ? LO.fovLow : LO.fov) * Math.max(lw, chase ? 0 : ow) + fovX; if (Math.abs(fv - this.cam.fov) > 0.01) { this.cam.fov = fv; this.cam.updateProjectionMatrix(); } } // look-out: a wider lens; v6: speed / nitro / crest lens
+      this.lookPrev = !chase && (ow > 0 || lw > 0.001);
+      { let fv = this.fov0 + (q === 'low' ? LO.fovLow : LO.fov) * Math.max(lw, chase ? 0 : ow) + fovX; // look-out: a wider lens; v6: speed / nitro / crest lens
+        if (hillOut) fv = first || !this.outOn ? springSet(this.sF, fv) : spring(this.sF, fv, LO.outW, LO.outFR, LO.outFA, dt);
+        if (Math.abs(fv - this.cam.fov) > 0.01) { this.cam.fov = fv; this.cam.updateProjectionMatrix(); } }
+      this.outOn = hillOut;
       // v6 landing kick: a damped spring (≈ 0.35 s), the whole view dips and settles
       if (dt > 0) { this.kickV += (-81 * this.kick - 11 * this.kickV) * dt; this.kick += this.kickV * dt; }
       this.shake = Math.max(0, this.shake - dt * 2.5);
