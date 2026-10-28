@@ -313,6 +313,34 @@ p { text-wrap: pretty; }
 .up { font: 700 15px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; text-decoration: none; }
 
 /* ---------------- responsive ---------------- */
+/* ---------------- trailer (v2) ---------------- */
+.tv-sec { background: linear-gradient(180deg, var(--bg2), rgba(29, 18, 10, 0) 70%); }
+.tv { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 14px; background: #000 url("../video/poster-loop.jpg") center / cover no-repeat;
+  box-shadow: 0 0 0 2px #0e0703, inset 0 0 0 2px rgba(255, 224, 170, .09), 0 10px 0 -3px #100804, 0 22px 44px rgba(0, 0, 0, .5); }
+.tv-v { display: block; width: 100%; height: 100%; object-fit: cover; background: transparent; }
+.tv-play {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 16px; max-width: calc(100% - 24px);
+  padding: 12px 26px 12px 12px; border: 0; border-radius: 999px; cursor: pointer; font: inherit; text-align: left; color: var(--paper);
+  background: rgba(14, 7, 3, .74); box-shadow: inset 0 0 0 2px rgba(242, 194, 46, .75), 0 10px 30px rgba(0, 0, 0, .5); backdrop-filter: blur(6px);
+  transition: transform .15s ease, background .15s ease; -webkit-tap-highlight-color: transparent;
+}
+.tv-ic { display: grid; place-items: center; flex: none; width: 64px; height: 64px; border-radius: 50%; color: #fff8ea; background: linear-gradient(180deg, #e8622b, #b23f14); box-shadow: inset 0 1px 0 rgba(255, 220, 180, .45), 0 4px 0 var(--rustd); }
+.tv-ic .ic { width: 30px; height: 30px; margin-left: 4px; fill: currentColor; stroke: none; }
+.tv-t b { display: block; font: 400 clamp(20px, 2.4vw, 28px)/1.05 var(--display); color: var(--yellow); text-shadow: var(--ext-sm); }
+.tv-t small { display: block; margin-top: 5px; font: 600 16px/1.2 var(--body); letter-spacing: .03em; color: var(--paper2); }
+.tv.full .tv-play { display: none; }
+@media (hover: hover) { .tv-play:hover { transform: translate(-50%, -50%) scale(1.04); background: rgba(14, 7, 3, .86); } }
+.tv-more { margin: 16px 0 0; font: 600 16px/1.5 var(--body); color: var(--paper2); }
+.tv-link .ic { width: 22px; height: 22px; fill: none; stroke: currentColor; }
+.tv-link .ic path { fill: currentColor; stroke: none; }
+@media (max-width: 520px) { .tv-play { gap: 10px; padding: 6px 16px 6px 6px; white-space: nowrap; } .tv-ic { width: 40px; height: 40px; } .tv-ic .ic { width: 20px; height: 20px; } .tv-t b { font-size: 17px; } .tv-t small { display: none; } }
+.chips em.new { font: 700 11px/1 var(--body); font-style: normal; letter-spacing: .12em; text-transform: uppercase; padding: 3px 6px 2px; border-radius: 5px; color: var(--ink); background: var(--yellow); align-self: center; }
+.foot .press { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 7px; border-radius: 9px; text-decoration: none; color: var(--paper); background: rgba(255, 226, 170, .07); box-shadow: inset 0 0 0 1px rgba(255, 226, 170, .2); }
+.foot .press .ic { width: 18px; height: 18px; color: var(--yellow); }
+.foot .press span { font: 700 15px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; }
+.foot .press small { font: 600 13px/1 var(--body); color: var(--sand); }
+@media (hover: hover) { .foot .press:hover { box-shadow: inset 0 0 0 2px var(--yellow); } }
+@media (max-width: 700px) { .foot-a { flex-wrap: wrap; gap: 14px 22px; } .foot .press small { display: none; } }
 @media (min-width: 700px) { :root { --gut: 28px; --hdr: 70px; } }
 @media (max-width: 1080px) {
   .feats { grid-template-columns: repeat(2, 1fr); }

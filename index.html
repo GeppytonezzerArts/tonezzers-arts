@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title data-i18n="meta.title">Tonezzer’s Arts — Giochi</title>
-<meta name="description" content="Tonezzer’s Arts, la celeberrima casa di produzione di Giacomo Tonezzer, presenta Tonezzer Racers: corse off-road in voxel art HD, 10 circuiti di montagna, cronoscalate e 2 giocatori. Gratis nel browser." data-i18n-attr="content=meta.desc">
+<meta name="description" content="Tonezzer’s Arts, la celeberrima casa di produzione di Giacomo Tonezzer, presenta Tonezzer Racers v2: corse off-road in voxel art HD con 7 mezzi, il Garage Tonezzer, 12 circuiti, 10 cronoscalate, 40 trofei, modalità foto e 2 giocatori. Gratis nel browser, in italiano e in inglese." data-i18n-attr="content=meta.desc">
 <meta name="author" content="Giacomo Tonezzer">
 <meta name="theme-color" content="#140c06">
 <link rel="alternate" hreflang="it" href="https://geppytonezzerarts.github.io/tonezzers-arts/?lang=it">
@@ -16,22 +16,26 @@
 <meta property="og:locale" content="it_IT" data-i18n-attr="content=meta.locale">
 <meta property="og:locale:alternate" content="en_US" data-i18n-attr="content=meta.localeAlt">
 <meta property="og:title" content="Tonezzer Racers — gioca gratis nel browser" data-i18n-attr="content=meta.ogTitle">
-<meta property="og:description" content="Corse off-road in voxel art HD: 10 circuiti di montagna, cronoscalate contro il tuo fantasma, 2 giocatori sullo stesso schermo. Da sempre, i migliori giochi del mondo." data-i18n-attr="content=meta.ogDesc">
-<meta property="og:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg">
+<meta property="og:description" content="Corse off-road in voxel art HD, versione 2: 7 mezzi e il Garage Tonezzer, 12 circuiti, 10 cronoscalate, 40 trofei, modalità foto e 2 giocatori sullo stesso schermo. Da sempre, i migliori giochi del mondo." data-i18n-attr="content=meta.ogDesc">
+<meta property="og:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg" data-i18n-attr="content=meta.ogImg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Tonezzer’s Arts presenta Tonezzer Racers" data-i18n-attr="content=meta.ogAlt">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tonezzer Racers — gioca gratis nel browser" data-i18n-attr="content=meta.ogTitle">
 <meta name="twitter:description" content="Corse off-road in voxel art HD by Tonezzer’s Arts." data-i18n-attr="content=meta.twDesc">
-<meta name="twitter:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg">
+<meta name="twitter:image" content="https://geppytonezzerarts.github.io/tonezzers-arts/img/og.jpg" data-i18n-attr="content=meta.ogImg">
+<meta property="og:video" content="https://geppytonezzerarts.github.io/tonezzers-arts/video/tonezzer-racers-trailer.mp4">
+<meta property="og:video:type" content="video/mp4">
+<meta property="og:video:width" content="1920">
+<meta property="og:video:height" content="1080">
 <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
 <link rel="icon" type="image/png" sizes="512x512" href="img/icon-512.png">
 <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,600&display=swap">
-<link rel="preload" as="image" href="img/c-falco-vetta.webp" fetchpriority="high">
+<link rel="preload" as="image" href="img/v2-nuvole.webp" fetchpriority="high">
 <link rel="stylesheet" href="css/site.css">
 <script>/* language before first paint (same rule as js/site.js): ?lang= > saved choice > browser language; hides the Italian text for a moment on English visits */
 (function () { try { var d = document.documentElement, q = /[?&]lang=(it|en)(?:&|#|$)/.exec(location.search), s = null;
@@ -68,14 +72,14 @@
 <!-- ============ HERO ============ -->
 <section class="hero" aria-labelledby="hero-title">
   <div class="slides" id="slides" role="group" aria-roledescription="carosello" aria-label="Immagini di gioco di Tonezzer Racers" data-i18n-attr="aria-roledescription=hero.carousel;aria-label=hero.slidesAria">
-    <figure class="slide on"><img src="img/c-falco-vetta.webp" width="1280" height="720" alt="Cronoscalata del Colle del Falco: il pick-up taglia il traguardo in vetta tra il pubblico, con boschi e montagne sullo sfondo" data-i18n-attr="alt=s1.alt" fetchpriority="high"><figcaption data-i18n="s1.cap">Colle del Falco · arrivo in vetta</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-falco-bosco.webp" width="1280" height="720" alt="Cronoscalata del Colle del Falco: il pick-up rosso sale tra gli abeti, con la montagna sullo sfondo" data-i18n-attr="alt=s2.alt"><figcaption data-i18n="s2.cap">Colle del Falco · cronoscalata</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-ring-neon.webp" width="1280" height="720" alt="Tonezzer Ring di notte: quattro pick-up in derapata sotto la Torre dei Neon e le tribune piene" data-i18n-attr="alt=s3.alt"><figcaption data-i18n="s3.cap">Tonezzer Ring · stadio di notte</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-bosco-ponte.webp" width="1280" height="720" alt="Bosco del Lupo: pick-up sul ponte di legno tra abeti e larici in voxel" data-i18n-attr="alt=s4.alt"><figcaption data-i18n="s4.cap">Bosco del Lupo · bosco alpino</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-neve-cima.webp" width="1280" height="720" alt="Salita al Passo della Neve: curva innevata con abeti e tribune" data-i18n-attr="alt=s5.alt"><figcaption data-i18n="s5.cap">Passo della Neve · neve</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-mesa-viadotto.webp" width="1280" height="720" alt="Mesa Grande: pick-up sul viadotto nel deserto rosso" data-i18n-attr="alt=s6.alt"><figcaption data-i18n="s6.cap">Mesa Grande · deserto</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-fuoco-spirale.webp" width="1280" height="720" alt="Canyon del Fuoco: i pick-up scendono nella Spirale scavata nella roccia rossa" data-i18n-attr="alt=s7.alt"><figcaption data-i18n="s7.cap">Canyon del Fuoco · canyon al tramonto</figcaption></figure>
-    <figure class="slide"><img data-src="img/c-palude-lago.webp" width="1280" height="720" alt="Palude Nera: due pick-up in derapata sulla pista di fango tra i cipressi" data-i18n-attr="alt=s8.alt"><figcaption data-i18n="s8.cap">Palude Nera · palude</figcaption></figure>
+    <figure class="slide on"><img src="img/v2-nuvole.webp" width="1280" height="720" alt="Cima delle Nuvole al tramonto: la Tonezzer Special sale verso la vetta sopra il mare di nuvole" data-i18n-attr="alt=s1.alt" fetchpriority="high"><figcaption data-i18n="s1.cap">Cima delle Nuvole · al tramonto</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-vulcano.webp" width="1280" height="720" alt="Il Vulcano Tonezzer: il Monster Bestione corre sul bordo del cratere, con la tribuna e la statua di Tonezzer" data-i18n-attr="alt=s2.alt"><figcaption data-i18n="s2.cap">Il Vulcano Tonezzer · il cratere</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-stadium.webp" width="1280" height="720" alt="Tonezzer Stadium di notte: i fuochi d’artificio sopra la pista all’ultimo giro" data-i18n-attr="alt=s3.alt"><figcaption data-i18n="s3.cap">Tonezzer Stadium · notte e fuochi d’artificio</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-ghiacciaio.webp" width="1280" height="720" alt="Il Passo del Ghiacciaio: il Rally Saetta salta il crepaccio tra le pareti di ghiaccio" data-i18n-attr="alt=s4.alt"><figcaption data-i18n="s4.cap">Il Passo del Ghiacciaio · il crepaccio</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-forra.webp" width="1280" height="720" alt="La Strada della Forra: la Jeep d’Epoca tra pareti di roccia, tornanti e il lago" data-i18n-attr="alt=s5.alt"><figcaption data-i18n="s5.cap">La Strada della Forra · la gola</figcaption></figure>
+    <figure class="slide"><img data-src="img/c-ring-neon.webp" width="1280" height="720" alt="Tonezzer Ring di notte: quattro pick-up in derapata sotto la Torre dei Neon e le tribune piene" data-i18n-attr="alt=s6.alt"><figcaption data-i18n="s6.cap">Tonezzer Ring · stadio di notte</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-palude.webp" width="1280" height="720" alt="Palude Nera: la Jeep d’Epoca e i rivali nel fango tra i cipressi" data-i18n-attr="alt=s7.alt"><figcaption data-i18n="s7.cap">Palude Nera · fango</figcaption></figure>
+    <figure class="slide"><img data-src="img/v2-neve.webp" width="1280" height="720" alt="Passo della Neve: il Rally Saetta in volo sul trampolino innevato" data-i18n-attr="alt=s8.alt"><figcaption data-i18n="s8.cap">Passo della Neve · neve</figcaption></figure>
   </div>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="wrap hero-in">
@@ -84,7 +88,7 @@
       <img class="lg1" src="img/logo-tonezzer.png" width="1254" height="198" alt="Tonezzer">
       <img class="lg2" src="img/logo-racers.png" width="946" height="198" alt="Racers">
     </h1>
-    <p class="tagline" data-i18n="hero.tagline">Fango, salti e nitro in <b>voxel art HD</b>. Dieci circuiti di montagna, cronoscalate contro il tuo fantasma e sfide a due sullo stesso schermo.</p>
+    <p class="tagline" data-i18n="hero.tagline">Fango, salti e nitro in <b>voxel art HD</b>. Sette mezzi da potenziare nel Garage Tonezzer, dodici circuiti, dieci cronoscalate contro il tuo fantasma e sfide a due sullo stesso schermo.</p>
     <div class="cta">
       <a class="btn go xl" href="games/tonezzer-racers/">
         <svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg>
@@ -96,12 +100,13 @@
         <span class="eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <span class="lbl" data-i18n="music.listenTheme">Ascolta la colonna sonora</span>
       </button>
+      <a class="btn ghost tv-link" href="#trailer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.2v5.6l4.6-2.8z" fill="currentColor"/></svg><span data-i18n="tv.link">Guarda il trailer</span></a>
     </div>
     <p class="lang-note en-only" data-i18n="play.note">Il gioco è disponibile in italiano e in inglese.</p>
     <p class="hint" data-i18n="hero.hint">Nessuna installazione, nessuna registrazione. Consiglio della casa: <span class="desk"><kbd>F11</kbd> per lo schermo intero, e il volume alto.</span><span class="mob">telefono in orizzontale, e il volume alto.</span></p>
   </div>
   <div class="wrap hero-ctrl">
-    <p class="cap" id="slide-cap">Colle del Falco · arrivo in vetta</p>
+    <p class="cap" id="slide-cap">Cima delle Nuvole · al tramonto</p>
     <div class="dots" id="dots"></div>
     <button class="pp" id="slide-pp" type="button" aria-label="Metti in pausa le immagini" aria-pressed="false">
       <svg class="ic i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
@@ -114,58 +119,77 @@
   <span data-i18n="motto">Da sempre, i migliori giochi del mondo</span><span>Tonezzer Racers</span><span data-i18n="tick.free">Gioca gratis nel browser</span><span data-i18n="cup">Coppa Tonezzer</span><span data-i18n="motto">Da sempre, i migliori giochi del mondo</span><span>Tonezzer Racers</span><span data-i18n="tick.free">Gioca gratis nel browser</span><span data-i18n="cup">Coppa Tonezzer</span>
 </div></div>
 
+<!-- ============ TRAILER ============ -->
+<section class="sec tv-sec" id="trailer" aria-labelledby="trailer-h">
+  <div class="wrap">
+    <header class="sec-h row">
+      <div><p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="5" width="19" height="14" rx="3"/><path d="M10 9.2v5.6l4.6-2.8z"/></svg><span data-i18n="tv.kicker">Trailer · versione 2</span></p>
+      <h2 id="trailer-h" data-i18n="tv.h">È arrivato il Garage Tonezzer</h2></div>
+      <p class="lead sm" data-i18n="tv.lead">Sette mezzi, quattro nuove cronoscalate epiche, il Tonezzer Stadium, 40 trofei e la modalità foto. Alza il volume.</p>
+    </header>
+    <div class="tv" id="tv">
+      <video class="tv-v" id="tv-video" muted loop playsinline preload="none" poster="video/poster-loop.jpg" width="1280" height="720" aria-label="Anteprima del trailer di Tonezzer Racers (senza audio)" data-i18n-attr="aria-label=tv.aria" data-loop-webm="video/tonezzer-racers-loop.webm" data-loop-mp4="video/tonezzer-racers-loop.mp4" data-full="video/tonezzer-racers-trailer.mp4" data-full-en="video/tonezzer-racers-trailer-en.mp4" data-full-poster="video/poster-trailer.jpg"></video>
+      <button class="tv-play" id="tv-play" type="button">
+        <span class="tv-ic" aria-hidden="true"><svg class="ic" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>
+        <span class="tv-t"><b data-i18n="tv.play">Guarda il trailer</b><small data-i18n="tv.sound">1:10 · con l’audio · “Toh-NAY-tser Racers”</small></span>
+      </button>
+    </div>
+    <p class="tv-more"><a href="video/tonezzer-racers-trailer.mp4" download data-i18n="tv.dl" data-i18n-attr="href=tv.dlHref">Scarica il trailer (MP4, 1080p)</a> · <a href="video/tonezzer-racers-trailer-vertical.mp4" download data-i18n="tv.dlv">versione verticale da 15 s</a> · <a href="presskit/tonezzer-racers-presskit.zip" download data-i18n="tv.kit">kit stampa</a></p>
+  </div>
+</section>
+
 <!-- ============ TONEZZER RACERS ============ -->
 <section class="sec" id="racers" aria-labelledby="racers-h">
   <div class="wrap">
     <header class="sec-h">
       <p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg><span data-i18n="r.kicker">Il gioco</span></p>
       <h2 id="racers-h" data-i18n="r.h">Il miglior gioco off-road del mondo<sup>*</sup></h2>
-      <p class="lead" data-i18n="r.lead">Quattro pick-up, una pista di fango e nessuna pietà. <b>Tonezzer Racers</b> è l’erede spirituale delle corse off-road da sala giochi di una volta, ricostruito voxel per voxel in alta definizione. Si gioca subito, nel browser, gratis.</p>
+      <p class="lead" data-i18n="r.lead">Sette mezzi, una pista di fango e nessuna pietà. <b>Tonezzer Racers</b> è l’erede spirituale delle corse off-road da sala giochi di una volta, ricostruito voxel per voxel in alta definizione. La <b>versione 2</b> porta il Garage Tonezzer, nuove piste, trofei e la modalità foto. Si gioca subito, nel browser, gratis.</p>
       <p class="fine" data-i18n="r.fine"><sup>*</sup> Secondo uno studio indipendente condotto da Giacomo Tonezzer.</p>
     </header>
 
     <div class="feats">
       <article class="feat big">
-        <img src="img/c-falco-vetta-640.webp" srcset="img/c-falco-vetta-640.webp 640w, img/c-falco-vetta.webp 1280w" sizes="(min-width: 1080px) 760px, 100vw" width="1280" height="720" loading="lazy" alt="Cronoscalata: il traguardo in vetta al Colle del Falco, con la valle e le montagne lontane sullo sfondo" data-i18n-attr="alt=f1.alt">
+        <img src="img/v2-nuvole-640.webp" srcset="img/v2-nuvole-640.webp 640w, img/v2-nuvole.webp 1280w" sizes="(min-width: 1080px) 760px, 100vw" width="1280" height="720" loading="lazy" alt="Cronoscalata di Cima delle Nuvole al tramonto, con le montagne lontane e il cielo rosa" data-i18n-attr="alt=f1.alt">
         <div class="feat-t">
           <p class="tag"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg><span data-i18n="f1.tag">Modalità</span></p>
           <h3 data-i18n="f1.h">Cronoscalata</h3>
-          <p data-i18n="f1.p">Dalla valle alla vetta contro il cronometro: sei salite di montagna, tempi intermedi, il <b>fantasma</b> del tuo record da battere e medaglie da Bronzo fino al <b>Platino</b>. Sbagli una curva? <kbd>R</kbd> e si riparte.</p>
+          <p data-i18n="f1.p">Dalla valle alla vetta contro il cronometro: <b>dieci salite</b>, tempi intermedi, il <b>fantasma</b> del tuo record da battere, sfide a premi e medaglie da Bronzo fino al <b>Platino</b>. Le nuove: Cima delle Nuvole sopra il mare di nuvole, la Strada della Forra, il Vulcano Tonezzer e il Passo del Ghiacciaio. Sbagli una curva? <kbd>R</kbd> e si riparte.</p>
         </div>
       </article>
       <article class="feat">
-        <img src="img/c-mesa-viadotto-640.webp" width="640" height="360" loading="lazy" alt="Pick-up sul viadotto di Mesa Grande nel deserto rosso" data-i18n-attr="alt=f2.alt">
+        <img src="img/v2-stadium-640.webp" width="640" height="360" loading="lazy" alt="Il Tonezzer Stadium di notte con i fuochi d’artificio" data-i18n-attr="alt=f2.alt">
         <div class="feat-t">
-          <h3 data-i18n="f2.h">10 piste di montagna</h3>
-          <p data-i18n="f2.p">Deserti, canyon al tramonto, paludi, boschi alpini, neve e stadi illuminati a giorno. Salti, guadi, ponti di legno e tornanti a strapiombo.</p>
+          <h3 data-i18n="f2.h">12 circuiti</h3>
+          <p data-i18n="f2.p">Deserti, canyon al tramonto, paludi, boschi alpini, neve e stadi illuminati a giorno. Nuovi il <b>Tonezzer Stadium</b>, con i fuochi d’artificio all’ultimo giro, e il <b>Rallycross del Lago</b>.</p>
         </div>
       </article>
       <article class="feat">
-        <img src="img/g-falco-2p-640.webp" width="640" height="360" loading="lazy" alt="Schermo diviso a due giocatori: pick-up rosso e blu affiancati in salita" data-i18n-attr="alt=f3.alt">
+        <img src="img/g2-rallycross-2p-640.webp" width="640" height="360" loading="lazy" alt="Schermo diviso a due giocatori al Rallycross del Lago: il Buggy contro il Monster" data-i18n-attr="alt=f3.alt">
         <div class="feat-t">
           <h3 data-i18n="f3.h">2 giocatori</h3>
           <p data-i18n="f3.p">Schermo diviso sullo stesso computer: tastiera condivisa o due gamepad. Le amicizie più solide finiscono qui, al primo tornante.</p>
         </div>
       </article>
       <article class="feat">
-        <img src="img/c-bosco-ponte-640.webp" width="640" height="360" loading="lazy" alt="Pick-up sul ponte di legno tra gli abeti del Bosco del Lupo" data-i18n-attr="alt=f4.alt">
+        <img src="img/v2-garage-640.webp" width="640" height="360" loading="lazy" alt="Il Garage Tonezzer in 3D: la Tonezzer Special sulla pedana girevole" data-i18n-attr="alt=f4.alt">
         <div class="feat-t">
-          <h3 data-i18n="f4.h">Voxel art HD</h3>
-          <p data-i18n="f4.p">Boschi rigogliosi di abeti e larici, laghi neri, fango che schizza, polvere e luci al neon. Ogni singolo voxel è stato approvato personalmente da Tonezzer.</p>
+          <h3 data-i18n="f4.h">7 mezzi e il Garage Tonezzer</h3>
+          <p data-i18n="f4.p">Pick-up, Jeep d’Epoca, Buggy, Rally, Trophy Truck, Monster e la leggendaria Tonezzer Special. Motore, turbo, gomme, sospensioni, vernici, adesivi e clacson (sì, anche la paperella).</p>
         </div>
       </article>
       <article class="feat">
         <img src="img/c-ring-neon-640.webp" width="640" height="360" loading="lazy" alt="Gara notturna nello stadio del Tonezzer Ring" data-i18n-attr="alt=f5.alt">
         <div class="feat-t">
           <h3 data-i18n="f5.h">Gran Premio Tonezzer’s Arts</h3>
-          <p data-i18n="f5.p">Gare in fila contro il Barone, premi in denaro e un gettone in meno a chi arriva ultimo. Chi incassa di più alza la <b>Coppa Tonezzer</b>.</p>
+          <p data-i18n="f5.p">Dodici gare in fila contro il Barone, premi in denaro e un gettone in meno a chi arriva ultimo. Chi incassa di più alza la <b>Coppa Tonezzer</b>.</p>
         </div>
       </article>
       <article class="feat">
-        <img src="img/g-officina-640.webp" width="640" height="360" loading="lazy" alt="L’Officina Tonezzer: nitro, accelerazione, velocità massima, pneumatici e ammortizzatori in vendita" data-i18n-attr="alt=f6.alt">
+        <img src="img/v2-foto-640.webp" width="640" height="360" loading="lazy" alt="Modalità foto in stile cartolina: Saluti da Cima delle Nuvole" data-i18n-attr="alt=f6.alt">
         <div class="feat-t">
-          <h3 data-i18n="f6.h">Officina Tonezzer</h3>
-          <p data-i18n="f6.p">Tra una gara e l’altra spendi i premi in nitro, accelerazione, velocità, gomme e ammortizzatori. I meccanici di Tonezzer lavorano anche di notte.</p>
+          <h3 data-i18n="f6.h">Trofei e modalità foto</h3>
+          <p data-i18n="f6.p">40 Trofei Tonezzer da sbloccare, qualcuno segreto. Premi <kbd>F</kbd> in gara, muovi il drone e scatta la tua cartolina. Ammaccature e pezzi che volano? Paga Tonezzer.</p>
         </div>
       </article>
       <article class="feat song" id="colonna">
@@ -187,16 +211,17 @@
 
     <div class="tracks">
       <div class="tcol">
-        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg><span data-i18n="tr.h">I 10 circuiti</span></h3>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4M5 4h12l-2 4 2 4H5"/></svg><span data-i18n="tr.h">I 12 circuiti</span></h3>
         <ol class="chips">
-          <li>Mesa Grande <small data-i18n="tr.desert">Deserto</small></li><li>Tonezzer Ring <small data-i18n="tr.night">Notte</small></li><li>Palude Nera <small data-i18n="tr.swamp">Palude</small></li><li>Bosco del Lupo <small data-i18n="tr.alpine">Bosco alpino</small></li><li>Gola del Diavolo <small data-i18n="tr.canyon">Canyon</small></li>
-          <li>Valle della Morte <small data-i18n="tr.desert">Deserto</small></li><li>Tre Archi <small data-i18n="tr.canyon">Canyon</small></li><li>Rodeo di Mezzanotte <small data-i18n="tr.night">Notte</small></li><li>Passo della Neve <small data-i18n="tr.snow">Neve</small></li><li>Canyon del Fuoco <small data-i18n="tr.canyon">Canyon</small></li>
+          <li>Mesa Grande <small data-i18n="tr.desert">Deserto</small></li><li>Tonezzer Ring <small data-i18n="tr.night">Notte</small></li><li>Tonezzer Stadium <small data-i18n="tr.night">Notte</small> <em class="new" data-i18n="tr.new">Nuovo</em></li><li>Palude Nera <small data-i18n="tr.swamp">Palude</small></li><li>Bosco del Lupo <small data-i18n="tr.alpine">Bosco alpino</small></li><li>Rallycross del Lago <small data-i18n="tr.alpine">Bosco alpino</small> <em class="new" data-i18n="tr.new">Nuovo</em></li>
+          <li>Gola del Diavolo <small data-i18n="tr.canyon">Canyon</small></li><li>Valle della Morte <small data-i18n="tr.desert">Deserto</small></li><li>Tre Archi <small data-i18n="tr.canyon">Canyon</small></li><li>Rodeo di Mezzanotte <small data-i18n="tr.night">Notte</small></li><li>Passo della Neve <small data-i18n="tr.snow">Neve</small></li><li>Canyon del Fuoco <small data-i18n="tr.canyon">Canyon</small></li>
         </ol>
       </div>
       <div class="tcol">
-        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg><span data-i18n="tr.hills">Le 6 cronoscalate</span></h3>
+        <h3><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 20l6-10 4 6 3-4 5 8z"/></svg><span data-i18n="tr.hills">Le 10 cronoscalate</span></h3>
         <ol class="chips">
-          <li>Colle del Falco</li><li>Passo dello Stambecco</li><li>Rampa del Condor</li><li>Strada del Vulcano</li><li>Salita al Passo della Neve</li><li>Salita della Gola del Diavolo</li>
+          <li>Cima delle Nuvole <em class="new" data-i18n="tr.new">Nuovo</em></li><li>La Strada della Forra <em class="new" data-i18n="tr.new">Nuovo</em></li><li>Il Vulcano Tonezzer <em class="new" data-i18n="tr.new">Nuovo</em></li><li>Il Passo del Ghiacciaio <em class="new" data-i18n="tr.new">Nuovo</em></li><li>Colle del Falco</li>
+          <li>Passo dello Stambecco</li><li>Rampa del Condor</li><li>Strada del Vulcano</li><li>Salita al Passo della Neve</li><li>Salita della Gola del Diavolo</li>
         </ol>
       </div>
     </div>
@@ -209,19 +234,19 @@
     <header class="sec-h row">
       <div><p class="kicker"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M21 16l-5-5-8 8"/></svg><span data-i18n="g.kicker">Galleria</span></p>
       <h2 id="gal-h" data-i18n="g.h">Cartoline dal fango</h2></div>
-      <p class="lead sm" data-i18n="g.lead">Immagini catturate dal gioco vero, senza ritocchi. Il fango è tutto originale.</p>
+      <p class="lead sm" data-i18n="g.lead">Immagini catturate dal gioco vero, versione 2, senza ritocchi. Il fango è tutto originale.</p>
     </header>
     <ul class="gallery" id="gallery">
-      <li><button type="button" data-full="img/g-titolo.webp"><img src="img/g-titolo-640.webp" width="640" height="360" loading="lazy" alt="La schermata del titolo di Tonezzer Racers con il menu principale" data-i18n-attr="alt=g1"></button></li>
-      <li><button type="button" data-full="img/g-falco-tornante.webp"><img src="img/g-falco-tornante-640.webp" width="640" height="360" loading="lazy" alt="Cronoscalata del Colle del Falco: tornante tra gli abeti" data-i18n-attr="alt=g2"></button></li>
-      <li><button type="button" data-full="img/g-ring-neon.webp"><img src="img/g-ring-neon-640.webp" width="640" height="360" loading="lazy" alt="Tonezzer Ring di notte sotto la Torre dei Neon" data-i18n-attr="alt=g3"></button></li>
-      <li><button type="button" data-full="img/g-falco-2p.webp"><img src="img/g-falco-2p-640.webp" width="640" height="360" loading="lazy" alt="Cronoscalata a due giocatori a schermo diviso" data-i18n-attr="alt=g4"></button></li>
-      <li><button type="button" data-full="img/g-neve-tornanti.webp"><img src="img/g-neve-tornanti-640.webp" width="640" height="360" loading="lazy" alt="Quattro pick-up in derapata sui tornanti innevati del Passo della Neve" data-i18n-attr="alt=g5"></button></li>
-      <li><button type="button" data-full="img/g-fuoco-spirale.webp"><img src="img/g-fuoco-spirale-640.webp" width="640" height="360" loading="lazy" alt="La Spirale nel Canyon del Fuoco" data-i18n-attr="alt=g6"></button></li>
-      <li><button type="button" data-full="img/g-mesa-viadotto.webp"><img src="img/g-mesa-viadotto-640.webp" width="640" height="360" loading="lazy" alt="Il viadotto di Mesa Grande" data-i18n-attr="alt=g7"></button></li>
-      <li><button type="button" data-full="img/g-palude-lago.webp"><img src="img/g-palude-lago-640.webp" width="640" height="360" loading="lazy" alt="Palude Nera: pick-up in derapata sulla curva tra i cipressi" data-i18n-attr="alt=g8"></button></li>
-      <li><button type="button" data-full="img/g-falco-vetta.webp"><img src="img/g-falco-vetta-640.webp" width="640" height="360" loading="lazy" alt="Il traguardo in vetta al Colle del Falco" data-i18n-attr="alt=g9"></button></li>
-      <li><button type="button" data-full="img/g-gola-ponte.webp"><img src="img/g-gola-ponte-640.webp" width="640" height="360" loading="lazy" alt="Il ponte sulla Gola del Diavolo" data-i18n-attr="alt=g10"></button></li>
+      <li><button type="button" data-full="img/g2-rallycross-2p.webp"><img src="img/g2-rallycross-2p-640.webp" width="640" height="360" loading="lazy" alt="Rallycross del Lago a due giocatori: Buggy contro Monster a schermo diviso, con l’interfaccia di gara" data-i18n-attr="alt=g1"></button></li>
+      <li><button type="button" data-full="img/g2-nuvole.webp"><img src="img/g2-nuvole-640.webp" width="640" height="360" loading="lazy" alt="Cima delle Nuvole: la Tonezzer Special sullo Sprint del Cielo al tramonto" data-i18n-attr="alt=g2"></button></li>
+      <li><button type="button" data-full="img/g2-vulcano.webp"><img src="img/g2-vulcano-640.webp" width="640" height="360" loading="lazy" alt="Il Vulcano Tonezzer: il Monster sul bordo del cratere, con tempi e medaglie a schermo" data-i18n-attr="alt=g3"></button></li>
+      <li><button type="button" data-full="img/g2-forra.webp"><img src="img/g2-forra-640.webp" width="640" height="360" loading="lazy" alt="La Strada della Forra: la Jeep d’Epoca sulla strada a strapiombo sul lago" data-i18n-attr="alt=g4"></button></li>
+      <li><button type="button" data-full="img/g2-ghiacciaio.webp"><img src="img/g2-ghiacciaio-640.webp" width="640" height="360" loading="lazy" alt="Il Passo del Ghiacciaio: il Rally Saetta salta il crepaccio" data-i18n-attr="alt=g5"></button></li>
+      <li><button type="button" data-full="img/g2-stadium.webp"><img src="img/g2-stadium-640.webp" width="640" height="360" loading="lazy" alt="Tonezzer Stadium di notte con i fuochi d’artificio" data-i18n-attr="alt=g6"></button></li>
+      <li><button type="button" data-full="img/g2-palude.webp"><img src="img/g2-palude-640.webp" width="640" height="360" loading="lazy" alt="Palude Nera: la Jeep d’Epoca nel fango, con l’interfaccia di gara" data-i18n-attr="alt=g7"></button></li>
+      <li><button type="button" data-full="img/g2-valle.webp"><img src="img/g2-valle-640.webp" width="640" height="360" loading="lazy" alt="Valle della Morte: il Trophy Truck Deserto tra le gobbe" data-i18n-attr="alt=g8"></button></li>
+      <li><button type="button" data-full="img/g2-neve.webp"><img src="img/g2-neve-640.webp" width="640" height="360" loading="lazy" alt="Passo della Neve: il Rally Saetta sul trampolino innevato" data-i18n-attr="alt=g9"></button></li>
+      <li><button type="button" data-full="img/g2-garage.webp"><img src="img/g2-garage-640.webp" width="640" height="360" loading="lazy" alt="Il Garage Tonezzer: prestazioni, officina e carrozzeria della Tonezzer Special" data-i18n-attr="alt=g10"></button></li>
     </ul>
   </div>
 </section>
@@ -236,12 +261,12 @@
     </header>
     <div class="games">
       <article class="game live">
-        <a class="cover" href="games/tonezzer-racers/" tabindex="-1" aria-hidden="true"><img src="img/g-titolo-640.webp" width="640" height="360" loading="lazy" alt=""></a>
+        <a class="cover" href="games/tonezzer-racers/" tabindex="-1" aria-hidden="true"><img src="img/v2-nuvole-640.webp" width="640" height="360" loading="lazy" alt=""></a>
         <div class="game-t">
           <p class="badge ok" data-i18n="c.avail">Disponibile · Gratis</p>
           <h3>Tonezzer Racers</h3>
           <p class="meta" data-i18n="c.meta">Corse off-road · 1–2 giocatori · Browser</p>
-          <p data-i18n="c.p">Il gioco di bandiera: pick-up, fango, nitro, dieci circuiti e sei cronoscalate. La Coppa Tonezzer non si vince da sola.</p>
+          <p data-i18n="c.p">Il gioco di bandiera, ora alla versione 2: sette mezzi, il Garage Tonezzer, dodici circuiti, dieci cronoscalate, trofei e modalità foto. La Coppa Tonezzer non si vince da sola.</p>
           <div class="game-a"><a class="btn go" href="games/tonezzer-racers/"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l12-7.5z"/></svg><span data-i18n="play">Gioca ora</span></a><a class="txt" href="#racers" data-i18n="c.more">Scopri di più</a></div>
           <p class="lang-note en-only" data-i18n="play.note">Il gioco è disponibile in italiano e in inglese.</p>
         </div>
@@ -347,7 +372,7 @@
           <li><span><kbd data-i18n="k.space">Spazio</kbd></span><span>nitro</span></li>
           <li><span><kbd>R</kbd></span><span data-i18n="k.reset">riposiziona</span></li>
         </ul>
-        <p class="note" data-i18n="k.p1note">Da solo guidi anche con <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>P</kbd> pausa, <kbd>C</kbd> telecamera, <kbd>M</kbd> audio.</p>
+        <p class="note" data-i18n="k.p1note">Da solo guidi anche con <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>P</kbd> pausa, <kbd>C</kbd> telecamera, <kbd>V</kbd> zoom, <kbd>F</kbd> modalità foto, <kbd>H</kbd> clacson, <kbd>M</kbd> audio.</p>
       </article>
       <article class="cc">
         <h3 data-i18n="k.p2">Tastiera · Giocatore 2</h3>
@@ -418,6 +443,7 @@
         <a href="?lang=it" hreflang="it" lang="it" data-lang="it" aria-label="Italiano" aria-current="true">IT</a>
         <a href="?lang=en" hreflang="en" lang="en" data-lang="en" aria-label="English">EN</a>
       </div>
+      <a class="press" href="presskit/tonezzer-racers-presskit.zip" download><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><span data-i18n="ft.press">Kit stampa</span><small data-i18n="ft.pressNote">ZIP · immagini, loghi, trailer, testi</small></a>
       <a class="up" href="#top" data-i18n="ft.up">Torna su ↑</a>
     </div>
   </div>

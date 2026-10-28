@@ -16,10 +16,8 @@
   /* ---------------- languages ---------------- */
   const EN = {
     'meta.title': 'Tonezzer’s Arts — Games',
-    'meta.desc': 'Tonezzer’s Arts, the world-famous production house of Giacomo Tonezzer, presents Tonezzer Racers: off-road racing in HD voxel art, 10 mountain circuits, hill climbs and 2 players. Free in your browser.',
     'meta.locale': 'en_US', 'meta.localeAlt': 'it_IT',
     'meta.ogTitle': 'Tonezzer Racers — play free in your browser',
-    'meta.ogDesc': 'Off-road racing in HD voxel art: 10 mountain circuits, hill climbs against your own ghost, 2 players on the same screen. The world’s greatest games, since forever.',
     'meta.ogAlt': 'Tonezzer’s Arts presents Tonezzer Racers',
     'meta.twDesc': 'Off-road racing in HD voxel art by Tonezzer’s Arts.',
     'skip': 'Skip to content',
@@ -30,24 +28,7 @@
     'play.xl': '<b>Play now</b><small>free in your browser</small>',
     'play.note': 'Available in English and Italian',
     'hero.carousel': 'carousel', 'hero.slidesAria': 'Tonezzer Racers gameplay images',
-    's1.alt': 'Colle del Falco hill climb: the pick-up crosses the summit finish line among the crowd, with forests and mountains behind',
-    's1.cap': 'Colle del Falco · summit finish',
-    's2.alt': 'Colle del Falco hill climb: the red pick-up climbs through the fir trees, with the mountain behind',
-    's2.cap': 'Colle del Falco · hill climb',
-    's3.alt': 'Tonezzer Ring at night: four pick-ups drifting under the Neon Tower and the packed grandstands',
-    's3.cap': 'Tonezzer Ring · night stadium',
-    's4.alt': 'Bosco del Lupo: a pick-up on the wooden bridge among voxel firs and larches',
-    's4.cap': 'Bosco del Lupo · alpine forest',
-    's5.alt': 'The climb to Passo della Neve: a snowy bend with fir trees and grandstands',
-    's5.cap': 'Passo della Neve · snow',
-    's6.alt': 'Mesa Grande: a pick-up on the viaduct in the red desert',
-    's6.cap': 'Mesa Grande · desert',
-    's7.alt': 'Canyon del Fuoco: the pick-ups plunge into the Spiral carved into the red rock',
-    's7.cap': 'Canyon del Fuoco · canyon at sunset',
-    's8.alt': 'Palude Nera: two pick-ups drifting on the mud track among the cypresses',
-    's8.cap': 'Palude Nera · swamp',
     'hero.presents': '<b>Tonezzer’s Arts</b> presents',
-    'hero.tagline': 'Mud, jumps and nitro in <b>HD voxel art</b>. Ten mountain circuits, hill climbs against your own ghost and head-to-head duels on the same screen.',
     'music.listenTheme': 'Listen to the soundtrack',
     'music.listen': 'Listen',
     'hero.hint': 'No install, no sign-up. House tip: <span class="desk"><kbd>F11</kbd> for full screen, and turn the volume up.</span><span class="mob">phone in landscape, and turn the volume up.</span>',
@@ -56,50 +37,23 @@
     'cup': 'Tonezzer Cup',
     'r.kicker': 'The game',
     'r.h': 'The world’s greatest <span class="nw">off-road</span> game<sup>*</sup>',
-    'r.lead': 'Four pick-ups, one mud track and zero mercy. <b>Tonezzer Racers</b> is the spiritual heir to the off-road arcade racers of yesteryear, rebuilt voxel by voxel in high definition. Play instantly, in your browser, for free.',
     'r.fine': '<sup>*</sup> According to an independent study conducted by Giacomo Tonezzer.',
-    'f1.alt': 'Hill climb: the summit finish of Colle del Falco, with the valley and distant mountains behind',
     'f1.tag': 'Mode',
     'f1.h': 'Hill Climb (Cronoscalata)',
-    'f1.p': 'From valley to summit against the clock: six mountain climbs, split times, the <b>ghost</b> of your record to beat and medals from Bronze all the way to <b>Platinum</b>. Missed a bend? Hit <kbd>R</kbd> and you’re off again.',
-    'f2.alt': 'A pick-up on the Mesa Grande viaduct in the red desert',
-    'f2.h': '10 mountain tracks',
-    'f2.p': 'Deserts, canyons at sunset, swamps, alpine forests, snow and floodlit stadiums. Jumps, fords, wooden bridges and hairpins over sheer drops.',
-    'f3.alt': 'Two-player split screen: red and blue pick-ups side by side on a climb',
     'f3.h': '2 players',
     'f3.p': 'Split screen on the same computer: shared keyboard or two gamepads. The strongest friendships end right here, at the first hairpin.',
-    'f4.alt': 'A pick-up on the wooden bridge among the fir trees of Bosco del Lupo',
-    'f4.h': 'HD voxel art',
-    'f4.p': 'Lush forests of firs and larches, black lakes, splattering mud, dust and neon lights. Every single voxel was personally approved by Tonezzer.',
     'f5.alt': 'A night race in the Tonezzer Ring stadium',
     'f5.h': 'Tonezzer’s Arts Grand Prix',
-    'f5.p': 'Back-to-back races against the Baron, prize money, and one token less for whoever finishes last. Whoever banks the most lifts the <b>Tonezzer Cup</b>.',
-    'f6.alt': 'The Tonezzer Garage: nitro, acceleration, top speed, tyres and shock absorbers for sale',
-    'f6.h': 'Tonezzer Garage',
-    'f6.p': 'Between races, spend your winnings on nitro, acceleration, speed, tyres and shocks. Tonezzer’s mechanics work through the night.',
     'song': 'Soundtrack',
     'song.p': 'The game’s official song, written by <b>Giacomo Tonezzer</b> and created with Suno. Best enjoyed with the windows rolled down.',
-    'tr.h': 'The 10 circuits', 'tr.hills': 'The 6 hill climbs',
     'tr.desert': 'Desert', 'tr.night': 'Night', 'tr.swamp': 'Swamp', 'tr.alpine': 'Alpine forest', 'tr.canyon': 'Canyon', 'tr.snow': 'Snow',
     'g.kicker': 'Gallery',
     'g.h': 'Postcards from the mud',
-    'g.lead': 'Captured in the real game, no retouching. All mud is 100% original.',
-    'g1': 'The Tonezzer Racers title screen with the main menu',
-    'g2': 'Colle del Falco hill climb: a hairpin among the fir trees',
-    'g3': 'Tonezzer Ring at night under the Neon Tower',
-    'g4': 'A two-player split-screen hill climb',
-    'g5': 'Four pick-ups drifting on the snowy hairpins of Passo della Neve',
-    'g6': 'The Spiral in Canyon del Fuoco',
-    'g7': 'The Mesa Grande viaduct',
-    'g8': 'Palude Nera: a pick-up drifting through the bend among the cypresses',
-    'g9': 'The summit finish line of Colle del Falco',
-    'g10': 'The bridge over Gola del Diavolo',
     'c.kicker': 'The catalogue',
     'c.h': 'The games of Tonezzer’s Arts',
     'c.lead': 'A small but perfect catalogue: for now it contains masterpieces exclusively.',
     'c.avail': 'Available · Free',
     'c.meta': 'Off-road racing · 1–2 players · Browser',
-    'c.p': 'The flagship game: pick-ups, mud, nitro, ten circuits and six hill climbs. The Tonezzer Cup won’t win itself.',
     'c.more': 'Learn more',
     'c.soon': 'Coming soon<sup>*</sup>',
     'c.s1.alt': 'A red tractor in voxel art',
@@ -137,7 +91,7 @@
     'k.h': 'Controls and requirements',
     'k.p1': 'Keyboard · Player 1', 'k.p2': 'Keyboard · Player 2',
     'k.acc': 'accelerate', 'k.brakeRev': 'brake / reverse', 'k.steer': 'steer', 'k.space': 'Space', 'k.reset': 'reset truck', 'k.brake': 'brake',
-    'k.p1note': 'Playing solo, you can also drive with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>P</kbd> pause, <kbd>C</kbd> camera, <kbd>M</kbd> audio.',
+    'k.p1note': 'Playing solo, you can also drive with <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>. <kbd>P</kbd> pause, <kbd>C</kbd> camera, <kbd>V</kbd> zoom, <kbd>F</kbd> photo mode, <kbd>H</kbd> horn, <kbd>M</kbd> audio.',
     'k.stick': 'Stick',
     'k.padNote': 'With two gamepads, one per player.',
     'k.lpad': 'Left pad', 'k.pedals': 'Right pedals', 'k.gas': 'throttle and brake', 'k.osb': 'On-screen buttons', 'k.osbV': 'nitro, reset, pause',
@@ -153,6 +107,67 @@
     'ft.trucks': 'No pick-ups were harmed in the making of this production. Except the Baron’s.',
     'ft.up': 'Back to top ↑',
     'lb.aria': 'Enlarged image', 'lb.close': 'Close', 'lb.prev': 'Previous image', 'lb.next': 'Next image',
+    'meta.desc': 'Tonezzer’s Arts, the world-famous production house of Giacomo Tonezzer, presents Tonezzer Racers v2: off-road racing in HD voxel art with 7 vehicles, the Tonezzer Garage, 12 circuits, 10 hill climbs, 40 trophies, a photo mode and 2 players. Free in your browser, in English and Italian.',
+    'meta.ogDesc': 'Off-road racing in HD voxel art, version 2: 7 vehicles and the Tonezzer Garage, 12 circuits, 10 hill climbs, 40 trophies, a photo mode and 2 players on one screen. The world’s greatest games, since forever.',
+    'meta.ogImg': 'https://geppytonezzerarts.github.io/tonezzers-arts/img/og-en.jpg',
+    's1.alt': 'Cima delle Nuvole (Cloud Peak) at sunset: the Tonezzer Special climbs toward the summit above the sea of clouds',
+    's1.cap': 'Cima delle Nuvole · at sunset',
+    's2.alt': 'Il Vulcano Tonezzer: the Monster Bestione races along the crater rim, past the grandstand and Tonezzer’s statue',
+    's2.cap': 'Tonezzer’s Volcano · the crater',
+    's3.alt': 'Tonezzer Stadium at night: fireworks over the track on the final lap',
+    's3.cap': 'Tonezzer Stadium · night and fireworks',
+    's4.alt': 'Il Passo del Ghiacciaio (Glacier Pass): the Rally Saetta jumps the crevasse between walls of ice',
+    's4.cap': 'Glacier Pass · the crevasse',
+    's5.alt': 'La Strada della Forra (Gorge Road): the Vintage Jeep among rock walls, hairpins and the lake',
+    's5.cap': 'Gorge Road · the gorge',
+    's6.alt': 'Tonezzer Ring at night: four pick-ups drifting under the Neon Tower and the packed grandstands',
+    's6.cap': 'Tonezzer Ring · night stadium',
+    's7.alt': 'Palude Nera: the Vintage Jeep and its rivals in the mud among the cypresses',
+    's7.cap': 'Palude Nera · mud',
+    's8.alt': 'Passo della Neve: the Rally Saetta flying off the snowy ramp',
+    's8.cap': 'Passo della Neve · snow',
+    'hero.tagline': 'Mud, jumps and nitro in <b>HD voxel art</b>. Seven vehicles to upgrade in the Tonezzer Garage, twelve circuits, ten hill climbs against your own ghost and head-to-head duels on the same screen.',
+    'tv.link': 'Watch the trailer',
+    'tv.kicker': 'Trailer · version 2',
+    'tv.h': 'The Tonezzer Garage is open',
+    'tv.lead': 'Seven vehicles, four epic new hill climbs, Tonezzer Stadium, 40 trophies and a photo mode. Turn the volume up.',
+    'tv.aria': 'Tonezzer Racers trailer preview (muted)',
+    'tv.play': 'Watch the trailer',
+    'tv.sound': '1:10 · with sound · “Toh-NAY-tser Racers”',
+    'tv.dl': 'Download the trailer (MP4, 1080p)', 'tv.dlHref': 'video/tonezzer-racers-trailer-en.mp4',
+    'tv.dlv': '15 s vertical cut',
+    'tv.kit': 'press kit',
+    'r.lead': 'Seven vehicles, one mud track and zero mercy. <b>Tonezzer Racers</b> is the spiritual heir to the off-road arcade racers of yesteryear, rebuilt voxel by voxel in high definition. <b>Version 2</b> brings the Tonezzer Garage, new tracks, trophies and a photo mode. Play instantly, in your browser, for free.',
+    'f1.alt': 'The Cima delle Nuvole hill climb at sunset, with distant mountains and a pink sky',
+    'f1.p': 'From valley to summit against the clock: <b>ten climbs</b>, split times, the <b>ghost</b> of your record to beat, challenges with rewards and medals from Bronze all the way to <b>Platinum</b>. New: Cloud Peak above a sea of clouds, the Gorge Road, Tonezzer’s Volcano and the Glacier Pass. Missed a bend? Hit <kbd>R</kbd> and you’re off again.',
+    'f2.alt': 'Tonezzer Stadium at night with fireworks',
+    'f2.h': '12 circuits',
+    'f2.p': 'Deserts, canyons at sunset, swamps, alpine forests, snow and floodlit stadiums. New: <b>Tonezzer Stadium</b>, with fireworks on the final lap, and <b>Rallycross del Lago</b>.',
+    'f3.alt': 'Two-player split screen at Rallycross del Lago: the Buggy against the Monster',
+    'f4.alt': 'The 3D Tonezzer Garage: the Tonezzer Special on the turntable',
+    'f4.h': '7 vehicles and the Tonezzer Garage',
+    'f4.p': 'Pick-up, Vintage Jeep, Buggy, Rally, Trophy Truck, Monster and the legendary Tonezzer Special. Engine, turbo, tyres, suspension, paints, decals and horns (yes, a rubber duck too).',
+    'f5.p': 'Twelve back-to-back races against the Baron, prize money, and one token less for whoever finishes last. Whoever banks the most lifts the <b>Tonezzer Cup</b>.',
+    'f6.alt': 'Photo mode, postcard style: Greetings from Cima delle Nuvole',
+    'f6.h': 'Trophies and photo mode',
+    'f6.p': '40 Tonezzer Trophies to unlock, some of them secret. Press <kbd>F</kbd> in a race, fly the drone and take your postcard. Dents and flying parts? Tonezzer pays the bill.',
+    'tr.h': 'The 12 circuits',
+    'tr.hills': 'The 10 hill climbs',
+    'tr.new': 'New',
+    'g.lead': 'Captured in the real game, version 2, no retouching. All mud is 100% original.',
+    'g1': 'Rallycross del Lago for two players: Buggy against Monster in split screen, with the race interface',
+    'g2': 'Cima delle Nuvole: the Tonezzer Special on the Sky Sprint at sunset',
+    'g3': 'Tonezzer’s Volcano: the Monster on the crater rim, with times and medals on screen',
+    'g4': 'Gorge Road: the Vintage Jeep on the cliff road above the lake',
+    'g5': 'Glacier Pass: the Rally Saetta jumps the crevasse',
+    'g6': 'Tonezzer Stadium at night with fireworks',
+    'g7': 'Palude Nera: the Vintage Jeep in the mud, with the race interface',
+    'g8': 'Valle della Morte: the Desert Trophy Truck over the whoops',
+    'g9': 'Passo della Neve: the Rally Saetta on the snowy ramp',
+    'g10': 'The Tonezzer Garage: performance, workshop and bodywork of the Tonezzer Special',
+    'c.p': 'The flagship game, now at version 2: seven vehicles, the Tonezzer Garage, twelve circuits, ten hill climbs, trophies and a photo mode. The Tonezzer Cup won’t win itself.',
+    'ft.press': 'Press kit',
+    'ft.pressNote': 'ZIP · images, logos, trailer, texts',
     // strings used only by this script
     'js.img': 'Image', 'js.pause': 'Pause the images', 'js.resume': 'Resume the images',
     'js.musicPause': 'Pause', 'js.musicNA': 'Soundtrack unavailable'
@@ -272,6 +287,28 @@
     });
     lb.addEventListener('keydown', (e) => { if (e.key === 'ArrowRight') open(li + 1); else if (e.key === 'ArrowLeft') open(li - 1); });
   } else items.forEach((b) => b.addEventListener('click', () => { location.href = b.dataset.full; }));
+
+  /* ---------------- trailer: a muted preview loop (loaded only near the viewport, never with reduced motion), the full
+     trailer with sound on click ---------------- */
+  const tv = $('#tv'), tvv = $('#tv-video'), tvb = $('#tv-play');
+  if (tv && tvv && tvb) {
+    let full = false, armed = false;
+    const arm = () => { if (armed) return; armed = true; const vp9 = tvv.canPlayType && tvv.canPlayType('video/webm; codecs="vp9"'); tvv.src = vp9 ? tvv.dataset.loopWebm : tvv.dataset.loopMp4; };
+    const playLoop = () => { if (full || reduce) return; arm(); const p = tvv.play(); if (p && p.catch) p.catch(() => {}); };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => es.forEach((e) => { if (full) return; if (e.isIntersecting) playLoop(); else if (armed && !tvv.paused) tvv.pause(); }), { rootMargin: '150px 0px' }).observe(tv);
+    }
+    tvb.addEventListener('click', () => {
+      full = true; tv.classList.add('full');
+      tvv.loop = false; tvv.removeAttribute('loop'); tvv.muted = false; tvv.controls = true; tvv.preload = 'auto';
+      tvv.poster = tvv.dataset.fullPoster; tvv.src = (lang === 'en' && tvv.dataset.fullEn) || tvv.dataset.full; // English cards in the English trailer tvv.setAttribute('aria-label', t('tv.play'));
+      if (audio && !audio.paused) audio.pause();
+      const p = tvv.play(); if (p && p.catch) p.catch(() => {});
+      try { tvv.focus({ preventScroll: true }); } catch (e) { /* old browser */ }
+    });
+    tvv.addEventListener('play', () => { if (full && audio && !audio.paused) audio.pause(); });
+    if (audio) audio.addEventListener('play', () => { if (full && !tvv.paused) tvv.pause(); });
+  }
 
   const y = $('#year'); if (y) y.textContent = String(Math.max(2026, new Date().getFullYear()));
 })();
