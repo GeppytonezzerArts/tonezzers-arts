@@ -215,6 +215,7 @@ p { text-wrap: pretty; }
 .gallery { grid-auto-flow: dense; }
 .gallery li:nth-child(1) { grid-column: 1 / span 2; grid-row: span 2; }
 .gallery li:nth-child(6) { grid-column: 3 / span 2; grid-row: span 2; }
+.gallery li:nth-child(11) { grid-column: 1 / span 2; grid-row: span 2; }
 .gallery button { display: block; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 10px; overflow: hidden; cursor: zoom-in; background: #000; box-shadow: 0 0 0 2px #0e0703, 6px 6px 0 #0a0502; }
 .gallery img { width: 100%; height: 100%; aspect-ratio: 16 / 9; object-fit: cover; transition: transform .4s ease, filter .3s; }
 @media (hover: hover) { .gallery button:hover img { transform: scale(1.05); filter: brightness(1.08); } }
@@ -378,8 +379,8 @@ p { text-wrap: pretty; }
   .feat.song .feat-t { padding: 4px 22px 26px; }
   .disc { width: 128px; height: 128px; margin: 24px auto 14px; }
   .gallery { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .gallery li:nth-child(1), .gallery li:last-child { grid-column: 1 / span 2; grid-row: auto; }
-  .gallery li:nth-child(6) { grid-column: auto; grid-row: auto; }
+  .gallery li:nth-child(1) { grid-column: 1 / span 2; grid-row: auto; }
+  .gallery li:nth-child(6), .gallery li:nth-child(11) { grid-column: auto; grid-row: auto; }
   .cta .btn.ghost { font-size: 16px; }
   .req ul { grid-template-columns: 1fr; }
   .brand span { font-size: 16px; }
