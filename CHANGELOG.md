@@ -1,5 +1,67 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3 — Notte vera, meteo, terreno vivo, Sfida del giorno
+
+### Italiano
+
+**Notte vera e meteo che cambia**
+* Le gare di notte sono davvero notte: fari che illuminano la strada (e luccicano nelle pozzanghere), torri di luci, lampioni,
+  catarifrangenti ai bordi della pista, stelle e luna. Al tramonto la luce cala durante la gara e si accendono i fari.
+* Meteo: sereno, pioggia, neve o nebbia, che può anche cambiare in gara («Comincia a piovere!»). Con la pioggia la pista è
+  bagnata e scivolosa, la terra diventa fango, tuoni e lampi; con la neve la pista si imbianca; nella nebbia segui i
+  catarifrangenti. Anche gli avversari rallentano sul bagnato.
+* Gara singola e Cronoscalata: scegli «Ora del giorno» (Pista, Giorno, Tramonto, Notte, Casuale) e «Meteo». Nel Gran Premio
+  ora e meteo cambiano a ogni gara. Gli stadi corrono sempre sotto i riflettori.
+
+**Terreno vivo**
+* Giro dopo giro le ruote scavano solchi nella terra, nel fango, nella sabbia e nella neve: le tracce si scuriscono, il fango
+  resta sulle gomme, i solchi profondi si riempiono d’acqua e un po’ ti guidano le ruote.
+* Con la pioggia i solchi si fanno più fangosi e diventano pozzanghere; con la neve le tracce restano grigie e battute; di notte
+  le vedi nella luce dei fari.
+* Opzioni → «Terreno vivo»: Sì, Solo visivo (solchi senza effetto sulla guida) o No.
+
+**Sfida del giorno e i tuoi record**
+* Ogni giorno una salita o un circuito, un mezzo (in prestito, di serie: uguale per tutti), una regola speciale (niente nitro,
+  guida pulita, festa del nitro…) e il suo cielo: giorno, tramonto o notte, sereno, pioggia, neve o nebbia. Ogni arrivo è un
+  tentativo, conta il migliore; +150 crediti al primo arrivo del giorno; nel menu il conto alla rovescia per la prossima.
+* «Record» nel menu: i tuoi tempi migliori — le sfide del giorno con la tua serie di giorni, le cronoscalate per ogni mezzo, il
+  giro più veloce di ogni circuito. A fine gara vedi se hai battuto il tuo record personale.
+
+**Altro**
+* Modalità foto: in una gara notturna le luci «Tramonto» e «Notte» colorano lo scatto senza scurirlo ancora.
+* I trofei sbloccati a fine gara compaiono nel riquadro dei crediti, non più sopra il titolo dei risultati; il menu principale
+  entra in uno schermo da 360×740 senza scorrere.
+
+### English
+
+**A real night and changing weather**
+* Night races are truly dark: headlights light up the road (and glint in the puddles), floodlight towers, street lamps,
+  reflective markers along the edges, stars and moon. At sunset the light fades during the race and the headlights come on.
+* Weather: clear, rain, snow or fog, and it can change mid-race ("It's starting to rain!"). Rain makes the track wet and
+  slippery, dirt turns to mud, thunder and lightning; snow whitens the track; in fog, follow the reflectors. Rivals slow down in
+  the wet too.
+* Single races and hill climbs: pick a "Time of day" (Track, Day, Sunset, Night, Random) and a "Weather". In the Grand Prix
+  time and weather change every race. The stadiums always race under the floodlights.
+
+**Living terrain**
+* Lap after lap the wheels dig ruts in dirt, mud, sand and snow: the tracks darken, mud sticks to the tyres, deep ruts fill with
+  water and pull your wheels a little.
+* In the rain the ruts get muddier and turn into puddles; in snow the tracks stay grey and packed; at night you see them in your
+  headlights.
+* Options → "Living terrain": Yes, Visual only (ruts that don't affect the driving) or No.
+
+**Daily challenge and your records**
+* Every day a climb or a circuit, a vehicle (on loan, stock: the same for everyone), a special rule (no nitro, clean driving,
+  nitro party…) and its sky: day, sunset or night, clear, rain, snow or fog. Every finish is an attempt, the best counts; +150
+  credits for the day's first finish; a countdown to the next one in the menu.
+* "Records" in the menu: your best times — the daily challenges with your streak, the hill climbs per vehicle, each circuit's
+  fastest lap. At the finish you see whether you beat your personal best.
+
+**Also**
+* Photo mode: in a night race the "Sunset" and "Night" lights tint the shot without darkening it further.
+* Trophies unlocked at the end of a race show up in the credits box, no longer over the results title; the main menu fits a
+  360×740 screen without scrolling.
+
 ## v2 (Garage Tonezzer)
 
 ### Italiano
