@@ -5,7 +5,9 @@
    Languages: index.html holds the Italian text; every translatable piece carries data-i18n="key" (its innerHTML) or
    data-i18n-attr="attr=key;attr2=key2" (attributes: alt, aria-label, meta content, ...). The Italian dictionary is read
    from the page itself at start-up, the English one is EN below: add a key in both places and they stay in sync.
-   Choice: ?lang=it|en in the URL > the visitor's saved choice (localStorage) > browser language (Italian -> it, else en). */
+   Choice: ?lang=it|en in the URL > the visitor's saved choice (localStorage) > browser language (Italian -> it, else en).
+   The game (games/tonezzer-racers/, Italian and English) follows the same rule and the same 'ta-lang' key; every "Play now"
+   link carries ?lang= of the current page language. */
 (function () {
   'use strict';
   const $ = (s, r) => (r || document).querySelector(s), $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
@@ -26,7 +28,7 @@
     'lang.aria': 'Language',
     'play': 'Play now',
     'play.xl': '<b>Play now</b><small>free in your browser</small>',
-    'play.note': 'The game is in Italian — English coming soon',
+    'play.note': 'Available in English and Italian',
     'hero.carousel': 'carousel', 'hero.slidesAria': 'Tonezzer Racers gameplay images',
     's1.alt': 'Colle del Falco hill climb: the pick-up crosses the summit finish line among the crowd, with forests and mountains behind',
     's1.cap': 'Colle del Falco · summit finish',
@@ -182,6 +184,8 @@
     });
     aNodes.forEach((el) => attrs(el).forEach(([a, k]) => el.setAttribute(a, t(k))));
     $$('.lang [data-lang]').forEach((a) => a.setAttribute('aria-current', a.dataset.lang === lang ? 'true' : 'false'));
+    // "Play now" opens the game in the page's language (the game reads ?lang=, then the same 'ta-lang' choice)
+    $$('a[href^="games/tonezzer-racers/"]').forEach((a) => a.setAttribute('href', 'games/tonezzer-racers/?lang=' + lang));
     hooks.forEach((f) => f());
     root.classList.remove('i18n-wait');
   }
