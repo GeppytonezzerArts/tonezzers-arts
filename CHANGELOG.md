@@ -1,5 +1,35 @@
 # Tonezzer Racers — Novità / What's new
 
+## Urti giusti e tre stili di guida
+
+### Italiano
+
+* **Urti giusti**: toccare un muro di terra non ti ferma più. Un colpo di striscio ti fa scivolare lungo il bordo e tieni quasi tutta
+  la velocità; un urto a metà costa poco e ti riprendi subito; solo un frontale vero fa perdere tanto, e lo scossone dura al massimo un
+  quarto di secondo, con lo sterzo sempre tuo.
+* **Arrivare lunghi costa ancora**: all’esterno delle curve c’è terra smossa e il muro frena, quindi frenare prima conviene sempre;
+  però non ti inchiodi più.
+* **Spintoni**: urtare un avversario non ti rallenta quasi più; atterraggi in salita o in discesa senza frenate brusche.
+* **Stile di guida** (Opzioni): **Arcade** (derapate lunghe e facili, tieni l’angolo con lo sterzo), **Rally** (conta il peso:
+  frenata in curva, gas alzato, pendolo; il fondo conta molto), **Grip** (preciso, incollato a terra, si vince frenando prima della
+  curva). Vale anche per gli avversari. Provali e dicci quale tenere!
+* **Novità: Sport**, a metà tra Rally e Grip: incollato a terra e sicuro come Grip, ma senti il peso (freni entrando in curva e il muso
+  gira, alzi il gas a metà curva e chiude un po’).
+
+### English
+
+* **Fair impacts**: brushing a dirt berm no longer stops you. A glancing touch slides you along the edge keeping nearly all your
+  speed; a medium hit costs a little and you are straight back on it; only a real head-on crash costs a lot, and the shake lasts a
+  quarter of a second at most, with the steering always yours.
+* **Running wide still costs**: loose dirt lines the outside of the bends and the berm drags, so braking early still pays; you just
+  never get nailed to a stop.
+* **Bumps**: nudging a rival barely slows you any more; landings on climbs or descents without a hard brake.
+* **Driving style** (Options): **Arcade** (long, easy powerslides, hold the angle with the steering), **Rally** (weight matters:
+  braking into a bend, lifting off, the flick; the surface matters a lot), **Grip** (precise, planted, braking before the bend wins).
+  The rivals drive the same way. Try them and tell us which one to keep!
+* **New: Sport**, halfway between Rally and Grip: planted and safe like Grip, with a feel for the weight (brake into the bend and the
+  nose turns in, lift mid-bend and it tightens a little).
+
 ## Una sola moneta — Crediti Tonezzer e un solo Garage
 
 ### Italiano
