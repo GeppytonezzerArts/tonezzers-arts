@@ -1,5 +1,72 @@
 # Tonezzer Racers — Novità / What's new
 
+## Una sola moneta — Crediti Tonezzer e un solo Garage
+
+### Italiano
+
+* **Una sola moneta**: niente più dollari di stagione. Gare singole, Gran Premio, cronoscalate, sfide, trofei, la Sfida del giorno
+  e la Scuola guida pagano tutti in **Crediti Tonezzer**.
+* **Un solo posto per potenziare**: l’Officina del Gran Premio non c’è più. **Tra una gara e l’altra del Gran Premio si apre il
+  Garage Tonezzer**: potenziamenti, mescole, carrozzeria, nitro e anche il mezzo per la gara dopo (gli avversari si adeguano).
+  Quello che compri resta tuo per sempre.
+* **Taniche di nitro**: si comprano nel nuovo **Box** del Garage (15 crediti l’una, scorta fino a 12, si parte con 6). In ogni gara ne
+  porti fino a 4; in due la scorta si divide. Le taniche raccolte in pista sono un regalo per quella gara; cronoscalate, Sfida del
+  giorno e Scuola guida hanno le loro.
+* **Coppa Tonezzer a punti**: 10 · 6 · 3 · 1 a ogni gara, chi ne fa di più alza la Coppa. I gettoni restano (ultimo arrivato ne perde
+  uno, a zero è game over) e hanno una nuova icona, per non confonderli con i crediti.
+* **Sacchetti con la T** in pista: 15 crediti ciascuno, incassati al traguardo (Gran Premio e gare singole).
+* I salvataggi restano: garage, crediti, record e trofei come prima, più 6 taniche di benvenuto.
+
+### English
+
+* **One currency**: no more season dollars. Single races, the Grand Prix, hill climbs, challenges, trophies, the Daily challenge and the
+  Driving school all pay in **Tonezzer Credits**.
+* **One place to upgrade**: the Grand Prix workshop is gone. **Between Grand Prix races the Tonezzer Garage opens**: upgrades, tyre
+  compounds, bodywork, nitro and even the vehicle for the next race (the rivals adapt). What you buy is yours for good.
+* **Nitro cans**: bought in the Garage’s new **Pit** tab (15 credits each, a stock of up to 12, you start with 6). You carry up to 4
+  into each race; two players share the stock. Cans picked up on the track are a gift for that race; hill climbs, the Daily challenge
+  and the Driving school bring their own.
+* **Tonezzer Cup on points**: 10 · 6 · 3 · 1 each race, the most points lift the Cup. Tokens stay (finish last and lose one, zero
+  means game over) with a new icon, so they are not mistaken for credits.
+* **T bags** on the track: 15 credits each, banked at the finish (Grand Prix and single races).
+* Saves carry over: garage, credits, records and trophies as before, plus 6 welcome nitro cans.
+
+## Frena! — più veloci, curve da frenare, cronoscalate più lunghe
+
+### Italiano
+
+* **Più veloci**: il pick-up di serie tocca i 155 km/h (prima 115), oltre 200 col nitro; ogni mezzo sale in proporzione (la
+  Tonezzer Special 175 km/h). Accelerazione ancora più rabbiosa, salite affrontate a tutta.
+* **Adesso si frena**: le gomme tengono meno di lato, quindi tornanti e curve strette vanno preparati — frena in rettilineo, inserisci
+  e riaccelera. Se entri lungo la macchina scivola, allarga e finisce sulla sponda di terra, che ora rallenta davvero. Frenando in
+  ingresso il muso morde e il retro si alleggerisce: la derapata si fa col freno e il gas.
+* **Frenate che si vedono e si sentono**: stop accesi anche di giorno, segni di frenata, polvere dalle ruote anteriori, il fruscio
+  delle gomme (e lo stridio sull’asfalto e sul ghiaccio). Nel cruscotto la spia **ALZA** / **FRENA!** avvisa delle curve da frenare.
+* **Avversari che frenano davvero**: seguono una traiettoria da pilota (esterno-corda-esterno), frenano al punto giusto e tengono
+  conto di ghiaccio, ghiaia, sabbia, pendenze, curve sopraelevate o in contropendenza e meteo.
+* **Salti più lunghi** alla nuova velocità: ogni salto è stato ricontrollato perché atterri in pista.
+* **Cronoscalate lunghe una volta e mezza** (fino a 5 km e 615 m di dislivello): nuove fasi — i Tornanti del Corno, le Svolte del
+  Pizzo, la Parete del Condor, il Giro del Cono, le Svolte dell’Aquila, i Tornanti del Passo, il Cono Tonezzer, le Svolte dei
+  Seracchi — con gallerie, ghiaccio, gobbe e tornanti tutti diversi. Medaglie, sfide e record nuovi.
+* Scuola guida: nuova lezione **Frena**. Trofei di velocità e di volo adeguati (230 km/h, salti di 45 e 70 m).
+
+### English
+
+* **Faster**: the stock pick-up now reaches 155 km/h (was 115), over 200 with nitro; every vehicle scales up (the Tonezzer Special
+  175 km/h). Even punchier acceleration, climbs taken flat out.
+* **Now you brake**: the tyres hold less sideways, so hairpins and tight bends need setting up — brake on the straight, turn in, power
+  out. Arrive too fast and the truck slides wide into the dirt bank, which now really slows you down. Braking into a bend loads the
+  nose and lightens the tail: drifts come from brake and throttle.
+* **Braking you can see and hear**: brake lights by day, skid marks, dust from the front wheels, tyre scrub (and a squeal on tarmac and
+  ice). On the HUD a **LIFT** / **BRAKE!** cue warns of the bends that need the brakes.
+* **Rivals who really brake**: they follow a racing line (outside–apex–outside), brake at the right point and allow for ice, gravel,
+  sand, slopes, banked and off-camber bends and the weather.
+* **Longer jumps** at the new speeds: every jump was rechecked so it lands on the track.
+* **Hill climbs one and a half times longer** (up to 5 km and 615 m of climbing): new phases — the Corno hairpins, the Pizzo bends,
+  the Condor face, the lap of the cone, the Eagle bends, the Pass hairpins, the Tonezzer cone, the serac bends — with tunnels, ice,
+  moguls and hairpins all different. New medals, challenges and records.
+* Driving school: a new **Brake** lesson. Speed and air trophies retuned (230 km/h, 45 m and 70 m jumps).
+
 ## v3 — Notte vera, meteo, terreno vivo, Sfida del giorno
 
 ### Italiano
