@@ -2154,6 +2154,40 @@ window.ORS = window.ORS || {};
     'opt.np': ['Titoli dei brani', 'Song titles'],
     'opt.vol': ['Volume musica', 'Music volume'], 'opt.vol.2': ['Pieno', 'Full'], 'opt.vol.1': ['Basso', 'Low'], 'opt.vol.0': ['Spento', 'Off'],
     'opt.ann': ['Annunciatore', 'Announcer'],
+    // v3.3.1 performance (js/perf.js): the F3 overlay, the audio detail, the software-rendering banner, the auto tier toast
+    'opt.perf': ['Statistiche prestazioni (F3)', 'Performance stats (F3)'],
+    'opt.aq': ['Qualità audio', 'Audio quality'], 'opt.aq.auto': ['Auto', 'Auto'], 'opt.aq.full': ['Completo', 'Full'], 'opt.aq.light': ['Leggero', 'Light'],
+    'toast.autoLow': ['Il gioco va lento: qualità grafica ridotta', 'The game runs slowly: graphics quality lowered'],
+    'gpu.title': ['Il browser disegna il gioco senza scheda video', 'Your browser is drawing the game without the graphics card'],
+    'gpu.body': ['L’accelerazione hardware sembra spenta (rendering software): il gioco andrà a scatti. Ho messo la qualità grafica su <b>Bassa</b>; per tornare fluido riattivala:',
+      'Hardware acceleration looks switched off (software rendering): the game will stutter. Graphics quality is now <b>Low</b>; to make it smooth again, turn it back on:'],
+    'gpu.chrome': ['Chrome: Impostazioni → Sistema → attiva «Usa l’accelerazione grafica quando disponibile» e premi Riavvia. Verifica in <code>chrome://gpu</code> (deve dire «Hardware accelerated»).',
+      'Chrome: Settings → System → turn on “Use graphics acceleration when available” and press Relaunch. Check <code>chrome://gpu</code> (it should say “Hardware accelerated”).'],
+    'gpu.edge': ['Edge: Impostazioni → Sistema e prestazioni → attiva «Usa l’accelerazione grafica quando disponibile» e riavvia. Verifica in <code>edge://gpu</code>.',
+      'Edge: Settings → System and performance → turn on “Use graphics acceleration when available” and restart. Check <code>edge://gpu</code>.'],
+    'gpu.opera': ['Opera: Impostazioni → Sistema → attiva «Usa l’accelerazione hardware quando disponibile» e riavvia. Verifica in <code>opera://gpu</code>.',
+      'Opera: Settings → System → turn on “Use hardware acceleration when available” and restart. Check <code>opera://gpu</code>.'],
+    'gpu.firefox': ['Firefox: Impostazioni → Generale → Prestazioni: togli «Utilizza impostazioni prestazioni consigliate», attiva «Utilizza l’accelerazione hardware quando disponibile» e riavvia. Verifica in <code>about:support</code> (sezione Grafica).',
+      'Firefox: Settings → General → Performance: untick “Use recommended performance settings”, tick “Use hardware acceleration when available” and restart. Check <code>about:support</code> (Graphics section).'],
+    'gpu.safari': ['Safari: aggiorna macOS / Safari e chiudi le altre app pesanti; su un Mac con due schede video disattiva «Cambio automatico della grafica» (Impostazioni → Batteria).',
+      'Safari: update macOS / Safari and close other heavy apps; on a Mac with two GPUs turn off “Automatic graphics switching” (Settings → Battery).'],
+    'gpu.other': ['Nelle impostazioni del browser attiva l’accelerazione hardware / grafica e riavvia il browser.', 'In your browser settings turn on hardware / graphics acceleration and restart the browser.'],
+    'gpu.win': ['Windows: Impostazioni → Sistema → Schermo → Grafica: scegli il browser → Opzioni → «Prestazioni elevate» (portatili con due schede video).',
+      'Windows: Settings → System → Display → Graphics: pick your browser → Options → “High performance” (laptops with two GPUs).'],
+    'gpu.power': ['Portatile: collega l’alimentatore e togli il risparmio energetico / la modalità batteria.', 'Laptop: plug in the charger and turn off battery saver / power saving mode.'],
+    'gpu.driver': ['Se non basta, aggiorna i driver della scheda video e riavvia il computer.', 'If that is not enough, update the graphics driver and restart the computer.'],
+    'gpu.detected': ['Renderer rilevato', 'Detected renderer'], 'gpu.ok': ['Ho capito', 'Got it'],
+    'igpu.title': ['Stai usando la scheda grafica integrata', 'You are using the integrated graphics'],
+    'igpu.body': ['Il browser disegna il gioco con la scheda grafica integrata del processore. Se il PC ha anche una scheda NVIDIA o AMD, fai usare quella al browser:',
+      'The browser draws the game on the processor’s integrated graphics. If the PC also has an NVIDIA or AMD card, give that one to the browser:'],
+    'igpu.body.low': ['Il browser disegna il gioco con la scheda grafica integrata del processore: ho messo la qualità grafica su <b>Bassa</b> perché resti fluido. Se il PC ha anche una scheda NVIDIA o AMD, impostala per il browser:',
+      'The browser draws the game on the processor’s integrated graphics: graphics quality is set to <b>Low</b> to keep it smooth. If the PC also has an NVIDIA or AMD card, set it for the browser:'],
+    'igpu.win': ['Windows → Impostazioni → Sistema → Schermo → Grafica → {b} → Opzioni → «Prestazioni elevate»;', 'Windows → Settings → System → Display → Graphics → {b} → Options → “High performance”;'],
+    'igpu.nv': ['oppure Pannello di controllo NVIDIA → Gestisci impostazioni 3D → Impostazioni programma → <code>{exe}</code> → «Processore NVIDIA ad alte prestazioni»;',
+      'or NVIDIA Control Panel → Manage 3D settings → Program settings → <code>{exe}</code> → “High-performance NVIDIA processor”;'],
+    'igpu.amd': ['con una scheda AMD: AMD Software → Sistema / Grafica commutabile → il browser su «Alte prestazioni».', 'with an AMD card: AMD Software → System / Switchable Graphics → the browser on “High Performance”.'],
+    'igpu.other': ['Nelle impostazioni grafiche del sistema o del driver assegna al browser la scheda NVIDIA / AMD (alte prestazioni).', 'In the system or driver graphics settings assign the NVIDIA / AMD card (high performance) to the browser.'],
+    'igpu.restart': ['Poi chiudi e riapri del tutto il browser: in <code>chrome://gpu</code> (o <code>edge://gpu</code>) deve comparire la scheda NVIDIA / AMD.', 'Then fully close and reopen the browser: <code>chrome://gpu</code> (or <code>edge://gpu</code>) should show the NVIDIA / AMD card.'],
     // music (js/music-list.js, js/audio.js): "now playing", "Prossimo brano", the credits' soundtrack card
     'pause.next': ['Prossimo brano', 'Next track'], 'ctl.nextKey': ['prossimo brano', 'next track'],
     'mus.none': ['Nessun altro brano', 'No other track'], 'mus.off': ['Musica spenta', 'Music is off'],
@@ -9482,6 +9516,13 @@ window.ORS.ONLINE_CONFIG = {
   const MAX_VOICES = 40, LOOKAHEAD = 0.3, TICK_MS = 40, AI_VOICES = 3, AI_RANGE = 170, SOUND_C = 343;
 
   let ctx = null, offline = false, M = null, B = null, timer = 0;
+  /* v3.3.1 audio detail: 'full' | 'light' (setQuality; the game's "Qualità audio", auto = light at the 'low' graphics tier). Light:
+     one pooled AI voice (the nearest truck), a leaner player truck (no exhaust comb / 2x oversampling / valvetrain / turbo rush /
+     creaks / chassis rattle, one squeal band), one crowd babble loop, one bird voice, a short environment IR (≤ 0.9 s) and no
+     music-bus convolver. Both: every rarely-heard layer is gated BEFORE its filters (gain → filter), so a silent layer costs the
+     audio thread almost nothing (the browser skips nodes fed only by silence). */
+  let AQ = 'full';
+  const light = () => AQ === 'light';
   const saved = (() => { try { const v = JSON.parse(localStorage.getItem('ors3d-settings')); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } })();
   let muted = !!saved.muted;
   let musicVol = saved.music === 0 ? 0 : saved.music === 1 ? 0.5 : 1; // "Musica": 2 Sì, 1 Bassa, 0 No
@@ -9648,7 +9689,9 @@ window.ORS.ONLINE_CONFIG = {
     music: { len: 1.4, pre: 0.014, rt: 0.95, bright: 0.8, er: 8, er0: 0.008, er1: 0.1, echoes: [] }, // the v1 "stadium" IR (music bus)
   };
   function makeIR(kind) {
-    const P = IRS[kind] || IRS.open, sr = ctx.sampleRate, b = mkBuf(P.len, 2);
+    let P = IRS[kind] || IRS.open;
+    if (light() && kind !== 'music') P = Object.assign({}, P, { len: Math.min(P.len, 0.9), rt: Math.min(P.rt, 0.8) }); // v3.3.1 light: a short tail
+    const sr = ctx.sampleRate, b = mkBuf(P.len, 2);
     for (let ch = 0; ch < 2; ch++) {
       const d = b.getChannelData(ch), pre = Math.floor(sr * P.pre), side = ch ? 1 : -1; let lp = 0;
       for (let i = pre; i < d.length; i++) {
@@ -9657,6 +9700,7 @@ window.ORS.ONLINE_CONFIG = {
       }
       for (let e = 0; e < P.er; e++) { const i = pre + Math.floor(sr * (P.er0 + rnd() * (P.er1 - P.er0))); if (i < d.length) d[i] += (rnd() < 0.5 ? -1 : 1) * (0.2 + rnd() * 0.4) * (1 - e / (P.er + 2)); }
       for (const [et, eg, ep] of P.echoes) {
+        if (et >= P.len) continue;
         const i0 = Math.floor(sr * (et + (ch ? 0.004 : 0) * ep)), n = Math.floor(sr * (0.012 + et * 0.012)), g = eg * (1 + side * ep * 0.7) * 0.5;
         let l2 = 0;
         for (let j = 0; j < n && i0 + j < d.length; j++) { l2 += (rnd() * 2 - 1 - l2) * 0.25; d[i0 + j] += l2 * g * 3 * Math.exp(-j / (n / 3)); }
@@ -9764,10 +9808,11 @@ window.ORS.ONLINE_CONFIG = {
     const tunIn = G(L, 0), tunOut = G(L, LVL.tun, mix), d1 = DLY(L, 0.1, 0.023), d2 = DLY(L, 0.1, 0.037), l1 = F(L, 'lowpass', 2600, 0.5), l2 = F(L, 'lowpass', 2100, 0.5);
     tunIn.connect(d1); tunIn.connect(d2); d1.connect(l1); d2.connect(l2); l1.connect(tunOut); l2.connect(tunOut);
     l1.connect(G(L, 0.5, d2)); l2.connect(G(L, 0.48, d1)); l1.connect(G(L, 0.12, d1));
-    const bus = (lvl, send, esend, tsend) => { const g = G(L, lvl, mix); if (send) g.connect(G(L, send, revIn)); if (esend) g.connect(G(L, esend, envIn)); if (tsend) g.connect(G(L, tsend, tunIn)); return g; };
+    const revSends = []; // v3.3.1 light: the music-bus convolver gets no input (silent input = the browser skips it after its tail)
+    const bus = (lvl, send, esend, tsend) => { const g = G(L, lvl, mix); if (send) { const sg = G(L, light() ? 0 : send, revIn); sg._lvl = send; revSends.push(sg); g.connect(sg); } if (esend) g.connect(G(L, esend, envIn)); if (tsend) g.connect(G(L, tsend, tunIn)); return g; };
     const music = bus(LVL.music, 0.14), duck = G(L, 1, music), mvol = G(L, musicVol, duck);
     Object.assign(M, {
-      mute, pause: pauseG, mix, revIn, envIn, envC, envOut, tunIn, music, duck, mvol,
+      mute, pause: pauseG, mix, revIn, envIn, envC, envOut, tunIn, music, duck, mvol, revSends,
       engine: bus(LVL.car, 0, 0.1, 0.6), ai: bus(LVL.ai, 0, 0.3, 0.3), sfx: bus(LVL.sfx, 0, 0.3, 0.6), amb: bus(LVL.amb, 0, 0.12, 0),
       crowd: bus(LVL.crowd, 0, 0.55, 0), ui: bus(LVL.sfx, 0.12, 0, 0), pa: bus(LVL.sfx, 0.05, 0.75, 0),
     });
@@ -10135,11 +10180,12 @@ window.ORS.ONLINE_CONFIG = {
   function buildCrowd() {
     const L = [], t = now();
     const out = G(L, 0, M.crowd), lp = F(L, 'lowpass', 2200, 0.5, out), pres = PK(L, 1400, 0.8, 4, F(L, 'highpass', 140, 0.6, lp));
-    LOOP(L, need('babble'), G(L, 0.8, pres), 1); LOOP(L, need('babble'), G(L, 0.6, pres), 0.94);
-    const chL = F(L, 'lowpass', 2600, 0.6), cG = G(L, 0, M.crowd); chL.connect(cG);
-    const cs = LOOP(L, need('cheer'), chL, 1);
-    const ap = LOOP(L, need('appl'), null), ahp = F(L, 'highpass', 700, 0.7), alp = F(L, 'lowpass', 6000, 0.7); ap.connect(ahp); ahp.connect(alp);
-    const aG = G(L, 0, M.crowd); alp.connect(aG);
+    if (light()) LOOP(L, need('babble'), G(L, 1.0, pres), 1); else { LOOP(L, need('babble'), G(L, 0.8, pres), 1); LOOP(L, need('babble'), G(L, 0.6, pres), 0.94); }
+    const cG = G(L, 0), chL = F(L, 'lowpass', 2600, 0.6, M.crowd); cG.connect(chL);
+    const cs = LOOP(L, need('cheer'), cG, 1);
+    // (v3.3.1: applause and the whistle gated before their filters / panner: idle while silent)
+    const ap = LOOP(L, need('appl'), null), aG = G(L, 0), ahp = F(L, 'highpass', 700, 0.7); ap.connect(aG); aG.connect(ahp);
+    if (light()) ahp.connect(M.crowd); else ahp.connect(F(L, 'lowpass', 6000, 0.7, M.crowd));
     const wh = OSC(L, 'sine', 2000), wG = G(L, 0, PAN(L, 0.35, M.crowd)); wh.connect(wG);
     startAll(L, t);
     crowd = { L, out, lp, chL, cs, cG, aG, wh, wG, nextT: t + 3, busy: 0, whBusy: 0, far: 2200 };
@@ -10221,7 +10267,7 @@ window.ORS.ONLINE_CONFIG = {
     if (E.rumble) { const lp = F(L, 'lowpass', 70, 0.8, G(L, 0.5, out)); nz.connect(lp); LOOP(L, B.gust, G(L, 0.3, lp.frequency), 0.4); }
     if (E.birds || E.hawk) { // two bird voices: a sine whose pitch is swept / trilled by automation and an FM oscillator
       A.birds = [];
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < (light() ? 1 : 2); i++) {
         const g = G(L, 0, PAN(L, i ? 0.6 : -0.5, out)), o = OSC(L, 'sine', 3000, F(L, 'highpass', 900, 0.7, g)), fm = OSC(L, 'sine', 30), fg = G(L, 0, o.frequency); fm.connect(fg);
         A.birds.push({ g, o, fm, fg, busy: 0 });
       }
@@ -10275,7 +10321,7 @@ window.ORS.ONLINE_CONFIG = {
     const day = 1 - nightLvl, E = A.E;
     if (A.birds && t >= A.nextB) {
       A.nextB = t + 0.7 + rnd() * 3.5 / Math.max(0.2, (E.birds || 0.2) * day);
-      const b = A.birds[rnd() < 0.5 ? 0 : 1];
+      const b = A.birds[rnd() < 0.5 ? 0 : A.birds.length - 1];
       if (t > b.busy && day > 0.3 && E.birds && rnd() < E.birds) chirp(b, t + 0.02, 'song');
     }
     if (A.birds && E.hawk && t >= A.nextH) { A.nextH = t + 14 + rnd() * 22; const b = A.birds[0]; if (t > b.busy && day > 0.4) chirp(b, t + 0.02, 'hawk'); }
@@ -10362,8 +10408,10 @@ window.ORS.ONLINE_CONFIG = {
     const am = G(L, 1, out), exh = this.exh = G(L, 0.3, am); // am: cycle-to-cycle level jitter (±15 %)
     const lp = this.lp = F(L, 'lowpass', 600, 0.7, exh);
     const pk2 = PK(L, P.f2, 2.2, 5, lp), pk1 = PK(L, P.f1, 1.1, 7, pk2);
-    const comb = G(L, 1, pk1), dl = DLY(L, 0.05, P.comb), clp = F(L, 'lowpass', 1800, 0.5), fb = G(L, P.fb, comb); comb.connect(dl); dl.connect(clp); clp.connect(fb);
-    const drive = this.drive = G(L, 1, SHAPER(L, B.shEng, '2x', comb));
+    const lt = light(); this.lite = lt;
+    const comb = G(L, 1, pk1);
+    if (!lt) { const dl = DLY(L, 0.05, P.comb), clp = F(L, 'lowpass', 1800, 0.5), fb = G(L, P.fb, comb); comb.connect(dl); dl.connect(clp); clp.connect(fb); } // the pipe comb (full)
+    const drive = this.drive = G(L, 1, SHAPER(L, B.shEng, lt ? 'none' : '2x', comb));
     this.gA = G(L, 0.5, drive); this.gB = G(L, 0.5, drive);
     this.oA = OSC(L, W[0], 5, this.gA); this.oB = OSC(L, W[1], 5, this.gB); this.oB.detune.value = P.fire === 'xplane' ? 4 : 0;
     this.sub = OSC(L, 'sine', 25); this.subG = G(L, 0, out); this.sub.connect(this.subG);
@@ -10378,33 +10426,35 @@ window.ORS.ONLINE_CONFIG = {
     this.bpI = F(L, 'bandpass', 900, 0.9); nz.connect(this.bpI);
     const amI = G(L, 0.35); this.bpI.connect(amI); this.fire.connect(G(L, 0.6, amI.gain));
     this.intG = G(L, 0, out); amI.connect(this.intG);
-    const hpM = F(L, 'bandpass', 4200, 1.2); nz.connect(hpM); const amM = G(L, 0.15); hpM.connect(amM); this.fire.connect(G(L, 0.5, amM.gain));
-    this.mechG = G(L, 0, out); amM.connect(this.mechG);
+    if (!lt) { const hpM = F(L, 'bandpass', 4200, 1.2); nz.connect(hpM); const amM = G(L, 0.15); hpM.connect(amM); this.fire.connect(G(L, 0.5, amM.gain)); this.mechG = G(L, 0, out); amM.connect(this.mechG); }
+    // gated layers (v3.3.1): source → level gain → filter(s) → out, so the filters idle while the layer is silent
     if (P.turbo) { // spool whistle (impeller blade pass) + air rush; blow-off valve "pssh" with flutter (events)
       this.tw = OSC(L, 'sine', 3000); this.twG = G(L, 0, out); this.tw.connect(this.twG);
-      this.bpT = F(L, 'bandpass', 2400, 1.4); nz.connect(this.bpT); this.taG = G(L, 0, out); this.bpT.connect(this.taG);
-      this.bpB = F(L, 'bandpass', 1800, 0.8); nz.connect(this.bpB); this.bovG = G(L, 0, out); this.bpB.connect(this.bovG);
+      if (!lt) { this.taG = G(L, 0); this.bpT = F(L, 'bandpass', 2400, 1.4, out); nz.connect(this.taG); this.taG.connect(this.bpT); }
+      this.bovG = G(L, 0); this.bpB = F(L, 'bandpass', 1800, 0.8, out); nz.connect(this.bovG); this.bovG.connect(this.bpB);
     }
-    if (P.sc) { this.sc = OSC(L, 'triangle', 600); this.scBP = F(L, 'bandpass', 1500, 2.5); this.scG = G(L, 0, out); this.sc.connect(this.scBP); this.scBP.connect(this.scG); }
+    if (P.sc) { this.sc = OSC(L, 'triangle', 600); this.scG = G(L, 0); this.scBP = F(L, 'bandpass', 1500, 2.5, out); this.sc.connect(this.scG); this.scG.connect(this.scBP); }
     if (P.gw) { this.gw = OSC(L, 'sine', 1500); this.gwG = G(L, 0, out); this.gw.connect(this.gwG); }
     // overrun crackle / backfires (events): a band-passed crack + a low thump
-    this.bpP = F(L, 'bandpass', 1300, 1.1); nz.connect(this.bpP); this.popG = G(L, 0, out); this.bpP.connect(this.popG);
+    this.popG = G(L, 0); this.bpP = F(L, 'bandpass', 1300, 1.1, out); nz.connect(this.popG); this.popG.connect(this.bpP);
     this.thump = OSC(L, 'sine', 60); this.thumpG = G(L, 0, out); this.thump.connect(this.thumpG);
     // nitro: intake roar (dark) + the purge hiss (bright)
-    this.bpN = F(L, 'lowpass', 700, 0.8); nz.connect(this.bpN); this.nitG = G(L, 0, out); this.bpN.connect(this.nitG);
-    const hpN = F(L, 'highpass', 5000, 0.7); nz.connect(hpN); this.hissG = G(L, 0, out); hpN.connect(this.hissG);
+    this.nitG = G(L, 0); this.bpN = F(L, 'lowpass', 700, 0.8, out); nz.connect(this.nitG); this.nitG.connect(this.bpN);
+    this.hissG = G(L, 0); const hpN = F(L, 'highpass', 5000, 0.7, out); nz.connect(this.hissG); this.hissG.connect(hpN);
     // ---- tyres and chassis (same pan as the engine) ----
     const ty = this.tyre = G(L, TYRE_G, this.panner || M.engine);
     this.lpR = F(L, 'lowpass', 300, 0.7); nz.connect(this.lpR); this.rG = G(L, 0, ty); this.lpR.connect(this.rG);
     this.bpH = F(L, 'bandpass', 2000, 0.6); nz.connect(this.bpH); this.hG = G(L, 0, ty); this.bpH.connect(this.hG);
     this.grS = LOOP(L, need('grains'), null); this.bpG = F(L, 'bandpass', 2000, 0.7); this.grS.connect(this.bpG); this.gG = G(L, 0, ty); this.bpG.connect(this.gG);
-    this.wtS = LOOP(L, need('wet'), null); this.bpW = F(L, 'bandpass', 1000, 0.6); this.wtS.connect(this.bpW); this.wG = G(L, 0, ty); this.bpW.connect(this.wG);
-    this.bpQ = F(L, 'bandpass', 1300, 9); const bpQ2 = F(L, 'bandpass', 1300, 6); nz.connect(this.bpQ); this.bpQ.connect(bpQ2); this.bpQ2 = bpQ2;
-    this.qG = G(L, 0, ty); bpQ2.connect(this.qG); const qw = G(L, 70); wob.connect(qw); qw.connect(this.bpQ.detune); qw.connect(bpQ2.detune);
-    this.rtS = LOOP(L, need('rattle'), null); const bpRt = F(L, 'highpass', 900, 0.7); this.rtS.connect(bpRt); this.rtG = G(L, 0, ty); bpRt.connect(this.rtG);
+    this.wtS = LOOP(L, need('wet'), null); this.wG = G(L, 0); this.bpW = F(L, 'bandpass', 1000, 0.6, ty); this.wtS.connect(this.wG); this.wG.connect(this.bpW);
+    // scrub squeal: two narrow bands in series (full) / one (light), wavering
+    this.qG = G(L, 0); this.bpQ = F(L, 'bandpass', 1300, lt ? 7 : 9); nz.connect(this.qG); this.qG.connect(this.bpQ);
+    const qw = G(L, 70); wob.connect(qw); qw.connect(this.bpQ.detune);
+    if (!lt) { const bpQ2 = this.bpQ2 = F(L, 'bandpass', 1300, 6, ty); this.bpQ.connect(bpQ2); qw.connect(bpQ2.detune); } else this.bpQ.connect(ty);
+    if (!lt) { this.rtS = LOOP(L, need('rattle'), null); this.rtG = G(L, 0); const bpRt = F(L, 'highpass', 900, 0.7, ty); this.rtS.connect(this.rtG); this.rtG.connect(bpRt); }
     this.thS = OSC(L, 'sine', 60); this.thSG = G(L, 0, ty); this.thS.connect(this.thSG);
-    this.lpT = F(L, 'lowpass', 260, 0.8); nz.connect(this.lpT); this.thNG = G(L, 0, ty); this.lpT.connect(this.thNG);
-    this.cr = OSC(L, 'sawtooth', 28); this.crBP = F(L, 'bandpass', 1100, 10); this.crG = G(L, 0, ty); this.cr.connect(this.crBP); this.crBP.connect(this.crG);
+    this.thNG = G(L, 0); this.lpT = F(L, 'lowpass', 260, 0.8, ty); nz.connect(this.thNG); this.thNG.connect(this.lpT);
+    if (!lt) { this.cr = OSC(L, 'sawtooth', 28); this.crG = G(L, 0); this.crBP = F(L, 'bandpass', 1100, 10, ty); this.cr.connect(this.crG); this.crG.connect(this.crBP); }
     // wind past the truck (speed², in the air)
     this.bpWd = F(L, 'bandpass', 500, 0.5); nz.connect(this.bpWd); this.wdG = G(L, 0, ty); this.bpWd.connect(this.wdG);
     startAll(L, t);
@@ -10518,13 +10568,13 @@ window.ORS.ONLINE_CONFIG = {
     this.set(9, this.subG.gain, (0.16 + 0.16 * ld) * (1 - 0.75 * Math.min(1, r)) * P.sub, t, tc);
     this.set(10, this.bpI.frequency, 450 + 1900 * r + 400 * n, t, tc);
     this.set(11, this.intG.gain, (0.012 + ld * (0.06 + 0.22 * r) + 0.12 * n + 0.03 * cl) * P.intake, t, tc);
-    this.set(12, this.mechG.gain, (0.012 + 0.03 * r) * P.mech, t, 0.05);
+    if (this.mechG) this.set(12, this.mechG.gain, (0.012 + 0.03 * r) * P.mech, t, 0.05);
     this.set(13, this.ld.gain, 10 * P.lope * Math.max(0, 1 - r * 4), t, 0.1);         // idle lope fades as the revs rise
     this.set(14, this.jd.gain, 22 * P.irr * (1 - 0.55 * r) * (1 + 0.5 * over), t, 0.1);
     if (P.turbo) {
       const b = this.boost;
       this.set(15, this.tw.frequency, 2600 + 5200 * b, t, 0.08); this.set(16, this.twG.gain, 0.022 * b * b, t, 0.06);
-      this.set(17, this.taG.gain, 0.05 * b, t, 0.06); this.set(18, this.bpT.frequency, 1800 + 2200 * b, t, 0.08);
+      if (this.taG) { this.set(17, this.taG.gain, 0.05 * b, t, 0.06); this.set(18, this.bpT.frequency, 1800 + 2200 * b, t, 0.08); }
     }
     if (P.sc) { this.set(19, this.sc.frequency, (P.idle + r * (P.max - P.idle)) / 60 * 2.4 * 6 * this.pitch, t, tc); this.set(20, this.scBP.frequency, (P.idle + r * (P.max - P.idle)) / 60 * 2.4 * 12, t, tc); this.set(21, this.scG.gain, 0.05 * (0.25 + r) * (0.3 + 0.7 * on), t, 0.05); }
     if (P.gw) { this.set(22, this.gw.frequency, cyc * 2 * 27 / (1 + 0.25 * this.gear), t, tc); this.set(23, this.gwG.gain, 0.012 * (0.2 + r) * (0.4 + on), t, 0.05); }
@@ -10543,11 +10593,11 @@ window.ORS.ONLINE_CONFIG = {
     this.set(37, this.wG.gain, (S.wg ? clamp(speed / 8, 0.15, 1) : 0) * (air ? 0 : 1) * (S.wg + 0.5 * wsk) * 0.5, t, 0.07);
     // scrub: a tarmac squeal (a wavering narrow band), an ice hiss; loose ground only scrapes louder (above)
     const qf = 1050 + 500 * sc + speed * 4;
-    this.set(38, this.bpQ.frequency, qf, t, 0.05); this.set(39, this.bpQ2.frequency, qf * 1.02, t, 0.05);
-    this.set(40, this.qG.gain, 0.9 * squeal * squeal * clamp(speed / 10, 0, 1), t, 0.04);
+    this.set(38, this.bpQ.frequency, qf, t, 0.05); if (this.bpQ2) this.set(39, this.bpQ2.frequency, qf * 1.02, t, 0.05);
+    this.set(40, this.qG.gain, (this.bpQ2 ? 0.9 : 0.6) * squeal * squeal * clamp(speed / 10, 0, 1), t, 0.04);
     const rough = S.rough + (this.bumpK || 0);
-    this.set(41, this.rtS.playbackRate, 0.7 + 0.5 * sp, t, 0.2);
-    this.set(42, this.rtG.gain, air ? 0 : clamp(rough * sp, 0, 1.4) * 0.12 * (1 + 1.5 * this.dmg), t, 0.08);
+    if (this.rtS) this.set(41, this.rtS.playbackRate, 0.7 + 0.5 * sp, t, 0.2);
+    if (this.rtG) this.set(42, this.rtG.gain, air ? 0 : clamp(rough * sp, 0, 1.4) * 0.12 * (1 + 1.5 * this.dmg), t, 0.08);
     this.set(43, this.bpWd.frequency, 250 + 18 * speed + (air ? 500 : 0), t, 0.2);
     this.set(44, this.wdG.gain, 0.006 + 0.07 * sp * sp + (air ? 0.06 : 0), t, 0.15);
     // tunnel / gallery reverb (the first human truck): more of the car into the cover's reverb
@@ -10577,7 +10627,7 @@ window.ORS.ONLINE_CONFIG = {
     if (this.dmg > 0.3 && rnd() < this.dmg * k * 2) this.creak(t + 0.02, k);
   };
   Engine.prototype.creak = function (t, k) { // a damaged body flexing: stick-slip (a slow buzz) through a panel resonance
-    if (!this.built || t < this.creakT) return; this.creakT = t + 0.3;
+    if (!this.built || !this.cr || t < this.creakT) return; this.creakT = t + 0.3;
     const d = 0.12 + 0.25 * rnd(), f0 = 18 + rnd() * 30;
     this.cr.frequency.setValueAtTime(f0, t); this.cr.frequency.linearRampToValueAtTime(f0 * (0.6 + rnd() * 0.8), t + d);
     this.crBP.frequency.setValueAtTime(700 + rnd() * 1200, t);
@@ -10680,8 +10730,9 @@ window.ORS.ONLINE_CONFIG = {
     for (let i = 0; i < engines.length; i++) { const e = engines[i]; if (e.ai && !e.stopped && e.d < AI_RANGE) cand.push(e); }
     for (let i = 1; i < cand.length; i++) { const e = cand[i]; let j = i - 1; while (j >= 0 && cand[j].d > e.d) { cand[j + 1] = cand[j]; j--; } cand[j + 1] = e; }
     if (!cand.length && !aiVoices.length) return;
-    while (aiVoices.length < Math.min(AI_VOICES, cand.length)) new AiVoice();
-    const stamp = ++allocStamp, K = Math.min(AI_VOICES, cand.length), lim = K ? cand[K - 1].d * 1.3 + 5 : 0;
+    const NV = light() ? 1 : AI_VOICES; // v3.3.1 light: the nearest AI truck only
+    while (aiVoices.length < Math.min(NV, cand.length)) new AiVoice();
+    const stamp = ++allocStamp, K = Math.min(NV, cand.length), lim = K ? cand[K - 1].d * 1.3 + 5 : 0;
     for (let i = 0; i < K; i++) cand[i].want = stamp;
     for (let i = 0; i < aiVoices.length; i++) { const v = aiVoices[i], e = v.eng; if (e && (e.stopped || (e.want !== stamp && (e.d > lim || e.d >= AI_RANGE)))) v.free(t); }
     for (let i = 0; i < K; i++) {
@@ -11439,6 +11490,20 @@ window.ORS.ONLINE_CONFIG = {
         return false;
       }
     },
+    // v3.3.1 audio detail 'full' | 'light' (see AQ): the master's sends / IR and the crowd at once, engines and ambience from the next race
+    setQuality(q) {
+      const nq = q === 'light' ? 'light' : 'full'; if (nq === AQ) return AQ; AQ = nq;
+      try {
+        if (!ctx || !M) return AQ;
+        const t = now();
+        for (const sg of M.revSends) sg.gain.setTargetAtTime(light() ? 0 : sg._lvl, t, 0.05);
+        if (M.envKind) { const k = M.envKind; M.envKind = null; setEnvReverb(k); }
+        while (light() && aiVoices.length > 1) { const v = aiVoices.pop(); if (v.eng) v.eng.voice = null; v.out.gain.setTargetAtTime(0, t, 0.03); reap.push({ L: v.L, end: t + 0.2 }); }
+        if (crowd) { const c = crowd; c.out.gain.cancelScheduledValues(t); c.out.gain.setTargetAtTime(0, t, 0.1); reap.push({ L: c.L, end: t + 0.6 }); crowd = null; buildCrowd(); }
+      } catch (e) { /* ignore */ }
+      return AQ;
+    },
+    quality() { return AQ; },
     setMuted(m) { muted = !!m; if (muted) hush(); fileLevels(); try { if (M) M.mute.gain.setTargetAtTime(muted ? 0 : 1, now(), 0.03); } catch (e) { /* ignore */ } },
     isMuted() { return muted; },
     pause(on) {
@@ -11550,7 +11615,7 @@ window.ORS.ONLINE_CONFIG = {
     weather(o) { try { setWx(o); } catch (e) { /* ignore */ } },
     // test hooks
     _debug: {
-      stats: () => Object.assign({}, stats, { voices: voices.length, reaping: reap.length, enginesLive: engines.length, aiVoices: aiVoices.length, aiBound: aiVoices.filter((v) => v.eng).map((v) => v.eng.id), music: cur ? cur.name : null, state: ctx ? ctx.state : 'none', offline, env: envCur ? envCur.key : null, amb: amb ? amb.L.length : 0, cpuAvgMs: stats.cpuN ? +(stats.cpuMs / stats.cpuN).toFixed(4) : 0 }),
+      stats: () => Object.assign({}, stats, { aq: AQ, voices: voices.length, reaping: reap.length, enginesLive: engines.length, aiVoices: aiVoices.length, aiBound: aiVoices.filter((v) => v.eng).map((v) => v.eng.id), music: cur ? cur.name : null, state: ctx ? ctx.state : 'none', offline, env: envCur ? envCur.key : null, amb: amb ? amb.L.length : 0, cpuAvgMs: stats.cpuN ? +(stats.cpuMs / stats.cpuN).toFixed(4) : 0 }),
       engines: () => engines.map((e) => ({ id: e.id, ai: e.ai, kind: e.P.key, rpm: +e.rpm.toFixed(3), gear: e.gear, load: +e.load.toFixed(2), boost: +e.boost.toFixed(2), d: e.d < 1e8 ? +e.d.toFixed(1) : null, vr: +e.vr.toFixed(1), pan: +e.pan.toFixed(2), voice: !!e.voice, scrub: +e.scrub.toFixed(2) })),
       music: () => ({ name: cur ? cur.name : null, kind: cur ? cur.kind : null, want: wantMusic, step: cur && cur.kind === 'synth' ? cur.step : -1, next: cur && cur.next != null ? cur.next : -1,
         now: ctx ? ctx.currentTime : -1, spb: cur && cur.spb || 0, int: cur && cur.int != null ? cur.int : 0, tr: cur && cur.tr != null ? cur.tr : 0, target: musicInt, vol: musicVol,
@@ -25298,7 +25363,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
   /* ---------------- state ---------------- */
   let cb = {};
   const SPL = { on: false }; // boot splash state (see splash())
-  const settings = { quality: 'auto', difficulty: 'normal', camMode: 'fixed', zoom: 1, muted: false, scenic: 2, music: 2, musicSrc: 'song', musicToast: true, announcer: true, live: 2, style: 'arcade' };
+  const settings = { quality: 'auto', difficulty: 'normal', camMode: 'fixed', zoom: 1, muted: false, scenic: 2, music: 2, musicSrc: 'song', musicToast: true, announcer: true, live: 2, style: 'arcade', audioQ: 'auto' };
   let qualities = [{ key: 'auto', name: 'Automatica' }, { key: 'low', name: 'Bassa' }, { key: 'medium', name: 'Media' }, { key: 'high', name: 'Alta' }];
   let difficulties = [{ key: 'easy', name: 'Facile' }, { key: 'normal', name: 'Normale' }, { key: 'hard', name: 'Difficile' }];
   const prefs = Object.assign({ humans: 1, mode: 'champ', track: 0, hill: 0, hillHum: 1, ghost: true }, store.get('ors3d-ui', {}));
@@ -25989,6 +26054,8 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       segHTML('music', $t('opt.vol'), 'audio', [['2', $t('opt.vol.2')], ['1', $t('opt.vol.1')], ['0', $t('opt.vol.0')]], String(settings.music == null ? 2 : settings.music)) +
       segHTML('musicToast', $t('opt.np'), 'music', [['true', $t('yes')], ['false', $t('no')]], String(settings.musicToast !== false)) + // music: "now playing" toasts
       segHTML('announcer', $t('opt.ann'), 'mic', [['true', $t('yes')], ['false', $t('no')]], String(settings.announcer !== false)) +
+      segHTML('audioQ', $t('opt.aq'), 'audio', [['auto', $t('opt.aq.auto')], ['full', $t('opt.aq.full')], ['light', $t('opt.aq.light')]], settings.audioQ || 'auto') + // v3.3.1
+      (O.Perf ? segHTML('perf', $t('opt.perf'), 'gauge', [['true', $t('yes')], ['false', $t('no')]], String(O.Perf.visible())) : '') + // v3.3.1: the F3 overlay
       '</div><p class="note">' + $t('opt.note') + (COARSE.matches ? '' : ' ' + $t('opt.keys', { c: kbd('C'), v: kbd('V'), m: kbd('M'), n: kbd('N') })) + '</p>';
   }
   const optionRadios = {
@@ -26003,6 +26070,8 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     musicSrc: (v) => { settings.musicSrc = v === 'synth' || v === 'off' ? v : 'song'; cb.onSettings && cb.onSettings({ musicSrc: settings.musicSrc }); },
     musicToast: (v) => { settings.musicToast = v === 'true'; cb.onSettings && cb.onSettings({ musicToast: settings.musicToast }); },
     announcer: (v) => { settings.announcer = v === 'true'; cb.onSettings && cb.onSettings({ announcer: settings.announcer }); }, // English voice, if the browser has one
+    audioQ: (v) => { settings.audioQ = v === 'full' || v === 'light' ? v : 'auto'; cb.onSettings && cb.onSettings({ audioQ: settings.audioQ }); }, // v3.3.1 audio detail
+    perf: (v) => { if (O.Perf) O.Perf.show(v === 'true'); }, // v3.3.1 performance overlay (F3)
     style: (v) => { // v10 driving style: at once (in the pause menu too), the line under it describes it
       settings.style = v; cb.onSettings && cb.onSettings({ style: v });
       const host = activeOv(), n = host && host.querySelector('.style-note'); if (n) n.textContent = $t('opt.style.d.' + v);
@@ -26604,10 +26673,11 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
   /* ---------------- game hotkeys mirrored into the settings copy ---------------- */
   O.on('input:camera', () => { settings.camMode = settings.camMode === 'fixed' ? 'chase' : 'fixed'; syncOptionRadios(); });
   O.on('input:zoom', () => { settings.zoom = (((settings.zoom | 0) + 1) % 3); syncOptionRadios(); });
+  O.on('perf:hud', () => syncOptionRadios()); // v3.3.1: F3 while the options are open
   O.on('input:mute', () => { settings.muted = !settings.muted; syncOptionRadios(); toast($t(settings.muted ? 'toast.muted' : 'toast.unmuted')); });
   function syncOptionRadios() {
     const host = activeOv(); if (!host) return;
-    const map = { quality: settings.quality, camMode: settings.camMode, zoom: String(settings.zoom), scenic: String(settings.scenic == null ? 2 : settings.scenic), muted: String(!!settings.muted), music: String(settings.music == null ? 2 : settings.music), musicSrc: musicSrcKey(), musicToast: String(settings.musicToast !== false), announcer: String(settings.announcer !== false), live: String(settings.live == null ? 2 : settings.live), style: settings.style };
+    const map = { quality: settings.quality, camMode: settings.camMode, zoom: String(settings.zoom), scenic: String(settings.scenic == null ? 2 : settings.scenic), muted: String(!!settings.muted), music: String(settings.music == null ? 2 : settings.music), musicSrc: musicSrcKey(), musicToast: String(settings.musicToast !== false), announcer: String(settings.announcer !== false), live: String(settings.live == null ? 2 : settings.live), style: settings.style, audioQ: settings.audioQ || 'auto', perf: String(!!(O.Perf && O.Perf.visible())) };
     $$(host, '.seg[data-key]').forEach((g) => { const v = map[g.dataset.key]; if (v == null) return; $$(g, '[role=radio]').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.v === v))); });
   }
 
@@ -28885,6 +28955,154 @@ void main(){
 
 </script>
 <script>
+/* Tonezzer Racers (© Tonezzer's Arts) — v3.3.1 performance helpers (O.Perf). Loaded before js/game.js.
+   • GPU check at load (a throwaway canvas, before the game's renderer): the WebGL renderer string (WEBGL_debug_renderer_info),
+     the WebGL version and a failIfMajorPerformanceCaveat probe. A software rasteriser (SwiftShader, llvmpipe / softpipe /
+     lavapipe, Microsoft Basic Render Driver, anything named "Software") or a context that only exists with a major performance
+     caveat = the browser lost its hardware acceleration (a setting, a blocked driver, power saving): O.Perf.gpu.slow. The game
+     then runs at the 'low' tier (js/game.js qualityKey; an explicit quality picked afterwards wins) and shows a banner once per
+     renderer string (IT / EN) with how to turn hardware acceleration back on in the detected browser.
+   • Performance overlay: F3 (or Opzioni / Options → "Statistiche prestazioni"): FPS, frame time (avg / max over 1 s), the game's
+     JS per frame, GPU renderer, WebGL version, quality tier, pixel ratio, draw calls / triangles of the last frame, audio state /
+     live nodes. The game calls O.Perf.frame(jsMs, rawDtMs) each frame and reads O.Perf.counting() to sum the frame's draw calls.
+   Tools: window.ORS_NO_PERF_ADAPT = true (tools/harness.js: SwiftShader on purpose) = no banner, no forced tier, no dynamic
+   resolution; the check itself still runs (O.Perf.gpu).
+   Integrated GPUs (gpu.integrated / gpu.weak from the renderer string): a one-time tip on desktop OSes to give the browser the
+   NVIDIA / AMD card (Windows graphics settings, the NVIDIA control panel), and gpu.weakIG = 'auto' quality starts at 'low'. */
+'use strict';
+(function (O) {
+  const W = window, LSK = 'ors3d-perf', TEST = !!W.ORS_NO_PERF_ADAPT;
+  const SW_RE = /swiftshader|llvmpipe|softpipe|lavapipe|software|basic render|microsoft basic|gdi generic/i;
+  // integrated GPUs: 'weak' ones (Intel HD / UHD / older Iris, AMD Vega / "Radeon Graphics" APUs, low-end mobile) start at 'low';
+  // every integrated one on a desktop OS gets the "use the NVIDIA / AMD card for the browser" tip (a dual-GPU laptop on its iGPU)
+  const IG_RE = /intel.*(\bu?hd\b|iris|graphics)|radeon\(tm\) graphics|radeon graphics|radeon\(tm\)? ?(vega|r[2-7]\b)|vega \d+ graphics|mali|adreno|powervr/i;
+  const WEAK_RE = /intel.*(\bu?hd\b|iris(?!.*\bxe\b))|radeon\(tm\) graphics|radeon graphics|radeon\(tm\)? ?(vega|r[2-7]\b)|vega \d+ graphics|mali|adreno \(tm\) [1-5]\d\d|powervr/i;
+  const gpu = { renderer: '', vendor: '', webgl: 0, caveat: false, software: false, slow: false, integrated: false, weak: false, kind: 'unknown' };
+  function lose(gl) { try { const e = gl && gl.getExtension('WEBGL_lose_context'); if (e) e.loseContext(); } catch (e) { /* ignore */ } }
+  try {
+    const cv = document.createElement('canvas');
+    let gl = cv.getContext('webgl2'); gpu.webgl = gl ? 2 : 0;
+    if (!gl) { gl = cv.getContext('webgl') || cv.getContext('experimental-webgl'); gpu.webgl = gl ? 1 : 0; }
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      gpu.renderer = String((ext && gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)) || gl.getParameter(gl.RENDERER) || '');
+      gpu.vendor = String((ext && gl.getParameter(ext.UNMASKED_VENDOR_WEBGL)) || gl.getParameter(gl.VENDOR) || '');
+      lose(gl);
+      const g2 = document.createElement('canvas').getContext('webgl', { failIfMajorPerformanceCaveat: true });
+      gpu.caveat = !g2; lose(g2);
+    }
+    if (typeof W.ORS_FAKE_GPU === 'string') { gpu.renderer = W.ORS_FAKE_GPU; gpu.caveat = false; } // tests (tools/perf-ui-test.js): another GPU's string
+    gpu.software = SW_RE.test(gpu.renderer + ' ' + gpu.vendor) || gpu.caveat;
+    if (!gpu.software && !/arc\(tm\)|\barc a\d/i.test(gpu.renderer)) { gpu.integrated = IG_RE.test(gpu.renderer); gpu.weak = WEAK_RE.test(gpu.renderer); }
+  } catch (e) { /* no WebGL: the game reports it itself */ }
+  gpu.slow = gpu.software && !TEST;
+  gpu.kind = gpu.software ? 'software' : gpu.integrated ? 'integrated' : gpu.renderer ? 'discrete' : 'unknown';
+  gpu.weakIG = gpu.weak && !TEST; // js/game.js: 'auto' quality starts at 'low'
+  const mobile = /Android|iPhone|iPad|Mobile/i.test(navigator.userAgent || '') || (W.matchMedia && matchMedia('(pointer:coarse)').matches);
+
+  const store = (() => { try { const v = JSON.parse(localStorage.getItem(LSK)); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } })();
+  const save = () => { try { localStorage.setItem(LSK, JSON.stringify(store)); } catch (e) { /* ignore */ } };
+  const t = (k, v) => (O.t ? O.t(k, v) : k);
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function browser() {
+    const ua = navigator.userAgent || '';
+    if (/Edg\//.test(ua)) return 'edge';
+    if (/OPR\/|Opera/.test(ua)) return 'opera';
+    if (/Firefox\//.test(ua)) return 'firefox';
+    if (/Chrome\/|Chromium\/|CriOS\//.test(ua)) return 'chrome';
+    if (/Safari\//.test(ua)) return 'safari';
+    return 'other';
+  }
+  let css = false;
+  function addCss() {
+    if (css) return; css = true;
+    const s = document.createElement('style');
+    s.textContent = '#perf-hud{position:fixed;left:8px;top:8px;z-index:9998;font:12px/1.35 ui-monospace,Menlo,Consolas,monospace;color:#e8f6ff;background:rgba(8,14,22,.82);' +
+      'border:1px solid rgba(120,200,255,.35);border-radius:6px;padding:6px 9px;pointer-events:none;white-space:pre;max-width:min(92vw,560px);overflow:hidden;text-overflow:ellipsis}' +
+      '#perf-hud .bad{color:#ff8a7a}#perf-hud .ok{color:#9be89b}#perf-hud .gpu{display:block;white-space:normal;font-size:13px;margin-bottom:2px}' +
+      '#gpu-warn{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:9999;width:min(94vw,640px);box-sizing:border-box;background:#2a1712;color:#fff3ec;' +
+      'border:2px solid #ff9a5a;border-radius:10px;padding:12px 16px;font:15px/1.4 "Barlow Condensed",system-ui,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.5)}' +
+      '#gpu-warn h4{margin:0 0 6px;font-size:18px;color:#ffc27a}#gpu-warn p{margin:4px 0}#gpu-warn ul{margin:4px 0 8px;padding-left:20px}#gpu-warn li{margin:2px 0}' +
+      '#gpu-warn code{background:rgba(255,255,255,.12);padding:0 4px;border-radius:3px;user-select:all}#gpu-warn .gw-r{opacity:.7;font-size:13px;word-break:break-all}' +
+      '#gpu-warn button{margin-top:4px;font:inherit;font-weight:700;padding:5px 16px;border-radius:6px;border:0;background:#ff9a5a;color:#2a1712;cursor:pointer}';
+    document.head.appendChild(s);
+  }
+
+  /* ---------------- the software-rendering banner (once per renderer string) ---------------- */
+  // kind 'software' (hardware acceleration off) | 'igpu' (an integrated GPU on a desktop OS: maybe a dual-GPU laptop on its iGPU)
+  const EXE = { chrome: 'chrome.exe', edge: 'msedge.exe', firefox: 'firefox.exe', opera: 'opera.exe' };
+  function bannerKind() { return gpu.slow ? 'software' : gpu.integrated && !mobile && !TEST ? 'igpu' : null; }
+  function banner(force) {
+    const kind = force || bannerKind();
+    if (!kind || (!force && store.warned === gpu.renderer)) return false;
+    if (document.getElementById('gpu-warn')) return true;
+    addCss();
+    const b = browser(), win = /Win/.test(navigator.platform || navigator.userAgent), steps = [];
+    let title, body;
+    if (kind === 'software') {
+      title = t('gpu.title'); body = t('gpu.body'); steps.push(t('gpu.' + b));
+      if (win) steps.push(t('gpu.win'));
+      steps.push(t('gpu.power'), t('gpu.driver'));
+    } else {
+      title = t('igpu.title'); body = t(gpu.weak ? 'igpu.body.low' : 'igpu.body');
+      if (win) steps.push(t('igpu.win', { b: esc(b === 'other' ? 'browser' : b[0].toUpperCase() + b.slice(1)) }), t('igpu.nv', { exe: EXE[b] || 'chrome.exe' }), t('igpu.amd'));
+      else steps.push(t('igpu.other'));
+      steps.push(t('igpu.restart'), t('gpu.power'));
+    }
+    const el = document.createElement('div'); el.id = 'gpu-warn'; el.className = 'gw-' + kind; el.setAttribute('role', 'alert');
+    el.innerHTML = '<h4>' + esc(title) + '</h4><p>' + body + '</p><ul>' + steps.map((s) => '<li>' + s + '</li>').join('') + '</ul>' +
+      '<p class="gw-r">' + esc(t('gpu.detected')) + ': ' + esc(gpu.renderer || '?') + (gpu.caveat ? ' · failIfMajorPerformanceCaveat' : '') + '</p>' +
+      '<button type="button">' + esc(t('gpu.ok')) + '</button>';
+    el.querySelector('button').addEventListener('click', () => { store.warned = gpu.renderer; save(); el.remove(); });
+    (document.body || document.documentElement).appendChild(el);
+    return true;
+  }
+
+  /* ---------------- the overlay ---------------- */
+  let hud = null, on = !!store.hud, src = null, acc = { n: 0, ft: 0, ftMax: 0, js: 0, jsMax: 0, t0: 0 }, last = '';
+  const fmt = (x, d) => (x == null || !isFinite(x) ? '-' : x.toFixed(d == null ? 1 : d));
+  function show(v) {
+    on = v == null ? !on : !!v; store.hud = on; save();
+    if (on && !hud) { addCss(); hud = document.createElement('div'); hud.id = 'perf-hud'; (document.body || document.documentElement).appendChild(hud); }
+    if (hud) hud.style.display = on ? '' : 'none';
+    acc = { n: 0, ft: 0, ftMax: 0, js: 0, jsMax: 0, t0: performance.now() };
+    if (O.emit) O.emit('perf:hud', on);
+    return on;
+  }
+  // per frame (js/game.js): the game's JS ms for this frame, the time since the previous frame (ms)
+  function frame(jsMs, dtMs) {
+    if (!on) return;
+    const now = performance.now();
+    acc.n++; acc.ft += dtMs; if (dtMs > acc.ftMax) acc.ftMax = dtMs; acc.js += jsMs; if (jsMs > acc.jsMax) acc.jsMax = jsMs;
+    if (now - acc.t0 < 1000) return;
+    const sec = (now - acc.t0) / 1000, fps = acc.n / sec, s = src ? src() : {};
+    let au = '-';
+    try { const A = O.Audio && O.Audio._debug && O.Audio._debug.stats ? O.Audio._debug.stats() : null; if (A) au = A.state + ' · ' + A.live + ' nodes' + (A.aiVoices != null ? ' · AI voices ' + A.aiVoices : '') + (A.aq ? ' · ' + A.aq : ''); } catch (e) { /* ignore */ }
+    const cls = (bad) => (bad ? 'bad' : 'ok');
+    const tag = gpu.software ? ' [SOFTWARE]' : gpu.integrated ? ' [INTEGRATED]' : '';
+    const html = '<b class="gpu ' + cls(gpu.software || gpu.weak) + '">' + esc(gpu.renderer || '?') + tag + '</b>' +
+      '<span class="' + cls(fps < 40) + '">FPS ' + fmt(fps, 0) + '</span>  frame ' + fmt(acc.ft / acc.n) + ' ms avg / ' + fmt(acc.ftMax) + ' max\n' +
+      'JS ' + fmt(acc.js / acc.n, 2) + ' ms/frame avg / ' + fmt(acc.jsMax) + ' max\n' +
+      'WebGL ' + (s.webgl || gpu.webgl) + (gpu.caveat ? ' (performance caveat)' : '') + ' · quality ' + (s.quality || '-') + (s.auto ? ' (auto)' : '') + ' · pixel ratio ' + fmt(s.pr, 2) + (s.scale && s.scale < 1 ? ' (×' + fmt(s.scale, 2) + ')' : '') + ' · ' + (s.size || '') + '\n' +
+      'draw calls ' + (s.calls != null ? s.calls : '-') + ' · triangles ' + (s.tris != null ? (s.tris / 1000).toFixed(0) + 'k' : '-') + '\n' +
+      'audio ' + au;
+    if (html !== last) { hud.innerHTML = html; last = html; }
+    acc = { n: 0, ft: 0, ftMax: 0, js: 0, jsMax: 0, t0: now };
+  }
+  addEventListener('keydown', (e) => { if (e.code === 'F3' && !e.repeat) { e.preventDefault(); show(); } });
+
+  O.Perf = {
+    gpu, banner, bannerKind, show, frame, browser,
+    visible: () => on,
+    counting: () => on, // the game sums the frame's draw calls only while the overlay is on
+    source(fn) { src = fn; if (on && !hud) show(true); },
+    test: TEST,
+  };
+  if (on) { if (document.body) show(true); else addEventListener('DOMContentLoaded', () => show(true)); }
+})(window.ORS);
+
+</script>
+<script>
 /* Tonezzer Racers (© Tonezzer's Arts) — game: renderer, cameras (follow / chase, split screen), physics, AI, race flow, championship (v9: one economy — Crediti Tonezzer, the Garage between races).
    Talks to the art/audio/UI modules only through their public contracts (see docs/ARCHITECTURE.md). */
 'use strict';
@@ -28978,6 +29196,7 @@ void main(){
   settings.music = [0, 1, 2].includes(+settings.music) ? +settings.music : 2; // "Musica": 2 Sì, 1 Bassa, 0 No
   settings.musicSrc = settings.musicSrc === 'synth' || settings.musicSrc === 'off' ? settings.musicSrc : 'song'; // "Musica": the playlist (js/music-list.js), the synth, off
   settings.musicToast = settings.musicToast !== false; // "Titoli dei brani": the now-playing toast (js/ui.js)
+  settings.audioQ = settings.audioQ === 'full' || settings.audioQ === 'light' ? settings.audioQ : 'auto'; // v3.3.1 "Qualità audio" (auto: follows the graphics tier)
   settings.announcer = settings.announcer !== false; // "Annunciatore" (English voice via speechSynthesis, when the browser has one)
   settings.live = [0, 1, 2].includes(+settings.live) ? +settings.live : 2; // v3 "Terreno vivo": 2 Sì, 1 Solo visivo, 0 No (world.live)
   /* ==== v10 "Stili di guida" (CONST.STYLES): settings.style arcade | rally | grip, players and AI alike; SY = the live preset.
@@ -28991,16 +29210,23 @@ void main(){
   /* ==== /v10 ==== */
   const MUSIC_VOL = [0, 0.5, 1];
   const saveSettings = () => { try { localStorage.setItem(SKEY, JSON.stringify(settings)); } catch (e) {} };
-  const qualityKey = () => { const k = settings.quality === 'auto' ? autoQ : settings.quality; return own(O.QUALITY, k) ? k : 'low'; };
+  /* v3.3.1: a software WebGL renderer (js/perf.js O.Perf.gpu.slow: hardware acceleration off) runs at 'low' whatever the stored
+     tier, until the player picks a tier again in the options (applySettings clears swLow) */
+  let swLow = !!(O.Perf && O.Perf.gpu.slow);
+  const qualityKey = () => { const k = swLow ? 'low' : settings.quality === 'auto' ? autoQ : settings.quality; return own(O.QUALITY, k) ? k : 'low'; };
+  // v3.3.1 "Qualità audio": auto = 'light' at the 'low' graphics tier (slow machines, software GL, auto step-down), else 'full'
+  const syncAudioQ = () => { try { if (O.Audio.setQuality) O.Audio.setQuality(settings.audioQ === 'auto' ? (qualityKey() === 'low' ? 'light' : 'full') : settings.audioQ); } catch (e) { /* ignore */ } };
   try { O.Audio.setMuted(!!settings.muted); O.Audio.setMusicVolume(MUSIC_VOL[settings.music]); O.Audio.setMusicSource(settings.musicSrc); O.Audio.setAnnouncer(settings.announcer); } catch (e) {}
-  let autoQ = (navigator.hardwareConcurrency || 4) <= 4 || matchMedia('(pointer:coarse)').matches ? 'low' : 'medium';
+  let autoQ = (navigator.hardwareConcurrency || 4) <= 4 || matchMedia('(pointer:coarse)').matches || (O.Perf && O.Perf.gpu.weakIG) ? 'low' : 'medium'; // (v3.3.1: a weak integrated GPU too)
+  let prScale = 1; // v3.3.1 auto quality: dynamic resolution (× the tier's pixel ratio) once 'low' is still too slow
+  syncAudioQ();
   /* Pixel ratio: the tier's DPR cap, further limited to a pixel budget on medium/high (a DPR-2 laptop at medium would
      otherwise render ~2.9 MP + MSAA), but never below CSS resolution. */
   const MAXPX = { medium: 2.1e6, high: 3.7e6 };
   function pixelRatioFor(key) {
     const d = devicePixelRatio || 1, q = O.QUALITY[key] || O.QUALITY.low;
     const budget = MAXPX[key] ? Math.sqrt(MAXPX[key] / Math.max(1, innerWidth * innerHeight)) : Infinity;
-    return Math.max(Math.min(d, 1), Math.min(d, q.pixelRatio, budget));
+    return Math.max(Math.min(d, 1), Math.min(d, q.pixelRatio, budget)) * (settings.quality === 'auto' || swLow ? prScale : 1);
   }
   const shadowTypeFor = (key) => (key === 'low' ? THREE.PCFShadowMap : THREE.PCFSoftShadowMap);
 
@@ -30581,9 +30807,10 @@ void main(){
   /* ---------------- UI callbacks ---------------- */
   function applySettings(cfg) {
     const oldQ = qualityKey();
+    if (cfg.quality != null) { swLow = false; prScale = 1; } // v3.3.1: the player's own tier wins over the software-GL / auto fallback
     Object.assign(settings, cfg); saveSettings();
     O.Audio.setMuted(!!settings.muted); O.Audio.setMusicVolume(MUSIC_VOL[settings.music]); O.Audio.setMusicSource(settings.musicSrc); O.Audio.setAnnouncer(settings.announcer);
-    renderer.setPixelRatio(pixelRatioFor(qualityKey()));
+    renderer.setPixelRatio(pixelRatioFor(qualityKey())); syncAudioQ();
     if (cfg.live != null && S.world && S.world.live) S.world.live.mode(settings.live); // v3 terreno vivo (from the pause menu: now)
     if (cfg.style != null) setStyle(settings.style); // v10 driving style (from the pause menu: at once, AI profile included)
     drawnPaused = false; // camera mode / zoom changed from the pause menu: draw the frozen frame again
@@ -30852,7 +31079,22 @@ void main(){
   }
   const ctxU = { time: 0, hype: 0, focus: null, cameras: null, state: '' };
   const focus = [], focusPool = [{}, {}], camLists = [[], [cams[0]], [cams[0], cams[1]]];
+  /* v3.3.1 (js/perf.js): the F3 overlay's numbers — the game's JS per frame, the frame interval, the frame's draw calls (summed over
+     the shadow pass, viewports and post while the overlay is on: info.autoReset off, reset here) */
+  let pfLast = 0, pfCalls = 0, pfTris = 0;
   function frame(now) {
+    const j0 = performance.now(), P = O.Perf, cnt = !!(P && P.counting()), inf = renderer.info;
+    if (cnt) { inf.autoReset = false; inf.reset(); } else if (!inf.autoReset) inf.autoReset = true;
+    frameBody(now);
+    if (P) {
+      if (cnt && inf.render.calls) { pfCalls = inf.render.calls; pfTris = inf.render.triangles; }
+      P.frame(performance.now() - j0, pfLast ? now - pfLast : 16.7); pfLast = now;
+    }
+  }
+  if (O.Perf) O.Perf.source(() => ({ webgl: renderer.capabilities.isWebGL2 ? 2 : 1, quality: qualityKey(), auto: settings.quality === 'auto' && !swLow, pr: renderer.getPixelRatio(), scale: prScale,
+    size: (() => { const v = renderer.getDrawingBufferSize(pfV2); return v.x + '×' + v.y; })(), calls: pfCalls, tris: pfTris }));
+  const pfV2 = new THREE.Vector2();
+  function frameBody(now) {
     requestAnimationFrame(frame);
     const rawDt = (now - last) / 1000; last = now;
     const dt = Math.min(0.05, rawDt);
@@ -30932,11 +31174,20 @@ void main(){
     /* auto quality: if race frames average slower than ~42 fps over 4 s, step down to 'low' (the pixel ratio now, the
        rest at the next load). Pauses and hidden tabs are not sampled, and each sample is clamped to 0.1 s so one long
        gap (tab switch, GC) cannot trip it, while a machine that really runs at a few fps still steps down. */
-    if (settings.quality === 'auto' && S.state === 'race' && autoQ !== 'low') {
-      if (S.paused || document.hidden) { ftAcc = ftN = ftT = 0; }
+    /* v3.3.1: then, still below ~40 fps at 'low' (or a software GL), the pixel ratio steps down (× 0.85, to × 0.6 at most: a
+       softer image instead of a stutter), sampled over 3 s in races and on the title's attract race. Not with the tools'
+       window.ORS_NO_PERF_ADAPT (SwiftShader on purpose). */
+    if ((settings.quality === 'auto' || swLow) && (S.state === 'race' || S.state === 'attract') && !(O.Perf && O.Perf.test)) {
+      if (S.paused || document.hidden || (O.GarageView && O.GarageView.active)) { ftAcc = ftN = ftT = 0; }
       else {
         const fs = Math.min(rawDt, 0.1); ftAcc += fs; ftN++; ftT += fs;
-        if (ftT > 4) { if (ftAcc / ftN > 0.024) { autoQ = 'low'; renderer.setPixelRatio(pixelRatioFor('low')); } ftAcc = ftN = ftT = 0; }
+        if (ftT > (qualityKey() === 'low' ? 3 : 4)) {
+          if (ftAcc / ftN > 0.025) {
+            if (qualityKey() !== 'low') { autoQ = 'low'; renderer.setPixelRatio(pixelRatioFor('low')); syncAudioQ(); if (O.UI.toast) O.UI.toast(O.t('toast.autoLow')); }
+            else if (prScale > 0.61) { prScale = Math.max(0.6, prScale * 0.85); renderer.setPixelRatio(pixelRatioFor('low')); }
+          }
+          ftAcc = ftN = ftT = 0;
+        }
       }
     }
   }
@@ -31102,6 +31353,7 @@ void main(){
     const p = S.profiles[pi], kind = (p && p.look && p.look.horn) || 'classic'; if (p && p.human) { O.Audio.play('horn', { kind, id: pi }); if (kind === 'duck' && O.Trophies) O.Trophies.add('duck'); } // v2 feat: Trofei (Qua qua!)
   });
   try { onlineSeed(); } catch (e) { /* v3 online: local boards only */ }
+  if (O.Perf && O.Perf.bannerKind()) setTimeout(() => { try { O.Perf.banner(); } catch (e) { /* ignore */ } }, 1200); // v3.3.1: software WebGL / an integrated GPU → how to use the real GPU
   if (O.UI.splash) O.UI.splash(); // "Tonezzer's Arts presenta" → TONEZZER RACERS, over the boot loading screen (skippable)
   toTitle();
 })(window.ORS);

@@ -1,5 +1,41 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3.3.1 — Fluido anche sui portatili: scheda video giusta, statistiche F3, audio leggero
+
+### Italiano
+
+* **Controllo della scheda video all’avvio.** Se il browser disegna il gioco **senza accelerazione hardware** (rendering
+  software: SwiftShader, llvmpipe, «Microsoft Basic Render Driver»…) compare un avviso, una volta sola, con i passi per
+  riattivarla nel tuo browser (Chrome, Edge, Firefox, Opera, Safari), le impostazioni grafiche di Windows e il risparmio
+  energetico; intanto il gioco passa alla qualità **Bassa**.
+* **Scheda grafica integrata?** Se il gioco gira sulla grafica integrata del processore (Intel HD / UHD, Iris, AMD Radeon
+  Vega…) un suggerimento, una volta sola, spiega come far usare al browser la scheda **NVIDIA o AMD** del portatile
+  (Windows → Grafica → «Prestazioni elevate», Pannello di controllo NVIDIA). Con la qualità **Auto** queste schede partono da
+  **Bassa**.
+* **Statistiche prestazioni**: premi **F3** (o Opzioni → «Statistiche prestazioni») per vedere scheda video in uso, FPS,
+  tempo per fotogramma, millisecondi di calcolo, qualità, risoluzione, draw call e triangoli, stato dell’audio.
+* **Qualità automatica più furba**: se il gioco resta sotto i 40 fotogrammi al secondo scende a Bassa e poi abbassa un po’ la
+  risoluzione, invece di andare a scatti.
+* **Qualità audio** (Opzioni): Auto / Completo / **Leggero**. Leggero (automatico con la grafica Bassa) usa un terzo di
+  calcolo audio in meno: un solo motore avversario alla volta, riverbero corto, folla e motore un po’ più semplici. Anche
+  in Completo i suoni che tacciono ora non costano quasi nulla.
+
+### English
+
+* **Graphics card check at start-up.** If the browser draws the game **without hardware acceleration** (software rendering:
+  SwiftShader, llvmpipe, “Microsoft Basic Render Driver”…) a one-time notice explains how to turn it back on in your browser
+  (Chrome, Edge, Firefox, Opera, Safari), Windows graphics settings and power saving; meanwhile the game switches to **Low**.
+* **Integrated graphics?** When the game runs on the processor’s integrated graphics (Intel HD / UHD, Iris, AMD Radeon
+  Vega…) a one-time tip explains how to give the browser the laptop’s **NVIDIA or AMD** card (Windows → Graphics → “High
+  performance”, NVIDIA Control Panel). With **Auto** quality these GPUs start at **Low**.
+* **Performance stats**: press **F3** (or Options → “Performance stats”) to see the GPU in use, FPS, frame time, JS
+  milliseconds, quality, resolution, draw calls and triangles, audio state.
+* **Smarter auto quality**: below 40 frames per second it steps down to Low, then lowers the resolution a little, instead of
+  stuttering.
+* **Audio quality** (Options): Auto / Full / **Light**. Light (automatic with Low graphics) needs about a third less audio
+  processing: one rival engine at a time, a short reverb, a simpler crowd and engine. In Full too, silent sounds now cost
+  next to nothing.
+
 ## v3.3 — Demolition Derby, la leggendaria Trento–Bondone, la colonna sonora estesa
 
 ### Italiano
