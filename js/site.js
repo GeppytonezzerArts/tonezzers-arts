@@ -170,7 +170,7 @@
     'g13': 'Bosco del Lupo in the snow: the track and the forest turn white',
     'g14': 'Living terrain at Mesa Grande: ruts dug by the wheels lap after lap',
     'g15': 'Tonezzer’s Volcano at night: the lava lake in the crater',
-    'c.p': 'The flagship game, now at version 3: a real night, changing weather, living terrain and a daily challenge, with seven vehicles, the Tonezzer Garage, twelve circuits and eleven hill climbs. The Tonezzer Cup won’t win itself.',
+    'c.p': 'The flagship game, now at version 3: a real night, changing weather, living terrain and a daily challenge, with seven vehicles, the Tonezzer Garage, twelve circuits and eleven hill climbs, plus Demolition Derby, Stage Rally and Elimination. The Tonezzer Cup won’t win itself.',
     'ft.press': 'Press kit',
     'ft.pressNote': 'ZIP · images, logos, trailer, texts',
     // strings used only by this script
@@ -316,4 +316,8 @@
   }
 
   const y = $('#year'); if (y) y.textContent = String(Math.max(2026, new Date().getFullYear()));
+
+  /* v3.4: the anonymous visit counter (js/visit.js, copied here by tools/build-site.js with the game's js/online-config.js): one
+     call per page load with the page language; nothing without a configuration, offline, with Do Not Track, for bots */
+  try { if (window.ORS && window.ORS.Visit) window.ORS.Visit.log('site', lang, ''); } catch (e) { /* silent */ }
 })();

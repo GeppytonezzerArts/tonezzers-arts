@@ -1,5 +1,110 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3.4 — Rally a tappe, Eliminazione, classifiche online, cronoscalate più fluide
+
+### Italiano
+
+**Rally a tappe**
+
+* **Nuova modalità: Rally a tappe** (menu principale). Le cronoscalate una dopo l’altra contro cinque rivali: conta la **somma
+  dei tempi**. Tre rally: **Rally dei Canyon** (3 prove, per cominciare), **Rally delle Alpi** (4 prove) e il **Gran Rally
+  Tonezzer** (3 prove, l’ultima è la leggendaria Trento–Bondone). Ogni rally si sblocca finendo quello prima.
+* **I danni restano** da una prova all’altra: tra le prove, al **parco assistenza**, vedi la classifica della prova e la
+  generale e decidi se riparare con i Crediti Tonezzer, riparare in fretta con qualche secondo di penalità o ripartire così (un’auto
+  molto ammaccata perde un po’ di velocità massima, mai più del 4 %).
+* Sul tabellone il **riferimento** è il tempo del rivale più veloce della prova, anche negli intermedi; tempo e meteo cambiano da
+  una prova all’altra. **R** ti rimette in strada con 5 secondi di penalità. Alla fine, il **podio**.
+
+**Eliminazione**
+
+* **Nuova modalità: Eliminazione**. Da 4 a 6 auto su qualsiasi circuito: alla fine di ogni giro **l’ultimo è eliminato**,
+  finché ne resta uno solo. Chi è fuori lampeggia, accosta e sparisce; l’annunciatore lo chiama per nome.
+* Il tabellone mostra le auto ancora in gara, le eliminazioni e un grande **«SEI ULTIMO!»** con il distacco da chi ti precede.
+  In due a schermo diviso; Facile, Normale, Difficile.
+
+**Per entrambe**
+
+* Crediti Tonezzer per piazzamento, prove vinte, avversari superati e prime vittorie; **otto nuovi trofei** (famiglie Rally ed
+  Eliminazione: 55 in tutto); i tuoi record di Eliminazione per ogni circuito nella pagina **Classifiche** (i rally hanno la classifica online, sotto).
+* L’annunciatore parla anche in **italiano** per eliminazioni e risultati, se il browser ha una voce italiana.
+
+**Classifiche online (accese)**
+
+* **Le classifiche online sono attive.** La casella del menu si chiama di nuovo **Classifiche**: i tempi delle cronoscalate, i
+  giri veloci dei circuiti e la **Sfida del giorno** si confrontano con quelli di tutti i giocatori. Nei risultati: *«Classifica
+  online: 12° su 340»*. Scegli il tuo **nome in classifica** (2–16 caratteri, con filtro anti-parolacce); il gioco invia solo un
+  codice anonimo, il nome e i tempi.
+* **Classifiche dei rally**: una per ogni rally, con il **tempo totale** (penalità comprese). La posizione compare nei risultati
+  finali del rally e sulla scheda di ogni rally; nella pagina Classifiche c’è la nuova scheda **Rally**. L’Eliminazione e il
+  Derby restano record di questo dispositivo.
+* Senza rete (o con il server in pausa) il gioco usa i tempi salvati sul dispositivo e li invia appena può.
+* **Contatore visite anonimo** (per lo studio): il gioco e il sito contano quante persone li aprono ogni giorno, senza cookie,
+  senza indirizzo IP e senza dati personali (un codice casuale del browser, la lingua, computer o telefono). Non conta nulla se
+  il browser ha «Do Not Track» attivo.
+* Controlli anti-imbroglio aggiornati a tutte le salite di oggi (anche la Trento–Bondone, nella Sfida del giorno dal 2 novembre
+  2026) e alle velocità di «Frena!»: i tempi veri passano sempre, quelli impossibili no.
+
+**Più fluido**
+* **Cronoscalate più fluide** (qualità Media e Alta): il terreno lontano si costruisce in sottofondo con più calma quando
+  nessuna telecamera ne ha bisogno a breve, mentre quello che stai per vedere ha sempre la precedenza, così nei primi
+  minuti di salita il calcolo per fotogramma è circa dimezzato e spariscono quasi tutti gli scatti. Nessun terreno compare
+  in ritardo: le distanze di disegno e i dettagli restano quelli di prima.
+* **Meno lavoro per fotogramma** anche dopo: ombre degli alberi e degli oggetti decise a gruppi, vegetazione aggiornata
+  solo dove serve, meno memoria temporanea (meno pause del garbage collector).
+* **Audio senza intoppi al primo clic**: i suoni generati (folla, ghiaia, acqua, pioggia, riverberi) si preparano a piccoli
+  pezzi in sottofondo invece che in blocchi da 30–70 ms.
+
+### English
+
+**Stage Rally**
+
+* **New mode: Stage Rally** (main menu). The hill climbs back to back against five rivals: the **total time** counts. Three
+  rallies: the **Canyon Rally** (3 stages, for starters), the **Alpine Rally** (4 stages) and the **Tonezzer Grand Rally** (3
+  stages, ending on the legendary Trento–Bondone). Each rally unlocks when you finish the one before.
+* **Damage carries over** from stage to stage: between stages, at the **service park**, check the stage result and the overall
+  standings, then repair with Tonezzer Credits, take a quick fix for a few penalty seconds, or drive on as you are (a badly
+  battered car loses a little top speed, never more than 4 %).
+* The board’s **benchmark** is the stage’s fastest rival, splits included; time of day and weather change from stage to stage.
+  **R** puts you back on the road for a 5-second penalty. The rally ends on the **podium**.
+
+**Elimination**
+
+* **New mode: Elimination**. 4 to 6 cars on any circuit: at the end of every lap **the last car is out**, until only one is
+  left. The car that goes out blinks, pulls over and vanishes; the announcer calls its name.
+* The HUD shows the cars still racing, the eliminations and a big **“YOU’RE LAST!”** with the gap to the car ahead. Two
+  players in split screen; Easy, Normal, Hard.
+
+**Both**
+
+* Tonezzer Credits for your place, stage wins, rivals outlasted and first wins; **eight new trophies** (Rally and Elimination
+  families: 55 in all); your Elimination records for every circuit on the **Leaderboards** page (the rallies get online boards, below).
+* The announcer also speaks **Italian** for eliminations and results, when the browser has an Italian voice.
+
+**Online leaderboards (switched on)**
+
+* **The online leaderboards are live.** The menu tile is **Rankings** again: hill-climb times, circuit best laps and the
+  **Daily challenge** are ranked against every player. In the results: *“Online leaderboard: 12th of 340”*. Pick your
+  **leaderboard name** (2–16 characters, profanity filtered); the game only sends an anonymous id, the name and the times.
+* **Rally leaderboards**: one per rally, on the **total time** (penalties included). Your rank shows on the rally’s final
+  results and on every rally card; the Leaderboards page has a new **Rallies** tab. Elimination and Derby stay this device’s
+  records.
+* Offline (or with the server paused) the game uses the times saved on your device and sends them when it can.
+* **Anonymous visit counter** (for the studio): the game and the site count how many people open them each day, with no
+  cookies, no IP address and no personal data (a random browser id, the language, computer or phone). Nothing is counted when
+  the browser has “Do Not Track” on.
+* Anti-cheat checks brought up to date with today’s hill climbs (the Trento–Bondone too, in the Daily challenge from 2 November
+  2026) and the “Frena!” speeds: real times always go through, impossible ones don’t.
+
+**Smoother**
+* **Smoother hill climbs** (Medium and High quality): distant ground is built in the background at a gentler pace when no
+  camera needs it soon, while what you are about to see always comes first, so in the first minutes of a climb the work
+  per frame is roughly halved and almost all hitches are gone. No ground appears late: draw distances and detail are
+  unchanged.
+* **Less work per frame** afterwards too: tree and prop shadows decided in groups, vegetation updated only where needed,
+  fewer temporary allocations (fewer garbage-collector pauses).
+* **No audio hiccup at the first click**: the generated sounds (crowd, gravel, water, rain, reverbs) are prepared in small
+  background slices instead of 30–70 ms blocks.
+
 ## v3.3.1 — Fluido anche sui portatili: scheda video giusta, statistiche F3, audio leggero
 
 ### Italiano
