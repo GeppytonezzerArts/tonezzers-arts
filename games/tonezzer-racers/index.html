@@ -854,6 +854,74 @@ html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: non
 @keyframes ors-boost { from { opacity: .75; } to { opacity: 1; } }
 @keyframes ors-speed { from { transform: rotate(0deg) scale(1); } to { transform: rotate(2.4deg) scale(1.03); } }
 
+/* ---------------- v3.4.1: confirm dialog, end of the Gran Premio, saved Gran Premio, nitro line ---------------- */
+#ui .ov-ask { z-index: 48; background: radial-gradient(110% 90% at 50% 45%, rgba(22, 13, 6, .55), rgba(12, 7, 3, .88)); }
+#ui .ask-s { padding-top: 22px; }
+#ui .ask-s h2 { font-size: clamp(24px, 3.4vw, 32px); }
+#ui .ask-t { margin: 4px 0 0; font: 500 17px/1.45 var(--body); color: var(--paper2); }
+#ui .ask-s .sign-f { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; }
+#ui .ask-s .sign-f .btn { flex: 1 1 auto; justify-content: center; }
+#ui .rnit { display: flex; align-items: center; gap: 8px; margin: 10px 0 0; font: 500 15.5px/1.35 var(--body); color: var(--paper2); }
+#ui .rnit .ic { flex: none; width: 18px; height: 18px; color: var(--green); }
+#ui .rnit b { font-weight: 700; color: var(--paper); }
+#ui .gp-end.res { padding-top: 26px; }
+#ui .gp-cup { display: flex; align-items: center; gap: 14px; margin: 2px 0 12px; padding: 12px 16px; border-radius: 14px; background: linear-gradient(180deg, rgba(242, 194, 46, .2), rgba(8, 4, 1, .5)); box-shadow: inset 0 0 0 2px rgba(242, 194, 46, .55), 0 8px 20px rgba(0, 0, 0, .3); }
+#ui .gp-cup.mine { background: linear-gradient(180deg, rgba(255, 216, 77, .38), rgba(120, 70, 8, .45)); box-shadow: inset 0 0 0 2px var(--yellow), 0 0 26px rgba(242, 194, 46, .35), 0 8px 20px rgba(0, 0, 0, .3); }
+#ui .gp-cup-ic { flex: none; width: 52px; height: 52px; color: var(--yellow); filter: drop-shadow(0 0 10px rgba(242, 194, 46, .65)); }
+#ui .gp-cup.mine .gp-cup-ic { animation: gp-shine 2.4s ease-in-out infinite; }
+@keyframes gp-shine { 0%, 100% { transform: rotate(-6deg) scale(1); } 50% { transform: rotate(6deg) scale(1.08); } }
+#ui .gp-cup .lbl { display: block; font: 600 14px var(--body); letter-spacing: .04em; text-transform: uppercase; color: var(--sand); }
+#ui .gp-cup b { display: block; margin-top: 3px; font: 400 clamp(19px, 2.4vw, 24px)/1.15 var(--display); color: var(--yellow2); }
+#ui .gp-cup small { display: block; margin-top: 4px; font: 600 15px var(--body); color: var(--paper2); }
+#ui .gp-pod { margin-top: 4px; }
+#ui .gp-tab td { padding-top: 5px; padding-bottom: 5px; }
+#ui .gp-tab .rb { font: 600 15px var(--body); color: var(--paper2); }
+#ui .gp-out { margin-left: 8px; font: 600 12.5px var(--body); color: #ffb39a; }
+#ui .gp-sum { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 10px 0 0; font: 600 16px var(--body); color: var(--paper); }
+#ui .gp-sum span { display: inline-flex; align-items: center; gap: 6px; }
+#ui .gp-sum .ic { width: 17px; height: 17px; color: var(--yellow); }
+#ui .gp-note { margin: 6px 0 0; font: 500 15px/1.4 var(--body); color: var(--paper2); }
+#ui .gp-res { display: flex; align-items: center; gap: 12px; margin: -4px 0 14px; padding: 10px 12px 10px 14px; border-radius: 12px; background: linear-gradient(180deg, rgba(242, 194, 46, .16), rgba(8, 4, 1, .45)); box-shadow: inset 0 0 0 2px rgba(242, 194, 46, .5); }
+#ui .gp-res[hidden] { display: none; }
+#ui .gp-res .gr-t { flex: 1 1 auto; display: flex; align-items: center; gap: 10px; min-width: 0; }
+#ui .gp-res .gr-t > .ic { flex: none; width: 26px; height: 26px; color: var(--yellow); }
+#ui .gp-res b { display: block; font: 400 18px/1.1 var(--display); color: var(--yellow2); }
+#ui .gp-res small { display: block; margin-top: 3px; font: 600 14.5px/1.3 var(--body); color: var(--paper2); }
+#ui .gp-res .btn { flex: none; }
+#ui .mi .mgp { display: inline-flex; align-items: center; gap: 4px; font-style: normal; color: var(--yellow2); }
+#ui .mi .mgp .ic { width: 13px; height: 13px; }
+@media (max-width: 560px) {
+  #ui .gp-res { flex-wrap: wrap; } #ui .gp-res .btn { flex: 1 1 100%; justify-content: center; }
+  #ui .gp-cup { padding: 10px 12px; gap: 10px; } #ui .gp-cup-ic { width: 40px; height: 40px; }
+  #ui .gp-end .pd { width: 104px; } #ui .gp-end .pd-n { font-size: 14px; }
+  #ui .gp-end .sign-f { flex-wrap: wrap; } #ui .gp-end .sign-f .btn { flex: 1 1 auto; justify-content: center; } #ui .gp-end .gohint { display: none; }
+  #ui .ask-t { font-size: 16px; }
+}
+/* v3.4.1 the ceremony overlay: transparent over the 3D podium */
+#ui .ov-cer { z-index: 44; display: block; padding: 0; background: linear-gradient(180deg, rgba(12, 7, 3, .55), transparent 26%, transparent 70%, rgba(12, 7, 3, .7)); overflow: hidden; }
+#ui .cer-skip { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background: none; cursor: pointer; outline: none; }
+#ui .cer-skip:focus-visible { outline: none; box-shadow: none; }
+#ui .cer-top, #ui .cer-bot { position: absolute; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; text-align: center; pointer-events: none; padding: 0 16px; }
+#ui .cer-top { top: max(22px, env(safe-area-inset-top)); }
+#ui .cer-bot { bottom: max(18px, env(safe-area-inset-bottom)); gap: 8px; }
+#ui .cer-k { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 5px; border-radius: 999px; font: 700 15px/1 var(--body); letter-spacing: .16em; text-transform: uppercase; color: #2a1408; background: linear-gradient(180deg, #ffe066, #e0a816); box-shadow: 0 3px 0 #7a5806, 0 8px 18px rgba(0, 0, 0, .35); }
+#ui .cer-k .ic { width: 18px; height: 18px; }
+#ui .cer-h { margin: 10px 0 0; font: 400 clamp(52px, 10vw, 118px)/.95 var(--display); letter-spacing: .02em; color: var(--yellow2);
+  text-shadow: 0 1px 0 #e0a816, 0 2px 0 #c98f10, 0 3px 0 #b07c0c, 0 4px 0 #8f630a, 0 5px 0 #6c4a06, 0 7px 0 #241106, 0 12px 26px rgba(0, 0, 0, .6), 0 0 40px rgba(255, 200, 60, .35); }
+#ui .cer-top:not(.win) .cer-h { font-size: clamp(38px, 7vw, 80px); color: var(--paper); text-shadow: 0 1px 0 #cdbb98, 0 2px 0 #a8946e, 0 3px 0 #7d6a4a, 0 5px 0 #241106, 0 10px 22px rgba(0, 0, 0, .6); }
+#ui .cer-goes { margin: 10px 0 0; font: 400 clamp(19px, 2.6vw, 28px)/1.15 var(--display); color: var(--yellow2); text-shadow: 0 2px 0 #241106, 0 6px 16px rgba(0, 0, 0, .6); }
+#ui .cer-name { display: inline-flex; align-items: center; gap: 10px; padding: 9px 18px 8px 12px; border-radius: 14px; background: rgba(12, 7, 3, .72); box-shadow: inset 4px 0 0 var(--c), inset 0 0 0 1px rgba(255, 226, 170, .16), 0 10px 24px rgba(0, 0, 0, .4); }
+#ui .cer-name .chip { width: 14px; height: 14px; margin: 0; border-radius: 3px; background: var(--c); }
+#ui .cer-name b { font: 400 clamp(22px, 3vw, 32px)/1 var(--display); color: var(--paper); }
+#ui .cer-name span { font: 700 clamp(14px, 1.7vw, 17px) var(--body); color: var(--paper2); }
+#ui .cer-me { padding: 5px 12px; border-radius: 999px; font: 700 15px var(--body); color: var(--yellow2); background: rgba(12, 7, 3, .6); }
+#ui .cer-brand { display: inline-flex; align-items: center; gap: 8px; font: 600 13px var(--body); letter-spacing: .08em; color: var(--paper2); opacity: .9; }
+#ui .cer-brand .crest { height: 24px; }
+#ui .cer-hint { font: 600 14px var(--body); color: var(--paper2); opacity: .75; animation: cer-blink 1.6s ease-in-out infinite; }
+@keyframes cer-blink { 0%, 100% { opacity: .35; } 50% { opacity: .85; } }
+@media (max-width: 560px) { #ui .cer-name { flex-wrap: wrap; justify-content: center; } #ui .cer-k { font-size: 12.5px; letter-spacing: .1em; } }
+@media (prefers-reduced-motion: reduce) { #ui .cer-hint { animation: none; } }
+
 </style>
 <style>
 /* Tonezzer Racers — v2 "Garage Tonezzer" (js/ui-garage.js, js/garage.js). Same wooden signs and palette as css/ui.css.
@@ -1144,6 +1212,20 @@ html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: non
   #ui .pt-nit .g-note { display: none; }
   #ui .pt-st { display: none; } /* (the standings are on the results just before; the nitro cans move up) */
   #ui .pt-cans { margin: 6px 0; } #ui .pt-cans i { height: 20px; }
+}
+
+/* v3.4.1: «Menu principale» in the Garage between Gran Premio races; the nitro the next race loads */
+#ui .gshop .g-side .sign-f .g-quit { flex: 0 0 auto; }
+#ui .gshop .g-side .g-pitf { gap: 8px; }
+#ui .gshop .g-side .g-pitf .btn { padding-left: 13px; padding-right: 13px; gap: 7px; font-size: 18px; }
+#ui .gshop .g-side .g-pitf .g-main { flex: 0 1 auto; min-width: 0; overflow: hidden; }
+#ui .gshop .g-side .g-pitf .g-go .ic:first-child { display: none; } /* (the flag: three buttons share the footer) */
+#ui .pt-next .pt-nl { flex-basis: 100%; display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; font: 700 14.5px var(--body); color: var(--green); }
+#ui .pt-next .pt-nl .ic { width: 16px; height: 16px; }
+@media (max-width: 560px) { /* phones: «Prossima gara» on its own row, «Menu» and buy / use under it */
+  #ui .gshop .g-side .g-pitf { flex-wrap: wrap; }
+  #ui .gshop .g-side .g-pitf .g-go { order: -1; flex: 1 1 100%; }
+  #ui .gshop .g-side .g-pitf .g-quit, #ui .gshop .g-side .g-pitf .g-main { flex: 1 1 0; justify-content: center; }
 }
 
 </style>
@@ -1727,6 +1809,12 @@ html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: non
 #ui .lb-note { margin: 8px 2px 0; font: 500 14px/1.3 var(--body); color: var(--paper2); }
 #ui .onl.pb .onl-t { color: var(--paper); }
 @media (max-width: 520px) { #ui .lbt.rec th:nth-child(2) { width: 32%; } #ui .lbt.rec th:last-child { width: 80px; } #ui .lbt.rec .lv small { display: block; margin-left: 0; } }
+
+/* v3.4.1: the leaderboard name in Opzioni / Options; the name editor / first-result prompt in a dialog (ui.js ask) */
+#ui .onm-row .namechip { justify-self: start; min-height: 44px; padding: 6px 14px; }
+#ui .onm-row .namechip b { max-width: 18ch; }
+#ui .ask-nm { margin-top: 12px; }
+#ui .ask-nm input::placeholder { color: var(--paper2); opacity: .45; }
 
 </style>
 <style>
@@ -2568,7 +2656,7 @@ window.ORS = window.ORS || {};
     // pause
     'pause': ['Pausa', 'Pause'], 'pause.race': ['Gara in corso', 'Race in progress'], 'pause.resume': ['Riprendi', 'Resume'],
     'pause.restart': ['Ricomincia la salita', 'Restart the climb'], 'pause.quit': ['Esci al menu', 'Quit to menu'], 'pause.sure': ['Sicuro? Esci', 'Sure? Quit'],
-    'pause.lostHill': ['La salita in corso andrà persa.', 'The current climb will be lost.'], 'pause.lostRace': ['La gara in corso andrà persa.', 'The current race will be lost.'],
+    'pause.lostHill': ['La salita in corso andrà persa.', 'The current climb will be lost.'], 'pause.lostGp': ['Questa gara non conta. Il Gran Premio resta salvato: lo riprendi dal Garage prima di questa gara.', 'This race won’t count. The Grand Prix stays saved: resume it from the Garage before this race.'], 'pause.lostRace': ['La gara in corso andrà persa.', 'The current race will be lost.'],
     'pause.confirm': ['Premi di nuovo per confermare.', 'Press again to confirm.'],
 
     // results
@@ -2581,7 +2669,30 @@ window.ORS = window.ORS || {};
     'res.split': ['Intermedio', 'Split'], 'res.prevRec': ['Record prec.', 'Prev. record'], 'res.gap': ['Distacco', 'Gap'],
     'res.nextGoal': ['Prossimo obiettivo:', 'Next goal:'], 'res.allMedals': ['Tutte le medaglie conquistate', 'Every medal won'],
     'res.hills': ['Salite', 'Climbs'], 'res.retry': ['Riprova', 'Retry'],
-    'cup.season': ['Coppa Tonezzer · Stagione {n}', 'Tonezzer Cup · Season {n}'],
+    'cup.season': ['Coppa Tonezzer · classifica finale', 'Tonezzer Cup · final standings'],
+    'cup.ceremony': ['Premiazione', 'Award ceremony'], // v3.4.1: after the last race
+    // v3.4.1: the end of the Gran Premio (ui.js showChampEnd), the saved Gran Premio (race setup: Riprendi), results nitro line
+    'cer.champ': ['Campione!', 'Champion!'], 'cer.over': ['Gran Premio finito', 'Grand Prix over'], 'cer.cup': ['Coppa Tonezzer · {diff}', 'Tonezzer Cup · {diff}'],
+    'cer.goes': ['La Coppa Tonezzer va a {name}', 'The Tonezzer Cup goes to {name}'],
+    'cer.stats': [(v) => v.pts + ' punti · ' + P(v.wins, '{n} vittoria', '{n} vittorie') + ' su ' + v.races + ' gare', (v) => v.pts + ' points · ' + v.wins + ' of ' + v.races + ' races won'],
+    'cer.you': [(v) => 'Tu: ' + v.p + ' posto · ' + P(v.n, '{n} punto', '{n} punti'), (v) => 'You: ' + v.p + ' place · ' + P(v.n, '{n} point', '{n} points')],
+    'cer.skip': ['Premi un tasto per continuare', 'Press any key to continue'], 'cer.skipT': ['Tocca per continuare', 'Tap to continue'],
+    'gp.end.k': ['{n} gare', '{n} races'], 'gp.end.h': ['Coppa Tonezzer', 'Tonezzer Cup'], 'gp.end.champ': ['Campione!', 'Champion!'],
+    'gp.end.cup': ['Gran Premio finito · classifica finale', 'Grand Prix over · final standings'],
+    'gp.end.youWon': ['Hai vinto il Gran Premio!', 'You won the Grand Prix!'], 'gp.end.youPod': ['Gran Premio chiuso sul podio: {p} posto.', 'Grand Prix finished on the podium: {p} place.'],
+    'gp.end.youPlace': ['Gran Premio chiuso al {p} posto.', 'Grand Prix finished in {p} place.'],
+    'gp.end.wins': [(v) => P(v.n, '{n} vittoria', '{n} vittorie'), (v) => P(v.n, '{n} win', '{n} wins')], 'gp.end.winsH': ['Vittorie', 'Wins'],
+    'gp.end.ct': ['Crediti Tonezzer guadagnati: {n}', 'Tonezzer Credits earned: {n}'], 'gp.end.myWins': [(v) => 'Gare vinte: ' + v.n + ' su ' + v.of, (v) => 'Races won: ' + v.n + ' of ' + v.of],
+    'gp.end.note': ['Il Gran Premio è finito. I crediti, i mezzi e i potenziamenti restano nel tuo Garage: il prossimo Gran Premio riparte da zero punti.',
+      'The Grand Prix is over. Your credits, vehicles and upgrades stay in your Garage: the next Grand Prix starts again from zero points.'],
+    'gp.end.again': ['Nuovo Gran Premio', 'New Grand Prix'], 'gp.end.menu': ['Menu principale', 'Main menu'],
+    'gp.res.menu': ['Gran Premio in corso: gara {n} di {of}', 'Grand Prix in progress: race {n} of {of}'],
+    'gp.res.h': ['Gran Premio in corso', 'Grand Prix in progress'], 'gp.res.place': ['{p} in classifica', '{p} in the standings'],
+    'gp.res.go': ['Riprendi', 'Resume'], 'gp.res.new': ['Nuovo Gran Premio', 'New Grand Prix'], 'gp.res.newQ': ['Ricominciare da capo?', 'Start over?'],
+    'gp.res.newT': ['Il Gran Premio salvato (gara {n} di {of}) andrà perso: punti e gettoni ripartono da zero. Crediti, mezzi e potenziamenti restano.',
+      'The saved Grand Prix (race {n} of {of}) will be lost: points and tokens start from zero. Credits, vehicles and upgrades stay.'],
+    'res.nitro': ['Nitro: ×{left} avanzate', 'Nitro: ×{left} left over'], 'res.nitroRefill': ['+{n} in regalo', '+{n} free'],
+    'res.nitroStock': ['scorta ×{n}', 'stock ×{n}'], 'res.nitroNext': ['prossima gara {n}', 'next race {n}'],
     'cup.lifts': ['{name} alza la Coppa Tonezzer!', '{name} lifts the Tonezzer Cup!'], 'cup.takes': ['{name} si porta a casa la Coppa Tonezzer', '{name} takes home the Tonezzer Cup'],
     'cup.standings': ['Classifica Coppa Tonezzer', 'Tonezzer Cup standings'],
     'cup.left': [(v) => P(v.n, '{n} gara', '{n} gare') + ' alla fine', (v) => P(v.n, '{n} race', '{n} races') + ' to go'],
@@ -2603,15 +2714,23 @@ window.ORS = window.ORS || {};
 
     // v9: the Garage between Gran Premio races (js/ui-garage.js pit mode) and its Box tab (nitro cans of the career)
     'pit.h': ['Garage Tonezzer', 'Tonezzer Garage'], 'pit.go': ['Prossima gara', 'Next race'], 'pit.next': ['Prossima gara', 'Next race'],
-    'pit.newSeason': ['Si riparte: stagione {n}, la classifica torna a zero.', 'Here we go again: season {n}, the standings start from zero.'],
+    // v3.4.1: «Menu principale» from the Garage between races (the Gran Premio stays saved), the nitro of the next race
+    'pit.quit': ['Menu principale', 'Main menu'], 'pit.quitS': ['Menu', 'Menu'], 'pit.stay': ['Resta nel Garage', 'Stay in the Garage'],
+    'pit.quitQ': ['Tornare al menu principale?', 'Back to the main menu?'],
+    'pit.quitT': ['Il Gran Premio resta salvato, con punti, gettoni e acquisti: lo riprendi quando vuoi da «1 giocatore» → «Riprendi», di nuovo qui nel Garage prima della gara {n}.',
+      'The Grand Prix stays saved, points, tokens and purchases included: resume it whenever you like from “1 player” → “Resume”, back here in the Garage before race {n}.'],
+    'pit.quitT2': ['Il Gran Premio resta salvato, con punti, gettoni e acquisti: lo riprendete quando volete da «2 giocatori» → «Riprendi», di nuovo qui nel Garage prima della gara {n}.',
+      'The Grand Prix stays saved, points, tokens and purchases included: resume it whenever you like from “2 players” → “Resume”, back here in the Garage before race {n}.'],
+    'pit.first': ['Prima gara del Gran Premio: la classifica parte da zero.', 'First race of the Grand Prix: the standings start from zero.'],
+    'pit.nitroNext': ['Nitro per la gara: {n}', 'Nitro for the race: {n}'],
     'pit.nitro': ['Taniche di nitro', 'Nitro cans'],
-    'pit.nitroD': ['In ogni gara ne porti fino a {n}: quelle che accendi si consumano.', 'You carry up to {n} into each race: the ones you light are used up.'],
+    'pit.nitroD': ['In ogni gara ne porti fino a {n}. Quelle che non accendi restano tue.', 'You carry up to {n} into each race. The ones you don’t light stay yours.'],
     'pit.plus1': ['+1 tanica', '+1 can'], 'pit.fill': [(v) => 'Pieno +' + v.n, (v) => 'Fill +' + v.n], 'pit.full': ['Pieno', 'Full'],
     'pit.buy1': ['Compra una tanica, {ct}', 'Buy one can, {ct}'],
-    'pit.nitroN': ['Per Gran Premio e gare singole. Le taniche raccolte in pista sono un regalo per quella gara; cronoscalate, Sfida del giorno e Scuola guida hanno taniche proprie.',
-      'For the Grand Prix and single races. Cans picked up on the track are a gift for that race; hill climbs, the Daily challenge and the Driving school bring their own.'],
-    'pit.nitro2': ['In due la scorta si divide: una tanica a testa, a turno. Le taniche raccolte in pista sono un regalo per quella gara.',
-      'With two players the stock is shared: one can each, in turn. Cans picked up on the track are a gift for that race.'],
+    'pit.nitroN': ['Gran Premio e gare singole: le taniche che non accendi, anche quelle raccolte in pista, tornano nella scorta (massimo 12). Nel Gran Premio, dopo ogni gara, 2 taniche in regalo. Cronoscalate, Sfida del giorno e Scuola guida hanno taniche proprie.',
+      'Grand Prix and single races: the cans you don’t light, picked-up ones included, go back into your stock (12 at most). In the Grand Prix every race also gives you 2 free cans. Hill climbs, the Daily challenge and the Driving school bring their own.'],
+    'pit.nitro2': ['In due la scorta si divide: una tanica a testa, a turno. Le taniche che non accendete tornano nella scorta (massimo 12); nel Gran Premio, dopo ogni gara, 2 taniche in regalo a testa.',
+      'With two players the stock is shared: one can each, in turn. The cans you don’t light go back into the stock (12 at most); in the Grand Prix every race also gives each of you 2 free cans.'],
     'up.aria': ['{name}, livello {lv} di {max}', '{name}, level {lv} of {max}'], 'up.ariaMax': [', al massimo', ', maxed out'], 'up.ariaCost': [', costa {p}', ', costs {p}'],
 
     // loading
@@ -2639,7 +2758,7 @@ window.ORS = window.ORS || {};
     'tip.18': ['La Jeep d’Epoca è lenta, ma nel fango e sulle pietraie non la ferma nessuno.', 'The Vintage Jeep is slow, but nothing stops it in mud and on rocks.'],
     'tip.19': ['Le gomme chiodate fanno miracoli sul ghiaccio. Sull’asfalto, un po’ meno.', 'Studded tyres work miracles on ice. On tarmac, not so much.'],
     'tip.20': ['Il Monster Bestione schiaccia gobbe e sassi: ma prima di una curva stretta, frena.', 'The Monster Bestione flattens whoops and rocks: but brake before a tight bend.'],
-    'tip.22': ['Le taniche di nitro si comprano nel Box del Garage: in gara ne porti fino a quattro.', 'Nitro cans are bought in the Garage’s Pit: you carry up to four into a race.'],
+    'tip.22': ['Nitro: in gara ne porti fino a quattro, e quelle che non accendi restano tue per la prossima. Nel Gran Premio ogni gara ne regala due; le altre si comprano nel Box del Garage.', 'Nitro: you carry up to four into a race, and the ones you don’t light stay yours for the next. In the Grand Prix every race gives you two; buy more in the Garage’s Pit.'],
     'tip.21': ['Vinci la Coppa Tonezzer a livello Normale o Difficile e nel garage ti aspetta la Tonezzer Special.', 'Win the Tonezzer Cup on Normal or Hard and the Tonezzer Special awaits you in the garage.'],
 
     // toasts
@@ -2768,6 +2887,7 @@ window.ORS = window.ORS || {};
     'lb.empty': ['Ancora nessun tempo: il primo posto è libero!', 'No times yet: first place is up for grabs!'], 'lb.emptyL': ['Nessun tuo tempo qui per ora.', 'None of your times here yet.'],
     'lb.mine': ['I tuoi tempi su questo dispositivo', 'Your times on this device'], 'lb.around': ['La tua zona', 'Around you'], 'lb.refresh': ['Aggiorna', 'Refresh'],
     'lb.dailyOf': ['Sfida di oggi · {date}', 'Today’s challenge · {date}'], 'lb.total': ['{n} piloti', '{n} drivers'],
+    'lb.ask.h': ['Sei in classifica!', 'You’re on the leaderboard!'], 'lb.ask.t': ['{rank} su {n}. Con che nome vuoi comparire?', '{rank} of {n}. What name should we show?'], 'lb.ask.later': ['Più tardi', 'Later'], // v3.4.1
     'lb.nameH': ['Nome in classifica', 'Leaderboard name'], 'lb.nameD': ['Così ti vedono gli altri piloti nelle classifiche online. Niente dati personali: solo un nome.', 'This is how other drivers see you on the online leaderboards. No personal data: just a name.'],
     'lb.name': ['Il tuo nome', 'Your name'], 'lb.nameEdit': ['Cambia nome', 'Change name'], 'lb.nameSave': ['Salva', 'Save'], 'lb.nameHint': ['2–16 caratteri: lettere, numeri, spazio . _ - \'', '2–16 characters: letters, digits, space . _ - \''],
     'lb.nameBad': ['Questo nome non va bene: scegline un altro', 'That name is not allowed: pick another one'], 'lb.nameShort': ['Almeno 2 caratteri', 'At least 2 characters'], 'lb.nameOk': ['Nome salvato: {name}', 'Name saved: {name}'],
@@ -3015,6 +3135,7 @@ window.ORS = window.ORS || {};
     'ann.elim': [(v) => v.name + ' è eliminato!', (v) => v.name + ' is out!'], 'ann.elimYou': ['Sei eliminato!', 'You are out!'],
     'ann.elimWin': [(v) => 'Vince ' + v.name + '!', (v) => v.name + ' wins it!'], 'ann.elimWinYou': ['Hai vinto! Sei l’ultimo rimasto!', 'You win! Last one standing!'],
     'ann.stageWin': ['Miglior tempo di prova!', 'Fastest stage time!'], 'ann.stagePos': [(v) => (['', 'Primo', 'Secondo', 'Terzo', 'Quarto', 'Quinto', 'Sesto'][v.p] || '') + ' tempo di prova.', (v) => (['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth'][v.p] || '') + ' fastest on the stage.'],
+    'ann.cupWin': ['Campione! La Coppa Tonezzer è tua!', 'Champion! The Tonezzer Cup is yours!'], 'ann.cupLost': [(v) => 'Gran Premio finito. La Coppa Tonezzer va a ' + v.name + '.', (v) => 'The Grand Prix is over. The Tonezzer Cup goes to ' + v.name + '.'], // v3.4.1
     'ann.rallyWin': ['Hai vinto il rally!', 'Rally winner!'], 'ann.rallyPos': [(v) => 'Rally finito: ' + (['', 'primo', 'secondo', 'terzo', 'quarto', 'quinto', 'sesto'][v.p] || '') + ' posto.', (v) => 'Rally done: ' + (['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth'][v.p] || '') + ' place.'],
     /* ==== end v3.4 ==== */
   };
@@ -9097,7 +9218,10 @@ void main() {
      persists): a circuit race (Gran Premio, single race) loads up to RACE cans per player from the stock, a can lit comes off it;
      cans picked up on the track are free for that race only. Hill climbs, the Sfida del giorno and the school keep their own
      fixed cans (part of the course rules / medal calibration) and never touch the stock. */
-  const NITRO = { price: 15, race: 4, max: 12, start: 6 };
+  /* v3.4.1 carry-over rule: the cans a player does not light stay theirs — the loaded ones never left the stock, the ones picked up on
+     the track and not lit go back into it at the results (keepNitro) — and every Gran Premio race adds a free refill (+refill per
+     player who raced); the stock is always clamped to max (never reset). */
+  const NITRO = { price: 15, race: 4, max: 12, start: 6, refill: 2 };
   const BAG_CT = 15; // v9: a Crediti Tonezzer bag picked up on a circuit (paid at the results, Gran Premio and single races)
   function fresh() {
     return { v: 2, coins: 0, life: 0, nitro: NITRO.start, owned: { pickup: 1 }, sel: ['pickup', 'pickup'], up: {}, look: {}, buy: {}, flags: {}, st: { races: 0, wins: 0, hills: 0, cups: 0, derbies: 0, dwins: 0, rallies: 0, rwins: 0, elims: 0, ewins: 0 }, unl: {} }; // (v11: derbies, dwins; v3.4: rallies, rwins, elims, ewins)
@@ -9206,6 +9330,8 @@ void main() {
       c.coins -= k * NITRO.price; c.nitro += k; changed('nitro'); return { ok: true, n: k, price: k * NITRO.price };
     },
     useNitro() { const c = get(); if (c.nitro <= 0) return false; c.nitro--; save(); return true; },
+    // v3.4.1: cans back into the stock (unused pick-ups, the Gran Premio refill): clamped to NITRO.max, returns how many fitted
+    keepNitro(n) { const c = get(), k = Math.max(0, Math.min(Math.floor(+n) || 0, NITRO.max - c.nitro)); if (k > 0) { c.nitro += k; changed('nitro'); } return k; },
     nitroLoad(humans) {
       const out = [], n = Math.max(1, humans | 0); let left = get().nitro;
       for (let i = 0; i < n; i++) out.push(0);
@@ -10767,6 +10893,30 @@ window.ORS.ONLINE_CONFIG = {
       bell(v, t + 10 * q + 0.1, 2093, 0.08, 1.2);
       jingleEnd = Math.max(jingleEnd, t + 2.8);
       cheer(1, 'cheer'); applause(1, 4.5); whistle(now() + 0.5); whistle(now() + 1.8);
+    },
+    /* v3.4.1: the Coppa Tonezzer is yours (the end-of-Gran-Premio ceremony): the motif twice (the second a fourth up), a long C major
+       chord on brass with a snare roll, crash and timpani, bells; the stands roar and whistle */
+    champion() {
+      if (!gate('champion', 8)) return; const v = voice(0.6, 0, 2, 0, M.ui); if (!v) return; const t = v.t, q = 0.11;
+      duckMusic(t, 6, 0.2);
+      const mot = [[0, 67, 0.12], [2, 72, 0.2], [5, 74, 0.04], [6, 76, 0.3]];
+      for (const [d, m, l] of mot) brass(v, t + d * q, m, l, 0.27);
+      for (const [d, m, l] of mot) brass(v, t + (d + 10) * q, m + 5, l, 0.29);
+      const T = t + 20 * q;
+      for (const m of [72, 76, 79, 84, 88]) brass(v, T, m, 2.6, 0.13);
+      for (let k = 0; k < 10; k++) nburst(v, T - 0.66 + k * 0.066, 'bandpass', 2200, 0.7, 0.001, 0, 0.06, 0.1 + k * 0.025); // snare roll
+      nburst(v, T, 'highpass', 4000, 0.6, 0.002, 0, 2, 0.3); // crash
+      tone(v, T, 'sine', 80, 0.003, 0.05, 0.9, 0.5, 55, 0.5); tone(v, T + 0.9, 'sine', 70, 0.003, 0.05, 0.9, 0.4, 50, 0.5); // timpani
+      bell(v, T + 0.1, 2093, 0.08, 1.4); bell(v, T + 0.5, 2637, 0.06, 1.4);
+      jingleEnd = Math.max(jingleEnd, T + 3);
+      cheer(1, 'cheer'); applause(1, 7); whistle(now() + 0.5); whistle(now() + 1.6); whistle(now() + 3.1);
+    },
+    // v3.4.1: a firework shell bursting (the ceremony): a dull launch thump, the bang, a crackle tail; o.k = loudness 0..1
+    firework(o) {
+      const v = voice(0.4, 0, 2, 0, M.ui); if (!v) return; const t = v.t, k = o && o.k != null ? clamp(+o.k, 0.2, 1) : 0.8;
+      nburst(v, t, 'lowpass', 900, 0.8, 0.003, 0.02, 0.5, 0.35 * k, 120, 0.4); // bang
+      tone(v, t, 'sine', 70, 0.002, 0.03, 0.5, 0.35 * k, 40, 0.4);
+      for (let i = 0; i < 9; i++) nburst(v, t + 0.18 + i * (0.05 + rnd() * 0.07), 'highpass', 3000 + rnd() * 3000, 0.9, 0.001, 0, 0.03, (0.05 + rnd() * 0.06) * k); // crackle
     },
     lose() {
       if (!gate('lose', 6)) return; const v = voice(0.5, 0, 2, 0, M.ui); if (!v) return; const t = v.t;
@@ -25884,6 +26034,132 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
 
 </script>
 <script>
+/* Tonezzer Racers (© Tonezzer's Arts) — v3.4.1 O.Ceremony: the end-of-Gran-Premio podium (voxel art, built with O.Vox).
+   The game (js/game.js cerStart / cerFrame) parks the top three trucks on the steps at the finish line of the last circuit, orbits
+   the camera, fires confetti / fireworks / nitro (O.FX) and plays the fanfare; this module only builds and animates the props:
+     build({scene, x, y, z, h, low, win}) → C
+       C.slots[0..2]  {x, y, z, h}: where the 1st / 2nd / 3rd truck stands (world, on the step's top)
+       C.center       {x, y, z}: the podium's front centre (camera target)
+       C.cup          {x, y, z}: the Coppa Tonezzer's current position (above the winner)
+       C.update(t, dt): the cup rises from the winner's roof (t 1.2 → 3.4 s) and spins; lamps pulse
+       C.dispose()    removes everything (geometries disposed; the voxel materials are the shared O.Vox ones)
+   Podium (0.125 m voxels): three cream steps with gold trim and a red carpet top, the place numbers in gold on the front; a
+   backdrop wall behind it (TONEZZER in gold, the studio's colours, a row of glowing bulbs). The cup (0.05 m voxels): gold metal
+   bowl with two handles, a red Tonezzer "T", a dark plinth. `low` (quality 'low'): no shadows cast, no point light.
+   win = false (the Barone or a rival won): the cup stays on the top step with the winner, smaller celebration (game.js). */
+(function (O) {
+  'use strict';
+  const V = O.Vox;
+  const GOLD = 0xf4c23a | V.METAL, GOLD2 = 0xd9a520 | V.METAL, CREAM = [0xf3ead6, 0xebe0c8, 0xf7f0e2], RED = 0xc8321f, RED2 = 0xa8261a, DARK = 0x2a1a10;
+  const pick = (arr, x, y, z) => arr[((((x * 73856093) ^ (y * 19349663) ^ (z * 83492791)) >>> 0) & 0xffff) % arr.length];
+  // step layout along local x (viewer at +z looking -z: 2nd on the left, 1st in the middle, 3rd on the right); heights in voxels
+  const VS = 0.125, SW = 26, SD = 44, H = [16, 12, 10]; // step width 3.25 m, depth 5.5 m, heights 2.0 / 1.5 / 1.25 m
+  const ORDER = [1, 0, 2]; // x slot → place index
+
+  function textGrid(str, px, col) { try { return V.text(str, { px, font: 'Bungee, Arial Black, Arial, sans-serif', color: 0xffffff, depth: 1, size: VS, pad: 0 }); } catch (e) { return null; } }
+  // stamp a 2D text grid onto the front face (z = zf) of grid g, centred at cx, bottom at y0, in colour col
+  function stampFront(g, t, cx, y0, zf, col) {
+    if (!t) return;
+    const x0 = Math.round(cx - t.nx / 2);
+    for (let y = 0; y < t.ny; y++) for (let x = 0; x < t.nx; x++) if (t.has(x, y, 0)) g.set(x0 + x, y0 + y, zf, col);
+  }
+  // 5 x 7 pixel digits for the step fronts (rows top → bottom)
+  const DIG = { 1: ['00100', '01100', '00100', '00100', '00100', '00100', '01110'], 2: ['01110', '10001', '00001', '00110', '01000', '10000', '11111'], 3: ['11110', '00001', '00001', '01110', '00001', '00001', '11110'] };
+  function digit(g, n, cx, y0, zf, col) {
+    const rows = DIG[n]; if (!rows) return;
+    for (let r = 0; r < 7; r++) for (let c = 0; c < 5; c++) if (rows[r][c] === '1') g.set(Math.round(cx - 2.5) + c, y0 + 6 - r, zf, col);
+  }
+  function trimRows(t) { // the text grid has empty rows (line height): find the inked rows
+    let lo = t.ny, hi = -1; for (let y = 0; y < t.ny; y++) for (let x = 0; x < t.nx; x++) if (t.has(x, y, 0)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+    return hi < 0 ? [0, 0] : [lo, hi];
+  }
+
+  function podiumGrid() {
+    const nx = SW * 3, ny = H[0] + 1, nz = SD + 1, g = new V.Grid(nx, ny, nz, VS, [-(nx * VS) / 2, 0, -(SD * VS) / 2]);
+    for (let s = 0; s < 3; s++) {
+      const p = ORDER[s], h = H[p], x0 = s * SW, x1 = x0 + SW;
+      g.box(x0, 0, 0, x1, h, SD, (x, y, z) => pick(CREAM, x, y, z));
+      g.box(x0, h - 1, 0, x1, h, SD, (x, y, z) => (x === x0 || x === x1 - 1 || z === 0 || z === SD - 1 ? GOLD2 : (x + z) % 7 === 0 ? RED2 : RED)); // carpet + gold rim
+      g.box(x0, 0, SD - 1, x1, 1, SD, DARK); // kick plate
+      // gold stripe under the carpet; the place number on the front, gold, protruding one voxel
+      g.box(x0, h - 2, SD - 1, x1, h - 1, SD, GOLD2);
+      digit(g, p + 1, x0 + SW / 2, 1 + Math.max(0, Math.floor((h - 3 - 7) / 2)), SD, GOLD);
+    }
+    return g;
+  }
+  function backdropGrid() { // a 12 m banner 2.5–5.5 m up on two posts: the lettering clears the trucks on the lower steps
+    const nx = 96, ny = 44, nz = 3, B = 20, g = new V.Grid(nx, ny, nz, VS, [-(nx * VS) / 2, 0, 0]);
+    g.box(2, 0, 0, 6, ny - 2, 3, 0x3a3f47 | V.METAL); g.box(nx - 6, 0, 0, nx - 2, ny - 2, 3, 0x3a3f47 | V.METAL); // posts
+    // (the front faces +z: the last layer, z = nz - 1)
+    g.box(0, B, 0, nx, ny, 2, (x, y) => (y >= ny - 3 || y < B + 2 ? 0x1c1410 : (x + y) % 2 ? 0x8f1f14 : 0x9a2316)); // red banner, dark frame
+    g.box(0, ny - 3, 0, nx, ny - 2, 2, GOLD2); g.box(0, B + 2, 0, nx, B + 3, 2, GOLD2);
+    for (let x = 3; x < nx; x += 6) g.set(x, ny - 1, 1, 0xffe6a8 | V.GLOW); // bulbs
+    const t = textGrid('TONEZZER', 14, GOLD);
+    if (t) { const [lo, hi] = trimRows(t); stampFront(g, t, nx / 2, B + 3 + Math.round((ny - B - 6 - (hi - lo + 1)) / 2) - lo, 2, 0xf6cc45 | V.GLOW); }
+    // the studio's colour stripes (red / yellow / blue) under the banner
+    for (let x = 0; x < nx; x++) g.set(x, B + 1, 2, x % 12 < 4 ? 0xe2412f : x % 12 < 8 ? 0xf2c22e : 0x2f72e0);
+    return g;
+  }
+  function cupGrid() {
+    const s = 0.05, nx = 40, ny = 38, nz = 24, g = new V.Grid(nx, ny, nz, s, [-(nx * s) / 2, 0, -(nz * s) / 2]), cx = nx / 2, cz = nz / 2;
+    g.box(cx - 7, 0, cz - 7, cx + 7, 3, cz + 7, DARK); g.box(cx - 6, 3, cz - 6, cx + 6, 5, cz + 6, 0x3b2616); // plinth
+    g.box(cx - 5, 5, cz - 5, cx + 5, 6, cz + 5, GOLD2);
+    g.cylinder('y', 6, 15, cx, cz, 2, GOLD); g.ellipsoid(cx, 11, cz, 3.2, 1.6, 3.2, GOLD2); // stem + knot
+    g.cylinder('y', 15, 17, cx, cz, 2, GOLD, 5);
+    g.ellipsoid(cx, 26, cz, 10, 11, 10, GOLD); // bowl
+    g.ellipsoid(cx, 27, cz, 8.4, 10, 8.4, null); g.box(0, 33, 0, nx, ny, nz, null); // hollow, open top
+    g.cylinder('y', 32, 33, cx, cz, 10, GOLD2); g.ellipsoid(cx, 30, cz, 8.4, 10, 8.4, null); // rim
+    for (const sd of [-1, 1]) for (let a = 0; a <= 32; a++) { // handles: half rings on both sides
+      const an = (a / 32) * Math.PI, hx = cx + sd * (9.5 + Math.sin(an) * 5), hy = 24 + Math.cos(an) * 6;
+      for (let dz = -1; dz <= 0; dz++) { g.set(Math.round(hx), Math.round(hy), cz + dz, GOLD); g.set(Math.round(hx + sd * 0.5), Math.round(hy), cz + dz, GOLD); }
+    }
+    // the red "T" on the front of the bowl
+    const fz = Math.round(cz + 9.6), T = [[-3, 30], [-2, 30], [-1, 30], [0, 30], [1, 30], [2, 30], [3, 30], [-3, 29], [-2, 29], [-1, 29], [0, 29], [1, 29], [2, 29], [3, 29]];
+    for (let y = 21; y < 29; y++) { T.push([-1, y]); T.push([0, y]); }
+    for (const [dx, y] of T) { g.set(Math.round(cx + dx), y - 2, fz, 0xe2412f | V.GLOSS); g.set(Math.round(cx + dx), y - 2, fz - 1, 0xe2412f | V.GLOSS); }
+    return g;
+  }
+  const mk = (grid, low) => { const m = V.toMesh(V.mesh(grid, { ao: true })); m.castShadow = !low; m.receiveShadow = true; return m; };
+
+  function build(o) {
+    const root = new THREE.Group(), low = !!o.low;
+    root.position.set(o.x, o.y, o.z); root.rotation.y = o.h || 0;
+    const pod = mk(podiumGrid(), low); root.add(pod);
+    const back = mk(backdropGrid(), low); back.position.set(0, 0, -(SD * VS) / 2 - 1.2); root.add(back);
+    const cupM = mk(cupGrid(), low); const cup = new THREE.Group(); cup.add(cupM); cup.scale.setScalar(1.1); cup.visible = false; root.add(cup);
+    let light = null;
+    if (!low) { light = new THREE.PointLight(0xffd27a, 0, 14, 2); root.add(light); }
+    o.scene.add(root); root.updateMatrixWorld(true);
+    const w = new THREE.Vector3();
+    const toW = (lx, ly, lz) => { w.set(lx, ly, lz); root.localToWorld(w); return { x: w.x, y: w.y, z: w.z }; };
+    const slots = [0, 1, 2].map((p) => { const s = ORDER.indexOf(p), lx = -(SW * 3 * VS) / 2 + (s + 0.5) * SW * VS; return Object.assign(toW(lx, H[p] * VS, 0.2), { h: (o.h || 0), lx }); });
+    const C = {
+      root, slots, roof: 2, center: toW(0, 0, (SD * VS) / 2), cup: toW(slots[0].lx, H[0] * VS + 1.6, 0.2), win: o.win !== false,
+      t: 0,
+      update(t, dt) {
+        C.t = t;
+        // the cup: hidden until 1.2 s, rises from the winner's roof to ~3.3 m over it by 3.4 s (ease out), then floats and spins
+        const k = Math.max(0, Math.min(1, (t - 1.2) / 2.2)), e = 1 - Math.pow(1 - k, 3), base = H[0] * VS;
+        cup.visible = t > 1.2;
+        const roof = C.roof || 2, ly = base + (C.win ? roof * 0.6 + e * (roof * 0.4 + 0.45) + (k >= 1 ? Math.sin((t - 3.4) * 1.8) * 0.1 : 0) : roof + 0.35);
+        cup.position.set(slots[0].lx, ly, 0.2); cup.rotation.y = t * (C.win ? 1.1 : 0.6);
+        cup.scale.setScalar(1.1 * (0.4 + 0.6 * e));
+        if (light) { light.position.set(slots[0].lx, ly + 0.9, 1.6); light.intensity = 2.2 * e * (0.85 + 0.15 * Math.sin(t * 6)); }
+        const p = toW(slots[0].lx, ly + 0.9, 0.2); C.cup.x = p.x; C.cup.y = p.y; C.cup.z = p.z;
+      },
+      dispose() {
+        o.scene.remove(root);
+        root.traverse((m) => { if (m.geometry) m.geometry.dispose(); });
+      },
+    };
+    C.update(0, 0);
+    return C;
+  }
+  O.Ceremony = { build, STEP_H: H.map((h) => h * VS) };
+})(window.ORS);
+
+</script>
+<script>
 /* Tonezzer Racers (Tonezzer's Arts) — UI (O.UI): boot splash, title + menus over the attract race, credits
    ("Riconoscimenti"), per-viewport HUD (position, laps, times, nitro, Crediti Tonezzer bags, gettoni, speed, minimap, standings), banners, pop
    labels, toasts, results, the Garage between Gran Premio races (v9, js/ui-garage.js), pause, game over, loading and touch controls.
@@ -26275,7 +26551,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
 
   /* ---------------- overlays, focus and navigation ---------------- */
   const OV = {};
-  const PRIO = ['loading', 'pause', 'over', 'results', 'shop', 'title'];
+  const PRIO = ['loading', 'ask', 'pause', 'cer', 'over', 'results', 'shop', 'title']; // (v3.4.1: 'ask' = a small confirm / prompt dialog over any screen)
   function ov(name) {
     if (!OV[name]) {
       const e = mk('div', 'ov ov-' + name); e.hidden = true;
@@ -26935,7 +27211,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
   const musicSrcKey = () => (settings.musicSrc === 'synth' || settings.musicSrc === 'off' ? settings.musicSrc : 'song');
   function optionsHTML() {
     const sty = O.Drive ? O.Drive.styles() : ['arcade', 'rally', 'grip'], sk = sty.includes(settings.style) ? settings.style : sty[0];
-    return '<div class="opts">' + langSeg() +
+    return '<div class="opts">' + langSeg() + (O.UIOnline && O.UIOnline.nameRowHTML ? O.UIOnline.nameRowHTML() : '') + // v3.4.1: the leaderboard name (online only)
       /* v10.2: driving style fixed to Sport (the style row was removed; settings.style stays for the harness) */
       segHTML('quality', $t('opt.quality'), 'quality', qualities.map((q) => [q.key, $t('q.' + q.key)]), settings.quality) +
       segHTML('live', $t('opt.live'), 'fondo', [['2', $t('yes')], ['1', $t('opt.live.1')], ['0', $t('no')]], String(settings.live == null ? 2 : settings.live)) + // v3 terreno vivo
@@ -27035,7 +27311,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     TT.track = clamp(prefs.track | 0, 0, Math.max(0, TT.tracks.length - 1));
     TT.diff = settings.difficulty || 'normal';
     TT.hills = st.hills || []; TT.hill = clamp(prefs.hill | 0, 0, Math.max(0, TT.hills.length - 1)); TT.hillHum = prefs.hillHum === 2 ? 2 : 1; TT.ghost = prefs.ghost !== false;
-    ['results', 'shop', 'over', 'pause'].forEach((n) => closeOv(n));
+    ['results', 'shop', 'over', 'pause', 'ask', 'cer'].forEach((n) => closeOv(n));
     clearBanners();
     const host = ov('title');
     const tr = O.state && O.state.track, th = tr && O.THEMES && O.THEMES[tr.theme];
@@ -27055,12 +27331,13 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     host._radio = { lang: optionRadios.lang }; host._act = {}; host._back = null;
     if (page === 'main') {
       const sch = O.Tut ? (O.Tut.firstRun() ? 'first' : 'menu') : ''; // v2-tut: the Scuola guida Tonezzer (first run: on top, focused)
+      const gpS = gpSaved(), gpSub = (n) => (gpS && gpS.humans === n ? '<em class="mgp">' + icon('flag', 'inl') + $t('gp.res.menu', { n: gpS.race, of: gpS.of }) + '</em>' : $t(n === 1 ? 'menu.p1s' : 'menu.p2s')); // v3.4.1: a saved Gran Premio
       box.innerHTML = '<nav class="sign menu" aria-label="' + esc($t('menu.aria')) + '">' +
         (sch === 'first' ? '<div class="mi-row mi-schw"><button class="mi mi-sch" data-act="school" data-default>' + crestImg() + '<span><b>' + $t('menu.schoolH') + '</b><small>' + $t('menu.schoolFirst', { ct: I.num(O.Tut.REWARD) }) + '</small></span>' + icon('play', 'chev') + '</button>' +
           '<button class="mi sm mi-x" data-act="schoolNo" aria-label="' + esc($t('menu.schoolNo')) + '" title="' + esc($t('menu.schoolNo')) + '">' + icon('cross') + '</button></div>' : '') +
         '<div class="mi-row mi-play">' + // v3: 1 / 2 giocatori side by side (+ the Sfida del giorno row below: the menu keeps five rows + one)
-        '<button class="mi" data-act="p1"' + (TT.humans === 1 && sch !== 'first' ? ' data-default' : '') + '>' + icon('helmet') + '<span><b>' + $t('menu.p1') + '</b><small>' + $t('menu.p1s') + '</small></span>' + icon('play', 'chev') + '</button>' +
-        '<button class="mi" data-act="p2"' + (TT.humans === 2 ? ' data-default' : '') + '>' + icon('two') + '<span><b>' + $t('menu.p2') + '</b><small>' + $t('menu.p2s') + '</small></span>' + icon('play', 'chev') + '</button></div>' +
+        '<button class="mi" data-act="p1"' + (TT.humans === 1 && sch !== 'first' ? ' data-default' : '') + '>' + icon('helmet') + '<span><b>' + $t('menu.p1') + '</b><small>' + gpSub(1) + '</small></span>' + icon('play', 'chev') + '</button>' +
+        '<button class="mi" data-act="p2"' + (TT.humans === 2 ? ' data-default' : '') + '>' + icon('two') + '<span><b>' + $t('menu.p2') + '</b><small>' + gpSub(2) + '</small></span>' + icon('play', 'chev') + '</button></div>' +
         (O.UIDerby ? O.UIDerby.menuHTML() : '') + // v11: Demolition Derby (js/ui-derby.js)
         (O.UIModes ? O.UIModes.menuHTML() : '') + // v3.4: Rally a tappe | Eliminazione (js/ui-modes.js)
         (O.UIOnline ? O.UIOnline.menuHTML() : '') + // v3 online: Sfida del giorno (countdown) + Classifiche
@@ -27099,7 +27376,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
         diff: (v) => { TT.diff = v; settings.difficulty = v; cb.onSettings && cb.onSettings({ difficulty: v }); refreshSetup(box); },
         track: (v, b, viaArrow) => { TT.track = +v; prefs.track = TT.track; savePrefs(); if (!viaArrow) { const go = $(box, '[data-act=go]'); if (go) go.focus({ preventScroll: true }); } },
       });
-      host._act = { back: () => titlePage('main', '[data-act=p' + TT.humans + ']'), go: startGame };
+      host._act = { back: () => titlePage('main', '[data-act=p' + TT.humans + ']'), go: startGame, resume: resumeGame };
       host._back = host._act.back;
       if (O.UIGarage) O.UIGarage.bindPicker(box, host);
       refreshSetup(box);
@@ -27130,7 +27407,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       box.innerHTML = '<section class="sign mid"><header class="sign-h"><div class="kicker">' + icon('gear') + $t('menu') + '</div><h2>' + $t('menu.opt') + '</h2></header>' + optionsHTML() +
         '<footer class="sign-f"><button class="btn" data-act="back" data-default>' + icon('back') + $t('back') + '</button></footer></section>';
       host._radio = optionRadios;
-      host._act = { back: () => titlePage('main', '[data-act=opt]') }; host._back = host._act.back;
+      host._act = { back: () => titlePage('main', '[data-act=opt]'), lbname: () => { if (O.UIOnline) O.UIOnline.openName('options'); } }; host._back = host._act.back; // (v3.4.1: the name page, back here)
     } else if (page === 'controls') {
       box.innerHTML = '<section class="sign wide"><header class="sign-h"><div class="kicker">' + icon('pad') + $t('menu') + '</div><h2>' + $t('menu.help') + '</h2></header>' + controlsHTML() +
         '<footer class="sign-f"><button class="btn" data-act="back" data-default>' + icon('back') + $t('back') + '</button></footer></section>';
@@ -27170,7 +27447,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       '<div class="opts two">' +
       segHTML('mode', $t('setup.mode'), 'trophy', [['champ', $t('setup.champ')], ['single', $t('setup.single')]], TT.mode) +
       segHTML('diff', $t('setup.diff'), 'flame', difficulties.map((d) => [d.key, $t('diff.' + d.key)]), TT.diff) +
-      '</div></header><p class="mdesc"></p>' + condHTML() + (O.UIGarage ? O.UIGarage.pickerHTML(TT.humans) : '') +
+      '</div></header><p class="mdesc"></p><div class="gp-res" hidden></div>' + condHTML() + (O.UIGarage ? O.UIGarage.pickerHTML(TT.humans) : '') +
       '<div class="tgrid" role="radiogroup" aria-label="' + esc($t('setup.track')) + '" data-key="track">' + cards + '</div>' +
       '<footer class="sign-f"><button class="btn ghost" data-act="back">' + icon('back') + $t('back') + '</button><span class="gohint"></span>' +
       '<button class="btn go" data-act="go" data-default>' + $t('go') + icon('play') + '</button></footer></section>';
@@ -27194,6 +27471,20 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     { const cr = $(box, '.cond'); if (cr) cr.hidden = champ; if (champ && O.Weather) $(box, '.mdesc').innerHTML += '<span class="dd">' + icon('cloud') + $t('cond.champ') + '</span>'; } // v3
     const t = TT.tracks[champ ? 0 : TT.track];
     $(box, '.gohint').innerHTML = t ? $t(champ ? 'setup.from' : 'setup.track') + ' <b>' + esc($x(t.name)) + '</b>' : '';
+    // v3.4.1: a saved Gran Premio for these players → «Riprendi» (default) and «Nuovo Gran Premio» (asks first)
+    const gs = champ ? gpSaved() : null, mine = !!(gs && gs.humans === TT.humans), rb = $(box, '.gp-res'), go = $(box, '[data-act=go]');
+    if (rb) {
+      rb.hidden = !mine;
+      rb.innerHTML = mine ? '<div class="gr-t">' + icon('flag') + '<span><b>' + $t('gp.res.h') + '</b><small>' + esc([$t('res.raceOf', { n: gs.race, of: gs.of }), I.num(gs.pts | 0) + ' ' + $t('pts', { n: gs.pts | 0 }) + (TT.humans === 1 ? ' · ' + $t('gp.res.place', { p: I.ord(gs.place) }) : ''), $t('diff.' + gs.diff)].join(' · ')) + '</small></span></div>' +
+        '<button class="btn go" data-act="resume" data-default>' + icon('play') + $t('gp.res.go') + '</button>' : '';
+    }
+    if (go) { go.innerHTML = (mine ? $t('gp.res.new') : $t('go')) + icon('play'); if (mine) go.removeAttribute('data-default'); else go.setAttribute('data-default', ''); }
+  }
+  function gpSaved() { try { return cb.gpSaved ? cb.gpSaved() : null; } catch (e) { return null; } }
+  function resumeGame() {
+    const gs = gpSaved(); if (!gs) { titlePage('setup'); return; }
+    closeOv('title');
+    if (cb.onStart) cb.onStart({ humans: gs.humans, mode: 'champ', resume: true });
   }
   /* ---------------- hill climb page (docs/HILLCLIMB.md) ---------------- */
   const MEDAL_KEYS = ['bronze', 'silver', 'gold', 'platinum'];
@@ -27331,6 +27622,15 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     if (cb.onStart) cb.onStart(cfg);
   }
   function startGame() {
+    const gs = TT.mode === 'champ' ? gpSaved() : null;
+    if (gs && gs.humans === TT.humans) { // v3.4.1: starting over throws the saved Gran Premio away: ask first
+      ask({ icon: 'flag', kicker: $t('gp', { studio: STUDIO }), title: $t('gp.res.newQ'), text: $t('gp.res.newT', { n: gs.race, of: gs.of }), yes: $t('gp.res.new'), no: $t('back'), danger: true, yesIcon: 'play' },
+        (ok) => { if (ok) startGameNow(); else { const r = OV.title && $(OV.title, '[data-act=resume]'); if (r) r.focus({ preventScroll: true }); } });
+      return;
+    }
+    startGameNow();
+  }
+  function startGameNow() {
     const cfg = { humans: TT.humans, mode: TT.mode, trackIdx: TT.mode === 'single' ? TT.track : 0, difficulty: TT.diff, vehicles: O.Career ? [O.Career.selected(0), O.Career.selected(1)] : null };
     if (O.Weather) O.Weather.reroll(); // v3: fresh random conditions for this start
     closeOv('title');
@@ -27361,7 +27661,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
         '<button class="btn" data-act="opt">' + icon('gear') + $t('menu.opt') + '</button>' +
         '<button class="btn" data-act="help">' + icon('pad') + $t('menu.help') + '</button>' +
         '<button class="btn danger" data-act="quit">' + icon('back') + '<span class="ql">' + $t('pause.quit') + '</span></button></div>' +
-        '<p class="note pnote" hidden>' + $t(rlyP ? 'rly.lost' : hillP ? 'pause.lostHill' : 'pause.lostRace') + ' ' + $t('pause.confirm') + '</p>' +
+        '<p class="note pnote" hidden>' + $t(rlyP ? 'rly.lost' : hillP ? 'pause.lostHill' : hud.cfg && hud.cfg.gp ? 'pause.lostGp' : 'pause.lostRace') + ' ' + $t('pause.confirm') + '</p>' +
         '<p class="brandln">' + crestImg('sm') + '<span>Tonezzer Racers · © ' + STUDIO + '</span></p></section>';
       host._act = {
         resume: () => { if (cb.onResume) cb.onResume(); },
@@ -27384,7 +27684,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       host.innerHTML = '<section class="sign mid"><header class="sign-h"><div class="kicker">' + icon('pause') + $t('pause') + '</div><h2>' + $t('menu.opt') + '</h2></header>' + optionsHTML() +
         '<footer class="sign-f"><button class="btn" data-act="back" data-default>' + icon('back') + $t('back') + '</button></footer></section>';
       host._radio = optionRadios;
-      host._act = { back: () => pausePage('main', '[data-act=opt]') }; host._back = host._act.back;
+      host._act = { back: () => pausePage('main', '[data-act=opt]'), lbname: () => { if (O.UIOnline) O.UIOnline.editName({}, () => { if (isOpen('pause')) pausePage('options', '[data-act=lbname]'); }); } }; host._back = host._act.back; // (v3.4.1: the name editor in a dialog)
     } else {
       host.innerHTML = '<section class="sign wide"><header class="sign-h"><div class="kicker">' + icon('pause') + $t('pause') + '</div><h2>' + $t('menu.help') + '</h2></header>' + controlsHTML() +
         '<footer class="sign-f"><button class="btn" data-act="back" data-default>' + icon('back') + $t('back') + '</button></footer></section>';
@@ -27481,13 +27781,13 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     }).join('');
     const win = (data.rows || [])[0];
     const humanWin = win && win.human;
-    const next = $t(data.mode === 'single' ? 'res.toMenu' : data.gameOver ? 'res.end' : 'pit.h');
+    const next = $t(data.mode === 'single' ? 'res.toMenu' : data.gameOver ? 'res.end' : data.cup && data.cup.final ? 'cup.ceremony' : 'pit.h'); // (v3.4.1: the last race leads to the final standings)
     const cup = data.cup, kick = cup ? $t('gp', { studio: STUDIO }) + ' · ' + $t('res.raceOf', { n: cup.race, of: cup.of }) : $t('split.finish');
     host.innerHTML = '<section class="sign wide res' + (humanWin ? ' won' : '') + '"><div class="checker"></div>' +
       '<header class="sign-h row"><div><div class="kicker">' + icon('flag') + esc(kick) + '</div><h2>' + esc($x(data.trackName || '')) + '</h2></div>' +
       (humanWin ? '<div class="ribbon">' + icon('trophy') + $t('res.win') + '</div>' : data.gameOver ? '<div class="ribbon bad">' + $t('res.noTokens') + '</div>' : '') + '</header>' +
       '<div class="tscroll"><table class="rtable"><thead><tr><th>' + $t('res.pos') + '</th><th>' + $t('res.driver') + '</th><th>' + $t('hud.time') + '</th><th class="rb">' + $t('res.bestLap') + '</th>' + (champ ? '<th>' + $t('res.pts') + '</th>' : '') + '</tr></thead><tbody>' + rows + '</tbody></table></div>' +
-      (data.note ? '<p class="rnote">' + esc(data.note) + '</p>' : '') + (O.UIOnline ? O.UIOnline.resHTML(data) : '') + (cup ? cupHTML(cup) : '') + (O.UITrophies ? O.UITrophies.billHTML(data.bill) : '') + (O.UIGarage ? O.UIGarage.coinsHTML(data.coins) : '') +
+      (data.note ? '<p class="rnote">' + esc(data.note) + '</p>' : '') + (O.UIOnline ? O.UIOnline.resHTML(data) : '') + nitroHTML(data.nitro, !!(cup && !cup.final && !data.gameOver)) + (cup ? cupHTML(cup) : '') + (O.UITrophies ? O.UITrophies.billHTML(data.bill) : '') + (O.UIGarage ? O.UIGarage.coinsHTML(data.coins) : '') +
       '<footer class="sign-f"><span class="gohint">' + $t('res.next') + ' <b>' + esc(next) + '</b></span><button class="btn go" data-act="cont" data-default>' + $t('res.cont') + icon('play') + '</button></footer></section>';
     let done = false;
     host._act = { cont: () => { if (done) return; done = true; closeOv('results'); if (onContinue) onContinue(); } };
@@ -27498,6 +27798,14 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     if (cup && cup.final && cup.standings && cup.standings[0] && cup.standings[0].human) setTimeout(() => toast($t('toast.cup')), 500);
     if (O.UIGarage) O.UIGarage.afterResults(data.coins);
     if (O.UIOnline) O.UIOnline.afterResults(host, data); // v3 online
+  }
+  /* v3.4.1 nitro carry-over line (game.js nitroCarry: {left, kept, refill, stock, next[]}): the cans left in the truck(s), the Gran
+     Premio refill, the stock now and what the next race loads */
+  function nitroHTML(n, withNext) {
+    if (!n) return '';
+    const nx = withNext && n.next && n.next.length ? (n.next.length > 1 ? n.next.map((x) => '×' + x).join(' + ') : '×' + n.next[0]) : '';
+    return '<p class="rnit">' + icon('nitro', 'inl') + '<span>' + $t('res.nitro', { left: n.left | 0 }) + (n.refill > 0 ? ' · ' + $t('res.nitroRefill', { n: n.refill | 0 }) : '') +
+      ' · ' + $t('res.nitroStock', { n: n.stock | 0 }) + (nx ? ' · <b>' + $t('res.nitroNext', { n: nx }) + '</b>' : '') + '</span></p>';
   }
   /* Gran Premio Tonezzer's Arts: season standings by points (v9; was prize money); the last race of the season awards the Coppa
      Tonezzer. cup = {race, of, season, final, standings: [{name, color, human, pts, wins}]} (sorted, best first) */
@@ -27513,15 +27821,100 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
   /* ---------------- between Gran Premio races: the Garage Tonezzer (v9; was the Officina season shop) ----------------
      st = game.js pitState() {season, race, of, nextTrack, nextTheme, laps, humans [{idx, name, color, credits, out, pts}], standings,
      twoP}; onNext() starts the next race. The page itself is js/ui-garage.js (champ mode) inside the 'shop' overlay. */
-  function showShop(st, onNext) {
+  function showShop(st, onNext, onQuit) {
+    closeOv('ask'); // (a dialog left over the results never follows into the Garage)
     const host = ov('shop');
     host.classList.add('gshop');
     let done = false;
     const next = () => { if (done) return; done = true; if (O.UIGarage) O.UIGarage.leave(null); closeOv('shop'); if (onNext) onNext(); };
+    const quit = onQuit ? () => { if (done) return; done = true; if (O.UIGarage) O.UIGarage.leave(null); closeOv('shop'); onQuit(); } : null; // v3.4.1: «Menu principale» (asked first, ui-garage.js)
     openOv('shop'); host.scrollTop = 0;
-    if (O.UIGarage) O.UIGarage.pit(host, st || {}, next);
+    if (O.UIGarage) O.UIGarage.pit(host, st || {}, next, quit);
     host._t0 = performance.now(); // a double click / tap from the results must not land on the page
     focusDefault(host);
+  }
+
+  /* ---------------- v3.4.1: the end of the Gran Premio ----------------
+     d = game.js champFinal: {standings [{place, name, color, human, pts, wins, veh, out}], champion, humanWon, me [human rows], races,
+     ct (CT this Gran Premio paid), diff, twoP}; onDone('menu' | 'again'). Podium, the Coppa Tonezzer, the final table, the season's
+     numbers; «Menu principale» (default, Esc) or «Nuovo Gran Premio». */
+  function showChampEnd(d, onDone) {
+    d = d || {};
+    ['results', 'shop', 'pause', 'ask'].forEach((n) => closeOv(n));
+    const host = ov('over'), st = d.standings || [], w = d.champion || st[0] || {}, me = (d.me || [])[0], solo = !d.twoP;
+    const vn = (id) => { const V = O.Veh && O.Veh.byId ? O.Veh.byId[id] : null; return V ? V.short || V.name : ''; };
+    const top = [st[1], st[0], st[2]].filter(Boolean);
+    const pod = '<div class="podium gp-pod">' + top.map((r) => '<div class="pd pd' + r.place + (r.human ? ' human' : '') + '" style="--c:' + esc(r.color) + '"><span class="pd-n"><i class="chip"></i>' + esc(r.name) + '</span><span class="pd-v">' + esc(vn(r.veh)) + '</span><span class="pd-t">' + I.num(r.pts | 0) + ' ' + $t('pts', { n: r.pts | 0 }) + '</span><div class="pd-b"><b>' + r.place + '</b></div></div>').join('') + '</div>';
+    const rows = st.map((r, i) => '<tr class="r' + r.place + (r.human ? ' human' : '') + '" style="--c:' + esc(r.color) + ';--i:' + i + '"><td class="rp"><b>' + I.ordHTML(r.place) + '</b></td>' +
+      '<td class="rn"><i class="chip"></i><span class="nm">' + esc(r.name) + '</span>' + (r.human && solo ? '<em class="you">' + $t('res.you') + '</em>' : '') + (r.out ? '<span class="gp-out">' + $t('res.noTokens') + '</span>' : '') + '</td>' +
+      '<td class="rb">' + $t('gp.end.wins', { n: r.wins | 0 }) + '</td><td class="rz">' + I.num(r.pts | 0) + ' ' + $t('pts', { n: r.pts | 0 }) + '</td></tr>').join('');
+    const verdict = d.humanWon ? $t('cup.lifts', { name: w.name }) : $t('cup.takes', { name: w.name });
+    const mine = solo && me ? $t(me.place === 1 ? 'gp.end.youWon' : me.place <= 3 ? 'gp.end.youPod' : 'gp.end.youPlace', { p: I.ord(me.place) }) : '';
+    host.innerHTML = '<section class="sign wide res gp-end' + (d.humanWon ? ' won' : '') + '"><div class="checker"></div>' +
+      '<header class="sign-h row"><div><div class="kicker">' + icon('flag') + esc($t('gp', { studio: STUDIO })) + ' · ' + esc($t('gp.end.k', { n: d.races | 0 })) + ' · ' + esc($t('diff.' + (d.diff || 'normal'))) + '</div><h2>' + $t('gp.end.h') + '</h2></div>' +
+      (d.humanWon ? '<div class="ribbon">' + icon('trophy') + $t('gp.end.champ') + '</div>' : solo && me && me.place <= 3 ? '<div class="ribbon soft">' + $t('rly.res.podium') + '</div>' : '') + '</header>' +
+      '<div class="gp-cup' + (d.humanWon ? ' mine' : '') + '">' + icon('trophy', 'gp-cup-ic') + '<div><span class="lbl">' + $t('gp.end.cup') + '</span><b>' + esc(verdict) + '</b>' + (mine ? '<small>' + esc(mine) + '</small>' : '') + '</div></div>' +
+      pod +
+      '<div class="tscroll"><table class="rtable gp-tab"><thead><tr><th>' + $t('res.pos') + '</th><th>' + $t('res.driver') + '</th><th class="rb">' + $t('gp.end.winsH') + '</th><th>' + $t('res.pts') + '</th></tr></thead><tbody>' + rows + '</tbody></table></div>' +
+      '<p class="gp-sum"><span>' + icon('coin', 'inl') + $t('gp.end.ct', { n: I.num(d.ct | 0) }) + '</span>' + (me ? '<span>' + icon('star', 'inl') + $t('gp.end.myWins', { n: me.wins | 0, of: d.races | 0 }) + '</span>' : '') + '</p>' +
+      '<p class="gp-note">' + $t('gp.end.note') + '</p>' +
+      '<footer class="sign-f"><button class="btn ghost" data-act="again">' + icon('reset') + $t('gp.end.again') + '</button><span class="gohint"></span><button class="btn go" data-act="menu" data-default>' + icon('back') + $t('gp.end.menu') + '</button></footer></section>';
+    let done = false;
+    const fin = (a) => { if (done) return; done = true; closeOv('over'); if (onDone) onDone(a); };
+    host._act = { menu: () => fin('menu'), again: () => fin('again') }; host._back = host._act.menu; host._radio = {}; host._keys = null;
+    openOv('over'); focusDefault(host); host.scrollTop = 0;
+    animate($(host, '.sign'), [{ opacity: 0, transform: 'translateY(30px) scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    if (d.humanWon) setTimeout(() => toast($t('toast.cup')), 600);
+  }
+  /* v3.4.1: the ceremony's overlay (game.js cerStart): transparent over the 3D podium — «CAMPIONE!» / «GRAN PREMIO FINITO», the
+     Coppa line, the champion's name, points and wins, the studio's crest; any key / click / tap / gamepad A (the focused full-screen
+     button) or Esc / B skips. d = {win, name, champ, color, pts, wins, races, diff, me {place, pts, wins}, twoP} */
+  let cerKey = null;
+  function showCeremony(d, onSkip) {
+    d = d || {};
+    clearBanners(); ['results', 'shop', 'pause', 'ask'].forEach((n) => closeOv(n));
+    const host = ov('cer');
+    const stats = $t('cer.stats', { pts: I.num(d.pts | 0), wins: d.wins | 0, races: d.races | 0 });
+    host.innerHTML = '<button class="cer-skip" data-act="skip" data-default aria-label="' + esc($t(COARSE.matches ? 'cer.skipT' : 'cer.skip')) + '"></button>' +
+      '<div class="cer-top' + (d.win ? ' win' : '') + '"><div class="cer-k">' + icon('trophy') + esc($t('cer.cup', { diff: $t('diff.' + (d.diff || 'normal')) })) + '</div>' +
+      '<h1 class="cer-h">' + esc($t(d.win ? 'cer.champ' : 'cer.over')) + '</h1>' +
+      (d.win ? '' : '<p class="cer-goes">' + esc($t('cer.goes', { name: d.champ || '' })) + '</p>') + '</div>' +
+      '<div class="cer-bot"><div class="cer-name" style="--c:' + esc(d.color || '#f2c22e') + '"><i class="chip"></i><b>' + esc(d.win ? d.name || '' : d.champ || '') + '</b><span>' + esc(stats) + '</span></div>' +
+      (!d.win && d.me && !d.twoP ? '<div class="cer-me">' + esc($t('cer.you', { p: I.ord(d.me.place), n: d.me.pts | 0 })) + '</div>' : '') +
+      '<div class="cer-brand">' + crestImg('sm') + '<span>Tonezzer Racers · © ' + STUDIO + '</span></div>' +
+      '<div class="cer-hint">' + esc($t(COARSE.matches ? 'cer.skipT' : 'cer.skip')) + '</div></div>';
+    let done = false, t0 = performance.now();
+    const fin = () => { if (done) return; done = true; if (onSkip) onSkip(); };
+    host._act = { skip: fin }; host._back = fin; host._radio = {}; host._keys = null;
+    if (cerKey) removeEventListener('keydown', cerKey, true);
+    cerKey = (e) => { if (e.repeat || /^(Shift|Control|Alt|Meta|F\d+)/.test(e.code) || performance.now() - t0 < 500) return; if (isOpen('cer') && activeOv() === host) fin(); };
+    addEventListener('keydown', cerKey, true);
+    openOv('cer'); focusDefault(host);
+    animate($(host, '.cer-h'), [{ opacity: 0, transform: 'scale(2.2)', letterSpacing: '.3em' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 350, easing: 'cubic-bezier(.2,1.25,.4,1)', fill: 'backwards' });
+    animate($(host, '.cer-bot'), [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 1300, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' });
+  }
+  function hideCeremony() {
+    if (cerKey) { removeEventListener('keydown', cerKey, true); cerKey = null; }
+    closeOv('cer', true);
+  }
+  /* v3.4.1: a small dialog over any screen (overlay 'ask', above everything but the loading screen): o = {icon, kicker, title, text,
+     html (extra body), yes, no, danger, focus ('no' default | 'yes' | a selector), act (extra data-act handlers)}; done(true|false).
+     Esc / gamepad B = no. Returns {host, end(result)}. */
+  function ask(o, done) {
+    o = o || {};
+    const host = ov('ask');
+    host.innerHTML = '<section class="sign narrow ask-s" aria-label="' + esc(o.title || '') + '"><header class="sign-h"><div class="kicker">' + icon(o.icon || 'flag') + esc(o.kicker || '') + '</div><h2>' + esc(o.title || '') + '</h2></header>' +
+      (o.text ? '<p class="ask-t">' + esc(o.text) + '</p>' : '') + (o.html || '') +
+      '<footer class="sign-f"><button class="btn ghost" data-act="no"' + (o.focus === 'yes' ? '' : ' data-default') + '>' + icon(o.noIcon || 'back') + esc(o.no || $t('back')) + '</button>' +
+      '<button class="btn ' + (o.danger ? 'danger' : 'go') + '" data-act="yes"' + (o.focus === 'yes' ? ' data-default' : '') + '>' + icon(o.yesIcon || (o.danger ? 'back' : 'check')) + esc(o.yes || 'OK') + '</button></footer></section>';
+    let fin = false;
+    const end = (r) => { if (fin) return; fin = true; closeOv('ask'); if (done) done(r); };
+    host._act = Object.assign({ yes: () => end(true), no: () => end(false) }, o.act || {}); host._back = () => end(false); host._radio = {}; host._keys = null;
+    openOv('ask'); host.scrollTop = 0;
+    const f = o.focus && o.focus !== 'yes' && o.focus !== 'no' ? $(host, o.focus) : null;
+    if (f) f.focus({ preventScroll: true }); else focusDefault(host);
+    animate($(host, '.sign'), [{ opacity: 0, transform: 'scale(.94)' }, { opacity: 1, transform: 'none' }], { duration: 220, easing: 'cubic-bezier(.2,.8,.3,1)' });
+    return { host, end };
   }
 
   /* ---------------- game over ---------------- */
@@ -27720,13 +28113,14 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     showResults,
     showShop,
     showGameOver,
+    showChampEnd, ask, showCeremony, hideCeremony, // v3.4.1
     showPause,
     /* optional extras */
     isMenuOpen() { return !!activeOv(); },
     // v2: building blocks for js/ui-garage.js (same look and navigation as every other page)
     _k: { mk, $, $$, esc, icon, kbd, segHTML, sfx, animate, popText, toast, focusDefault, crestImg, STUDIO, COARSE, RM, titlePage: (p, f) => titlePage(p, f), activate, $t, $x,
       // v3 online (js/ui-online.js): overlays, decorations, starting a race from a title page
-      ov, openOv, closeOv, isOpen, clearBanners, drawThumb, drawProfile, themeAcc, medalIc, medalName, start: (cfg) => { closeOv('title'); if (cb.onStart) cb.onStart(cfg); }, page: () => TT.page },
+      ov, openOv, closeOv, isOpen, clearBanners, ask /* v3.4.1 */, drawThumb, drawProfile, themeAcc, medalIc, medalName, start: (cfg) => { closeOv('title'); if (cb.onStart) cb.onStart(cfg); }, page: () => TT.page },
   };
   O.UI = UI;
 })(window.ORS);
@@ -27783,8 +28177,9 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       '<div class="seg g-tabs" role="radiogroup" aria-label="' + k.esc($t('gar.tabs')) + '" data-key="gtab">' +
       TABS.map((t) => '<button role="radio" data-act="radio" data-v="' + t + '" aria-checked="' + (GS.tab === t) + '">' + $t('gar.tab.' + t) + '</button>').join('') + '</div>' +
       '<div class="g-body"></div>' +
-      (GS.pit // v9: between Gran Premio races the footer starts the next race (no way back: the season goes on)
-        ? '<footer class="sign-f"><button class="btn ghost g-main" data-act="main"></button><button class="btn go g-go" data-act="go" data-default>' + k.icon('flag') + '<span>' + $t('pit.go') + '</span>' + k.icon('play') + '</button></footer>'
+      (GS.pit // v9: between Gran Premio races the footer starts the next race; v3.4.1: «Menu principale» leaves (asked first, the Gran Premio stays saved)
+        ? '<footer class="sign-f g-pitf">' + (GS.pit.onQuit ? '<button class="btn ghost g-quit" data-act="quit" aria-label="' + k.esc($t('pit.quit')) + '" title="' + k.esc($t('pit.quit')) + '">' + k.icon('back') + '<span>' + $t('pit.quitS') + '</span></button>' : '') +
+          '<button class="btn ghost g-main" data-act="main"></button><button class="btn go g-go" data-act="go" data-default>' + k.icon('flag') + '<span>' + $t('pit.go') + '</span>' + k.icon('play') + '</button></footer>'
         : '<footer class="sign-f"><button class="btn ghost" data-act="back">' + k.icon('back') + $t('back') + '</button><button class="btn go g-main" data-act="main" data-default></button></footer>') +
       '</div></section>';
   }
@@ -27831,8 +28226,10 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     if (P) {
       const toks = (P.humans || []).map((p) => '<span class="pt-h" style="--c:' + k.esc(p.color) + '"><i class="chip"></i><b>' + k.esc(p.name) + '</b>' +
         (p.out ? '<em class="pt-out">' + $t('res.noTokens') + '</em>' : '<span class="pt-tok" title="' + k.esc($t('tokens')) + '">' + new Array(Math.max(0, p.credits | 0) + 1).join(k.icon('token')) + '</span>') + '</span>').join('');
-      const st = P.standings ? '<ol class="pt-st">' + P.standings.map((r, i) => '<li class="' + (r.human ? 'me' : '') + '" style="--c:' + k.esc(r.color) + '"><b>' + (i + 1) + '</b><i class="chip"></i><span>' + k.esc(r.name) + '</span><em>' + O.I18N.num(r.pts | 0) + ' ' + $t('pts', { n: r.pts | 0 }) + '</em></li>').join('') + '</ol>' : '<p class="g-note">' + $t('pit.newSeason', { n: P.season | 0 }) + '</p>';
-      h += '<div class="pt-next"><div class="pt-nh"><span class="gsl">' + $t('pit.next') + '</span><b>' + k.esc(k.$x(P.nextTrack || '')) + '</b><em>' + k.esc(O.I18N.theme(P.nextTheme || 'desert')) + ' · ' + $t('laps', { n: P.laps || 3 }) + '</em></div>' +
+      const st = P.standings ? '<ol class="pt-st">' + P.standings.map((r, i) => '<li class="' + (r.human ? 'me' : '') + '" style="--c:' + k.esc(r.color) + '"><b>' + (i + 1) + '</b><i class="chip"></i><span>' + k.esc(r.name) + '</span><em>' + O.I18N.num(r.pts | 0) + ' ' + $t('pts', { n: r.pts | 0 }) + '</em></li>').join('') + '</ol>' : '<p class="g-note">' + $t('pit.first') + '</p>';
+      const ld = O.Career.nitroLoad((P.humans || []).filter((p) => !p.out).length || 1); // v3.4.1: the cans the next race loads
+      h += '<div class="pt-next"><div class="pt-nh"><span class="gsl">' + $t('pit.next') + '</span><b>' + k.esc(k.$x(P.nextTrack || '')) + '</b><em>' + k.esc(O.I18N.theme(P.nextTheme || 'desert')) + ' · ' + $t('laps', { n: P.laps || 3 }) + '</em>' +
+        '<span class="pt-nl">' + k.icon('nitro') + $t('pit.nitroNext', { n: ld.map((x) => '×' + x).join(' + ') }) + '</span></div>' +
         '<div class="pt-toks">' + toks + '</div>' + st + '</div>';
     }
     h += '<div class="pt-nit"><div class="pt-nh">' + k.icon('nitro', 'big') + '<div><b>' + $t('pit.nitro') + '</b><small>' + $t('pit.nitroD', { n: N.race }) + '</small></div><em class="pt-have">×' + have + '</em></div>' +
@@ -27898,12 +28295,19 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     return true;
   }
   /* v9: between two Gran Premio races (ui.js showShop → the 'shop' overlay host): the same garage, Box tab first, "Prossima gara" */
-  function pit(host, st, onNext) {
-    GS.pit = { st, onNext }; GS.tab = 'pit'; GS.fromPit = true;
+  function pit(host, st, onNext, onQuit) {
+    GS.pit = { st, onNext, onQuit }; GS.tab = 'pit'; GS.fromPit = true;
     host.innerHTML = '<div class="gp-wrap"></div>';
     host._radio = {}; host._act = {};
     mount(K().$(host, '.gp-wrap'), host);
-    host._back = null; // the season goes on: Esc does not leave the page
+    host._back = onQuit ? host._act.quit : null; // v3.4.1: Esc / gamepad B ask to go back to the main menu (was: nothing)
+  }
+  /* v3.4.1: «Menu principale» between Gran Premio races: a dialog says what is kept (the Gran Premio is saved: «Riprendi» on the
+     race setup page; the career's purchases are saved anyway) */
+  function askQuit(host) {
+    const k = K(), P = GS.pit; if (!P || !P.onQuit || !k.ask) return;
+    k.ask({ icon: 'flag', kicker: $t('gp', { studio: k.STUDIO }) + ' · ' + $t('res.raceOf', { n: P.st.race || 1, of: P.st.of || 1 }), title: $t('pit.quitQ'), text: $t(P.st.twoP ? 'pit.quitT2' : 'pit.quitT', { n: P.st.race || 1 }), yes: $t('pit.quit'), no: $t('pit.stay'), noIcon: 'garage', yesIcon: 'back' },
+      (ok) => { if (ok) { const f = P.onQuit; GS.pit = null; f(); } else { const b = k.$(host, '[data-act=quit]'); if (b) b.focus({ preventScroll: true }); } });
   }
   function mount(box, host) {
     const k = K();
@@ -27921,6 +28325,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     host._act = {
       back: () => k.titlePage('main', '[data-act=garage]'),
       go: () => { if (GS.pit && GS.pit.onNext) { const f = GS.pit.onNext; GS.pit = null; f(); } }, // v9: next Gran Premio race
+      quit: () => askQuit(host), // v3.4.1
       nit: (b) => { const r = O.Career.buyNitro(+b.dataset.n || 1); feedback(b, r.ok, r.ok ? r.price : 0); body(host, r.ok && O.Career.nitro() < O.Career.NITRO.max ? '[data-act=nit]' : '[data-act=go], [data-k]'); }, // v9 nitro cans
       prev: () => go(-1), next: () => go(1),
       rev: () => { if (O.GarageView) O.GarageView.rev(); },
@@ -28634,7 +29039,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     const inp = box.querySelector('input'), err = box.querySelector('.nm-err'), form = box.querySelector('form');
     form.addEventListener('submit', (e) => e.preventDefault());
     inp.addEventListener('input', () => { err.hidden = true; });
-    const back = () => k.titlePage(NS.from === 'daily' ? 'daily' : 'boards', '[data-act=name]');
+    const back = () => (NS.from === 'options' ? k.titlePage('options', '[data-act=lbname]') : k.titlePage(NS.from === 'daily' ? 'daily' : 'boards', '[data-act=name]')); // (v3.4.1: from Opzioni)
     host._act = {
       back,
       save: () => {
@@ -28646,6 +29051,55 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     host._back = back;
     if (!k.COARSE.matches) setTimeout(() => { if (inp.isConnected) { inp.focus({ preventScroll: true }); inp.select(); } }, 30);
     return true;
+  }
+
+  /* ---------------- v3.4.1: the leaderboard name, easier to find ----------------
+     • Opzioni / Options (title and pause): a row «Nome in classifica: Pilota 1234 ✎» (nameRowHTML); on the title it opens the name
+       page (back to Options), in the pause menu the same editor in a dialog (editName).
+     • The first online result while the player still has the default name (1P only): a dialog on the results — «Sei in
+       classifica! 23° su 140. Con che nome vuoi comparire?» with the field (same checks as the name page), «Salva» and «Più tardi».
+       «Più tardi» is remembered (NKEY): offered once more after 5 more online results, then never. Online only (dormant: nothing). */
+  const NKEY = 'ors3d-name-ask-v1';
+  const nrd = () => { try { const v = JSON.parse(localStorage.getItem(NKEY) || '{}'); return v && typeof v === 'object' ? v : {}; } catch (e) { return {}; } };
+  const nwr = (v) => { try { localStorage.setItem(NKEY, JSON.stringify(v)); } catch (e) { /* ignore */ } };
+  function nameRowHTML() {
+    if (!ON() || !O.Online) return '';
+    const p = O.Online.player();
+    return '<div class="orow onm-row"><div class="ol">' + ico('podium') + '<span>' + $t('lb.nameH') + '</span></div>' +
+      '<button class="btn ghost namechip optname' + (p.named ? '' : ' unnamed') + '" data-act="lbname" aria-label="' + esc($t('lb.nameEdit') + ': ' + p.name) + '">' + ico('pen') + '<span><b>' + esc(p.name) + '</b></span></button></div>';
+  }
+  function openName(from) { NS.from = from || 'boards'; K().titlePage('name'); }
+  // the name editor in a dialog (k.ask): o = {title, text, kicker, no (label)}; done(saved) — also the results prompt
+  function editName(o, done) {
+    const k = K(); if (!k.ask || !O.Online) { if (done) done(false); return; }
+    o = o || {}; const p = O.Online.player();
+    const html = '<form class="nm-form ask-nm" data-act="yes" autocomplete="off"><label><span>' + $t('lb.name') + '</span><input type="text" name="nick" maxlength="16" spellcheck="false" autocapitalize="words" enterkeyhint="done" value="' + esc(p.named ? p.name : '') + '" placeholder="' + esc(p.name) + '"></label>' +
+      '<small class="nm-hint">' + esc($t('lb.nameHint')) + '</small><p class="nm-err" role="alert" hidden></p></form>';
+    let A = null;
+    const save = () => {
+      const h = A && A.host, inp = h && h.querySelector('input'), err = h && h.querySelector('.nm-err'); if (!inp) return;
+      const r = O.Online.setName(inp.value);
+      if (!r.ok) { err.textContent = $t(r.why === 'bad' ? 'lb.nameBad' : 'lb.nameShort'); err.hidden = false; k.sfx('error'); inp.focus(); return; }
+      k.toast($t('lb.nameOk', { name: r.name })); A.end(true);
+    };
+    A = k.ask({ icon: 'flag', kicker: o.kicker || $t('lb.h'), title: o.title || $t('lb.nameH'), text: o.text || $t('lb.nameD'), html, yes: $t('lb.nameSave'), yesIcon: 'check', no: o.no || $t('back'), focus: k.COARSE.matches ? 'yes' : 'input', act: { yes: save } }, (ok) => { if (done) done(!!ok); });
+    const h = A.host, inp = h.querySelector('input'), form = h.querySelector('form');
+    form.addEventListener('submit', (e) => e.preventDefault());
+    inp.addEventListener('input', () => { const e = h.querySelector('.nm-err'); if (e) e.hidden = true; });
+    if (!k.COARSE.matches) setTimeout(() => { if (inp.isConnected) { inp.focus({ preventScroll: true }); inp.select(); } }, 30);
+  }
+  // after an online result (afterResults): the first-time name prompt, if it applies
+  function namePrompt(host, r) {
+    const k = K();
+    if (!ON() || !O.Online || !r || !r.online || !r.ok || !(r.rank > 0) || O.Online.player().named) return;
+    if (O.state && O.state.humans === 2) return; // 2P: whose name? (the Options row is there)
+    if (!host || !host.isConnected || host.hidden || (k.isOpen && k.isOpen('ask'))) return;
+    const st = nrd(); if ((st.n | 0) >= 2) return;
+    if ((st.n | 0) === 1) { st.seen = (st.seen | 0) + 1; nwr(st); if (st.seen < 5) return; }
+    editName({ kicker: $t('lb.h'), title: $t('lb.ask.h'), text: $t('lb.ask.t', { rank: I().ord(r.rank), n: I().num(r.total) }), no: $t('lb.ask.later') }, (saved) => {
+      if (!saved) { const v = nrd(); v.n = (v.n | 0) + 1; v.seen = 0; nwr(v); }
+      if (host.isConnected && !host.hidden) k.focusDefault(host);
+    });
   }
 
   /* ---------------- results ---------------- */
@@ -28679,14 +29133,14 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     if (!host || !data) return;
     startCd();
     const o = data.online, el = host.querySelector('[data-onl]');
-    if (o && o.promise && el) o.promise.then((r) => { if (!el.isConnected) return; const x = onlText(r); el.className = 'onl ' + x.cls; el.querySelector('.onl-t').innerHTML = esc(x.t) + (x.s ? '<small>' + esc(x.s) + '</small>' : ''); });
+    if (o && o.promise && el) o.promise.then((r) => { if (!el.isConnected) return; const x = onlText(r); el.className = 'onl ' + x.cls; el.querySelector('.onl-t').innerHTML = esc(x.t) + (x.s ? '<small>' + esc(x.s) + '</small>' : ''); namePrompt(host, r); });
     const d = data.daily, dr = host.querySelector('[data-drank]');
     if (d && d.promise && dr && ON()) d.promise.then((r) => {
       if (!dr.isConnected) return;
       const x = onlText(r);
       dr.querySelector('b').textContent = r.online && r.rank > 0 ? I().ord(r.rank) : '—';
       dr.querySelector('span').textContent = r.online && r.rank > 0 ? $t('lb.total', { n: I().num(r.total) }) : x.t;
-      dr.classList.toggle('ok', !!(r.online && r.rank > 0));
+      dr.classList.toggle('ok', !!(r.online && r.rank > 0)); namePrompt(host, r);
       const top = host.querySelector('[data-dtop]'); if (top) fillBoard(top, d.board, 5, true);
     });
     else { const top = host.querySelector('[data-dtop]'); if (top && d) fillBoard(top, d.board, 5, true); }
@@ -28711,7 +29165,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
     afterResults(host, data);
   }
 
-  O.UIOnline = { menuHTML, page, resHTML, dailyResHTML, afterResults, showDailyResults, ico, _bs: BS, _hms: hms };
+  O.UIOnline = { menuHTML, page, resHTML, dailyResHTML, afterResults, showDailyResults, ico, _bs: BS, _hms: hms, nameRowHTML, openName, editName, _nameAsk: { KEY: NKEY, prompt: namePrompt } }; // (v3.4.1: name row, editor, prompt)
 })(window.ORS);
 
 </script>
@@ -30406,6 +30860,11 @@ void main(){
      every upgrade is bought in the Garage, which opens between the Gran Premio races (no season money, no season shop). */
   const POINTS = [10, 6, 3, 1];
   const BAG_CT = () => (O.Career && O.Career.BAG_CT) || 15;
+  const NITRO_MAX = () => (O.Career && O.Career.NITRO ? O.Career.NITRO.max : 12); // v3.4.1: a player's truck holds at most the stock's cap
+  /* v3.4.1: the Gran Premio in progress is saved (localStorage GP_KEY) after every race and when it starts, so the player can leave
+     from the Garage between races (or the pause menu) and resume it from the race setup page; cleared when the Gran Premio ends
+     (final standings, game over) or a new one starts. Only the season's own facts: the career (CT, garage, nitro) is saved anyway. */
+  const GP_KEY = 'ors3d-gp-v1';
   /* ==== v2 GARAGE: vehicles (js/vehicles.js) ====
      Humans race their garage vehicle (O.Career: chosen vehicle, garage upgrades, look); the AI rivals have their own: BLU a Rally
      Saetta, GIALLO a Buggy Zanzara, il Barone a Trophy Truck Deserto. The AI's pace is normalised per vehicle (AI_TOP, measured
@@ -31062,6 +31521,7 @@ void main(){
     loadTrack(attract);
     /* ==== v3 TERRENO VIVO: fresh ground every race; trucks see the ruts through a track view whose locate() includes them ==== */
     S.liveTr = S.track; if (S.world && S.world.live) { S.world.live.reset(settings.live); S.liveTr = S.world.live.wrap(S.track); }
+    cerStop(); // v3.4.1
     clearCars(); clearPickups(); clearGhost();
     if (S.fx) S.fx.clear();
     const tr = S.track, hill = S.mode === 'hill' && !attract;
@@ -31162,7 +31622,7 @@ void main(){
       const b = hill ? outline.reduce((a, p) => ({ minX: Math.min(a.minX, p[0]), maxX: Math.max(a.maxX, p[0]), minZ: Math.min(a.minZ, p[1]), maxZ: Math.max(a.maxZ, p[1]) }), { minX: 1e9, maxX: -1e9, minZ: 1e9, maxZ: -1e9 }) : tr.bounds;
       O.UI.hud.setup({
         rally: hill && S.rally ? rallyHudCfg() : null, elim: S.elim ? { n: S.elim.n, laps: S.elim.laps } : null, // v3.4 (js/ui-modes.js)
-        mode: hill ? 'hill' : S.derby ? 'derby' : 'race', bags: S.mode === 'champ' || S.mode === 'single', // v9: the CT bag board (circuits that pay bags); v11: the derby HUD (js/ui-derby.js)
+        mode: hill ? 'hill' : S.derby ? 'derby' : 'race', bags: S.mode === 'champ' || S.mode === 'single', gp: S.mode === 'champ' && S.cars.some((c) => c.human) /* v3.4.1: the pause note */, // v9: the CT bag board (circuits that pay bags); v11: the derby HUD (js/ui-derby.js)
         viewports: S.viewports.map((v) => ({ x: v.x, y: v.y, w: v.w, h: v.h, playerIndex: v.car ? v.car.id : 0 })),
         cars: S.cars.map((c) => ({ id: c.id, name: c.prof.label, color: c.prof.color, human: c.human })),
         track: { name: tr.name, laps: tr.laps, outline, bounds: b, theme: tr.theme, open: hill },
@@ -31681,7 +32141,7 @@ void main(){
         if (got) {
           S.fx.pickupBurst(p.x, p.y + 1, p.z, p.type);
           if (p.type === 'nitro') {
-            if (got.human) { got.nitro++; popAt(got, p, '+1 NITRO', '#7fe08a'); } // v9: free for this race (never added to the stock)
+            if (got.human) { if ((got.nitro | 0) < NITRO_MAX()) { got.nitro++; popAt(got, p, '+1 NITRO', '#7fe08a'); } } // v9: free for this race; v3.4.1: capped at the stock max, kept at the results if not lit (nitroCarry)
             else { got.pkN = (got.pkN || 0) + 1; if (got.pkN <= 2) got.nitro++; } // AI: at most 2 extra cans per race
           } else if (got.human) { got.bags++; popAt(got, p, '+' + BAG_CT() + ' CT', '#f2c22e'); if (O.Trophies) O.Trophies.add('cash'); } // v9: a Crediti Tonezzer bag (paid at the results)
           if (got.human) O.Audio.play(p.type === 'nitro' ? 'pickupNitro' : 'pickupCash');
@@ -31840,16 +32300,170 @@ void main(){
     const ftE = featEnd(rk, { cupWin: !!(cup && cup.final && cup.standings[0] && cup.standings[0].human), seasonDone: !!(cup && cup.final) }); // v2 feat: Trofei, Conto carrozzeria
     featCoins(coins, ft0);
     if (champ && coins) S.seasonCT = (S.seasonCT || 0) + coins.total; // v9: the CT this Gran Premio paid (game over line)
-    O.UI.showResults({ trackName: S.track.name, rows, note, mode: S.mode, gameOver: !alive, newRecord: newRec, cup, coins, bill: ftE.bill, online: onlineLap(rk) /* v3 online */ }, () => {
+    const nitro = nitroCarry(champ); // v3.4.1: unused cans back into the stock (+ the Gran Premio refill)
+    const last = !!(cup && cup.final);
+    if (champ) { if (!alive || last) gpClear(); else gpSave(S.trackIdx + 1); } // v3.4.1: the season so far (resume from the Garage before the next race)
+    O.UI.showResults({ trackName: S.track.name, rows, note, mode: S.mode, gameOver: !alive, newRecord: newRec, cup, coins, nitro, bill: ftE.bill, online: onlineLap(rk) /* v3 online */ }, () => {
       if (S.mode === 'single') { toTitle(); return; }
       if (!alive) { O.UI.showGameOver({ text: O.t('over.text', { n: S.raceNum + 1, ct: O.I18N.num(S.seasonCT || 0) }) }, toTitle); return; }
+      if (last) { champFinal(cup); return; } // v3.4.1: the Gran Premio ends here (it used to wrap into a new season, forever)
       openShop();
     });
   }
   // v9: Gran Premio standings (points, then wins, then the last race's place)
   function standings() {
     return S.profiles.slice().sort((a, b) => (b.pts - a.pts) || (b.wins - a.wins) || (a.last - b.last))
-      .map((p) => ({ name: p.label, color: p.color, human: p.idx < S.humans, pts: p.pts || 0, wins: p.wins || 0 }));
+      .map((p) => ({ idx: p.idx, name: p.label, color: p.color, human: p.idx < S.humans, pts: p.pts || 0, wins: p.wins || 0, veh: p.veh, out: !!p.out }));
+  }
+  /* v3.4.1 nitro carry-over (Gran Premio and single races, the circuit races that load from the career's stock): the loaded cans a
+     player did not light never left the stock; the cans picked up on the track and not lit go back into it now; a Gran Premio race
+     also adds NITRO.refill per player who raced. Everything clamped to NITRO.max (O.Career.keepNitro). → {left, kept, refill,
+     stock, next} for the results line, or null where the stock is not used. */
+  function nitroCarry(champ) {
+    if (!O.Career || !O.Career.keepNitro || (S.mode !== 'champ' && S.mode !== 'single')) return null;
+    const hs = S.cars.filter((c) => c.human); if (!hs.length) return null;
+    const left = hs.reduce((a, c) => a + Math.max(0, c.nitro | 0), 0), free = hs.reduce((a, c) => a + Math.max(0, (c.nitro | 0) - (c.nitroBank | 0)), 0);
+    const kept = O.Career.keepNitro(free), refill = champ ? O.Career.keepNitro(O.Career.NITRO.refill * hs.length) : 0;
+    const humansNext = S.profiles.filter((p) => p.human && !p.out).length || 1;
+    return { left, kept, refill, stock: O.Career.nitro(), next: O.Career.nitroLoad(humansNext) };
+  }
+  /* v3.4.1: the Gran Premio's last race → the final standings screen (podium, the Coppa Tonezzer, rewards), then the main menu or a
+     new Gran Premio with the same players and difficulty */
+  function champFinal(cup) {
+    S.state = 'results';
+    const st = cup.standings.map((r, i) => ({ ...r, place: i + 1 })), me = st.filter((r) => r.human);
+    const data = { standings: st, champion: st[0], humanWon: !!(st[0] && st[0].human), me, races: O.TRACKS.length, ct: S.seasonCT || 0, diff: settings.difficulty, twoP: S.humans === 2 };
+    const end = () => {
+      O.UI.showChampEnd(data, (act) => {
+        if (act === 'again') { const humans = S.humans; O.Audio.init(); cerStop(); newProfiles(humans); S.mode = 'champ'; S.raceNum = 0; S.season = 1; S.seasonCT = 0; S.glStart = glSnap(); S.trackIdx = 0; if (O.Weather) O.Weather.reroll(); beginRace(); return; }
+        toTitle();
+      });
+    };
+    cerStart(data, end);
+  }
+  /* v3.4.1 the end-of-Gran-Premio ceremony (js/ceremony.js builds the podium and the Coppa): on the last circuit, a little past the
+     finish line, the top three trucks on the steps, the camera orbiting, confetti and fireworks (O.FX, scaled by the quality tier),
+     nitro flames from the winner, the fanfare and the crowd, the announcer. ~9 s when a human lifts the Coppa (CER_WIN), ~5.5 s
+     otherwise (a lighter version: one confetti burst, the 'finish' jingle); any key / click / gamepad A skips (ui.js
+     showCeremony). Then the final standings (showChampEnd) open over the still orbiting scene; cerStop disposes it all (toTitle,
+     startRace). State 'ceremony': no physics, no HUD. */
+  const CER_WIN = 9, CER_LOSE = 5.5;
+  let CER = null;
+  function cerStart(d, onDone) {
+    cerStop();
+    const tr = S.track;
+    if (!O.Ceremony || !tr || !S.cars.length) { onDone(); return; }
+    let i0 = Math.round(16 / tr.ds) % tr.N; const x = tr.cx[i0], z = tr.cz[i0], h = tr.ang[i0], y = tr.locate(x, z, i0, tmpI).y;
+    let C = null; try { C = O.Ceremony.build({ scene, x, y, z, h, low: qualityKey() === 'low', win: d.humanWon }); } catch (e) { console.error(e); onDone(); return; }
+    const top = d.standings.slice(0, 3).map((r) => S.cars.find((c) => c.prof.idx === r.idx)).filter(Boolean);
+    for (const c of S.cars) { c.view.root.visible = false; if (c.eng) { c.eng.stop(); c.eng = null; } }
+    clearPickups(); clearGhost();
+    top.forEach((c, k) => { const sl = C.slots[k]; c.x = sl.x; c.z = sl.z; c.y = sl.y; c.groundY = sl.y; c.h = sl.h; c.vx = c.vz = 0; c.air = false; c.nitroT = 0; c.view.root.visible = true; });
+    if (top[0]) C.roof = { monster: 2.9, trophy: 2.2, special: 2.0, buggy: 1.8 }[top[0].prof.veh] || 2.1; // the cup floats just over the winner's roof
+    cerPose(top, 0);
+    S.state = 'ceremony';
+    CER = { C, top, d, t: 0, dur: d.humanWon ? CER_WIN : CER_LOSE, done: false, onDone, i0, said: false, conf: 0, pops: [], nit: 0 };
+    cerViewport();
+    O.Audio.crowd(d.humanWon ? 1 : 0.6);
+    O.Audio.play(d.humanWon ? 'champion' : 'finish');
+    const w = d.champion || {}, me = (d.me || [])[0];
+    const nm = d.humanWon && !d.twoP && O.Online && O.Online.configured && O.Online.configured() && O.Online.player().named ? O.Online.player().name : w.name; // the leaderboard name, if chosen
+    if (O.UI.showCeremony) O.UI.showCeremony({ win: d.humanWon, name: nm, champ: w.name, color: w.color, pts: w.pts, wins: w.wins, races: d.races, diff: d.diff, me: me ? { place: me.place, pts: me.pts, wins: me.wins } : null, twoP: d.twoP }, cerSkip);
+    else cerSkip();
+  }
+  function cerViewport() {
+    const w = Math.max(1, innerWidth), hh = Math.max(1, innerHeight), a = w / hh;
+    S.viewports = [{ x: 0, y: 0, w, h: hh, car: CER && CER.top[0] ? CER.top[0] : S.cars[0] }];
+    cams[0].aspect = a; cams[0].fov = a < 1 ? 62 : 46; cams[0].updateProjectionMatrix();
+  }
+  // the timeline ends (or is skipped): the final standings; the scene keeps orbiting behind them
+  function cerSkip() {
+    if (!CER || CER.done) return;
+    CER.done = true;
+    if (O.UI.hideCeremony) O.UI.hideCeremony();
+    if (!CER.said) { CER.said = true; O.Audio.announce(CER.d.humanWon ? 'cupWin' : 'cupLost', { name: CER.d.champion ? CER.d.champion.name : '' }); }
+    const f = CER.onDone; CER.onDone = null; if (f) f();
+  }
+  function cerStop() {
+    if (!CER) return;
+    try { CER.C.dispose(); } catch (e) { /* ignore */ }
+    if (O.UI.hideCeremony) O.UI.hideCeremony();
+    for (const c of S.cars) if (c.view && c.view.root) c.view.root.visible = true;
+    CER = null;
+  }
+  function cerPose(top, dt, nitroOn) {
+    top.forEach((c, k) => {
+      c.view.update({ x: c.x, y: c.y, z: c.z, h: c.h, pitch: 0, roll: 0, steer: 0, speed: 0, slip: 0, spin: 0, air: false, squash: 0, nitro: k === 0 && !!nitroOn, braking: false, throttle: k === 0 && nitroOn ? 1 : 0.15, surf: 0, bump: false, time: S.time, groundY: c.y, ghost: false, wob: null }, dt);
+    });
+  }
+  const cerE = (k) => 1 - Math.pow(1 - clamp(k, 0, 1), 3);
+  function cerFrame(dt) {
+    const K = CER, C = K.C, t = (K.t += dt), win = K.d.humanWon, fx = S.fx, dur = K.dur;
+    C.update(t, dt);
+    // the trucks on the steps (static; the winner's exhaust spits nitro now and then)
+    const nitroOn = win && ((t > 2.1 && t < 2.9) || (t > 5.2 && t < 5.8) || (t > 7.6 && t < 8.1));
+    cerPose(K.top, dt, nitroOn);
+    if (fx) {
+      const cf = win ? [1.0, 3.6, 6.3] : [1.2];
+      while (K.conf < cf.length && t >= cf[K.conf]) {
+        const p = K.conf === 1 ? C.cup : C.center; fx.confetti(p.x, p.y + (K.conf === 1 ? 0.5 : 2.2), p.z);
+        for (let i = 0; i < 5; i++) K.pops.push(t + 0.2 + i * 0.4 + Math.random() * 0.2); // the fireworks the burst schedules (fx.js confetti)
+        K.conf++;
+      }
+      if (nitroOn && K.top[0]) {
+        const c = K.top[0], fxx = Math.sin(c.h), fzz = Math.cos(c.h), wb = (c.st && c.st.wb) || 1.2;
+        if ((K.nit -= dt) <= 0) { K.nit = 0.35; fx.nitroBurst(c.x - fxx * (wb + 1.1), c.y + 0.7, c.z - fzz * (wb + 1.1), -fxx, -fzz); }
+      }
+      if (win && t > 1.4 && t < 3.6 && Math.random() < dt * 6) fx.pickupBurst(C.cup.x + (Math.random() - 0.5) * 0.6, C.cup.y, C.cup.z + (Math.random() - 0.5) * 0.6, 'cash'); // gold glitter around the rising cup
+    }
+    for (let i = K.pops.length - 1; i >= 0; i--) if (t >= K.pops[i]) { K.pops.splice(i, 1); O.Audio.play('firework', { k: win ? 0.9 : 0.5 }); }
+    if (!K.said && t > (win ? 3.2 : 1.6)) { K.said = true; O.Audio.announce(win ? 'cupWin' : 'cupLost', { name: K.d.champion ? K.d.champion.name : '' }); }
+    if (!K.done && t >= dur) cerSkip();
+    // camera: a crane down and an orbit in front of the podium; afterwards a slow drift behind the final standings
+    const cam = cams[0], ce = C.center, h = C.slots[0].h, f = [Math.sin(h), Math.cos(h)], l = [Math.cos(h), -Math.sin(h)];
+    const k = cerE(t / Math.min(dur, 8)), a = -0.95 + 1.45 * k + Math.max(0, t - dur) * 0.05, nar = clamp((1 - cam.aspect) / 0.55, 0, 1), r = (18 - 5.5 * k) * (1 + 0.5 * nar), up = 9.5 - 4.5 * k + 2 * nar; // (portrait: further back to fit the podium)
+    const tgY = ce.y + 2.4 + (win ? 1.1 * cerE((t - 1.2) / 2.2) : 0.5);
+    cam.position.set(ce.x + f[0] * r * Math.cos(a) + l[0] * r * Math.sin(a), ce.y + up, ce.z + f[1] * r * Math.cos(a) + l[1] * r * Math.sin(a));
+    cam.lookAt(ce.x - f[0] * 1.5, tgY, ce.z - f[1] * 1.5);
+    S.hype = damp(S.hype, 0.9, 1, dt);
+  }
+  function gpSave(next) {
+    try {
+      const d = { v: 1, humans: S.humans, diff: settings.difficulty, next: next | 0, of: O.TRACKS.length, ct: S.seasonCT || 0, gl: S.glStart || {}, t: Date.now(),
+        prof: S.profiles.map((p) => ({ pts: p.pts | 0, wins: p.wins | 0, last: p.last | 0, credits: p.credits | 0, out: !!p.out, human: !!p.human, skill: +p.skill || 0, lv: p.lv })) };
+      localStorage.setItem(GP_KEY, JSON.stringify(d));
+    } catch (e) { /* storage blocked or full: the season lives on in this page only */ }
+  }
+  function gpClear() { try { localStorage.removeItem(GP_KEY); } catch (e) { /* ignore */ } }
+  // the saved Gran Premio, validated (null when there is none or it does not fit this game any more: other track count, corrupt)
+  function gpLoad() {
+    let d = null; try { d = JSON.parse(localStorage.getItem(GP_KEY) || 'null'); } catch (e) { d = null; }
+    if (!d || d.v !== 1 || !Array.isArray(d.prof) || d.prof.length !== TEAM.length || (d.humans !== 1 && d.humans !== 2) || d.of !== O.TRACKS.length) return null;
+    if (!(d.next >= 0 && d.next < O.TRACKS.length) || !own(DIFF, d.diff)) return null;
+    if (!d.prof.some((p) => p && p.human && !p.out)) return null;
+    return d;
+  }
+  // for the title (race setup page): {humans, race, of, pts, diff} of the saved Gran Premio, or null
+  function gpInfo() {
+    const d = gpLoad(); if (!d) return null;
+    const pts = d.prof.slice(0, d.humans).map((p) => p.pts | 0), all = d.prof.map((p, i) => ({ i, pts: p.pts | 0, wins: p.wins | 0, last: p.last | 0 })).sort((a, b) => (b.pts - a.pts) || (b.wins - a.wins) || (a.last - b.last));
+    return { humans: d.humans, race: d.next + 1, of: d.of, pts: pts[0], pts2: d.humans === 2 ? pts[1] : null, place: all.findIndex((q) => q.i === 0) + 1, diff: d.diff };
+  }
+  // resume: the Garage before the saved next race (the race quit mid-way, if any, did not count)
+  function gpResume() {
+    const d = gpLoad(); if (!d) return false;
+    applySettings({ difficulty: d.diff });
+    newProfiles(d.humans);
+    S.profiles.forEach((p, i) => {
+      const q = d.prof[i] || {};
+      p.pts = q.pts | 0; p.wins = q.wins | 0; p.last = q.last | 0 || 9; p.credits = Math.max(0, Math.min(3, q.credits | 0)); p.out = !!q.out;
+      if (i < d.humans) p.human = !p.out; else { if (+q.skill > 0) p.skill = Math.min(1.1, +q.skill); if (q.lv && typeof q.lv === 'object') p.lv = { acc: +q.lv.acc || 0, top: +q.lv.top || 0, tires: +q.lv.tires || 0, shocks: +q.lv.shocks || 0 }; }
+    });
+    S.mode = 'champ'; S.daily = null; S.rally = null; S.elimCfg = null; S.season = 1; S.seasonCT = +d.ct || 0; S.glStart = d.gl && typeof d.gl === 'object' ? d.gl : glSnap();
+    S.trackIdx = d.next - 1; S.raceNum = d.next - 1; // openShop → the next race is d.next
+    aiBoostCalc();
+    openShop();
+    return true;
   }
   /* Hill climb results: best run of the players -> record (time, splits, ghost) when it beats the stored one; medal per player.
      v2-tut: records and medals per vehicle (each run against its own vehicle's record and targets), plus the course's overall best
@@ -32031,17 +32645,19 @@ void main(){
      compounds, paint, nitro cans and the vehicle for the next race (a switch is allowed: the rivals follow the new set-up through
      S.aiBoost, champSync), all paid in Crediti Tonezzer from the career. pitState = the season facts the page shows. */
   function pitState() {
-    const nx = (S.trackIdx + 1) % O.TRACKS.length, t = O.TRACKS[nx];
+    const nx = Math.min(O.TRACKS.length - 1, S.trackIdx + 1), t = O.TRACKS[nx]; // v3.4.1: no wrap — the Gran Premio ends after its last race
     return {
-      season: S.season + (nx === 0 ? 1 : 0), race: nx + 1, of: O.TRACKS.length, nextTrack: t.name, nextTheme: t.theme, laps: t.laps || 3,
+      season: S.season, race: nx + 1, of: O.TRACKS.length, nextTrack: t.name, nextTheme: t.theme, laps: t.laps || 3,
       humans: S.profiles.filter((p) => p.idx < S.humans).map((p) => ({ idx: p.idx, name: p.label, color: p.color, credits: p.credits, out: !!p.out, pts: p.pts || 0 })),
       standings: nx === 0 ? null : standings(), twoP: S.humans === 2,
     };
   }
   function openShop() {
+    if (S.trackIdx + 1 >= O.TRACKS.length) { toTitle(); return; } // (never: the last race ends in champFinal)
     O.Audio.music('shop'); // music: the garage songs in the Gran Premio shop
     S.state = 'shop';
-    O.UI.showShop(pitState(), () => { S.raceNum++; S.trackIdx = (S.trackIdx + 1) % O.TRACKS.length; if (S.trackIdx === 0) { S.season++; S.glStart = glSnap(); for (const p of S.profiles) { p.pts = 0; p.wins = 0; p.last = 9; } } beginRace(); });
+    O.UI.showShop(pitState(), () => { S.raceNum++; S.trackIdx++; beginRace(); },
+      () => { toTitle(); }); // v3.4.1: «Menu principale» (confirmed in the Garage): the Gran Premio stays saved (gpSave) for a resume
   }
   // v9: before every Gran Premio race the humans race what the garage holds now (vehicle chosen between races, upgrades, look)
   function champSync() {
@@ -32055,7 +32671,7 @@ void main(){
     if (O.UIModes && (S.rally || (S.mode === 'elim' && S.elimCfg))) O.UIModes.loading(S.rally ? { ev: S.rally.id, k: S.rally.stage, n: S.rally.n } : { n: S.elimCfg.n, laps: curDef().laps }); // v3.4: the rally stage / the elimination field on the loading screen
     // 'loading' until startRace runs: the old race stops simulating and cannot be paused or finished in the gap
     S.state = 'loading'; S.paused = false;
-    if (S.mode === 'champ') champSync(); // v9
+    if (S.mode === 'champ') { champSync(); gpSave(S.trackIdx); } // v9; v3.4.1: saved at every start (a quit mid-race resumes before it)
     setTimeout(() => {
       startRace({}); O.UI.setLoading(false);
       // touch-only devices: full controls in 1P; in 2P (keyboard/gamepads drive) at least a pause button
@@ -32081,6 +32697,7 @@ void main(){
   }
   function toTitle(o) {
     S.paused = false; O.UI.showPause(false);
+    cerStop(); // v3.4.1
     if (O.Tut) O.Tut.stop(); // v2-tut
     for (const c of S.cars) if (c.eng) { c.eng.stop(); c.eng = null; }
     clearGhost();
@@ -32119,6 +32736,8 @@ void main(){
     onStart(cfg) {
       // cfg: {humans:1|2, mode:'champ'|'single'|'hill', trackIdx?, hillIdx?, ghost?, difficulty?}
       O.Audio.init(); O.Audio.music(null);
+      if (cfg.mode === 'champ' && cfg.resume && gpResume()) return; // v3.4.1: «Riprendi il Gran Premio» (the Garage before the next race)
+      if (cfg.mode === 'champ') gpClear(); // a new Gran Premio replaces the saved one
       if (cfg.difficulty) applySettings({ difficulty: cfg.difficulty });
       newProfiles(cfg.humans || 1, cfg.vehicles); // v2: the vehicle each player chose
       S.mode = cfg.mode || 'champ'; S.raceNum = 0; S.season = 1; S.seasonCT = 0; S.glStart = S.mode === 'champ' ? glSnap() : null;
@@ -32139,6 +32758,7 @@ void main(){
     onUserGesture() { O.Audio.init(); },
     // i18n: the title's data again after a language change (challenge texts are generated in the current language)
     titleData() { return { hills: hillList() }; },
+    gpSaved: gpInfo, // v3.4.1: the saved Gran Premio for the race setup page (resume)
   });
   function setPause(on) {
     if (!(S.state === 'race' || S.state === 'countdown' || S.state === 'finish')) on = false;
@@ -32163,6 +32783,7 @@ void main(){
     renderer.setPixelRatio(pixelRatioFor(qualityKey())); // browser zoom / another monitor changes devicePixelRatio
     renderer.setSize(w, h); drawnPaused = false;
     if (O.Photo && O.Photo.active && S.viewports[0]) { const v = S.viewports[0]; v.w = w; v.h = h; cams[0].aspect = w / h; cams[0].updateProjectionMatrix(); O.Photo.resize(); return; } // v2 feat: photo mode keeps one full-screen view
+    if (CER) { cerViewport(); return; } // v3.4.1: the ceremony's one full-screen view
     if (S.cars.length) setupViewports();
   }
   addEventListener('resize', resize);
@@ -32547,7 +33168,8 @@ void main(){
     const photo = !!(O.Photo && O.Photo.active); // v2 feat: the photo mode drives camera 0 (the race is paused)
     if (photo && O.Photo.frame(rawDt)) drawnPaused = false;
     if (S.paused || !racing) O.Input.syncPads(); // keep gamepad edge state fresh while read() is not called
-    if (!S.paused) {
+    if (S.state === 'ceremony' && CER) { S.time += dt; cerFrame(dt); } // v3.4.1: the end-of-Gran-Premio podium (no physics)
+    else if (!S.paused) {
       S.time += dt;
       if (S.state === 'countdown') {
         const prev = Math.ceil(S.countdown - 0.7); S.countdown -= dt; const cur = Math.ceil(S.countdown - 0.7);
@@ -32585,7 +33207,8 @@ void main(){
     // cameras + world update
     focus.length = 0;
     for (let k = 0; k < S.viewports.length; k++) {
-      const v = S.viewports[k]; if (!(photo && k === 0)) rigs[k].update(v.car, S.paused ? 0 : dt);
+      const v = S.viewports[k]; if (!(photo && k === 0) && !CER) rigs[k].update(v.car, S.paused ? 0 : dt);
+      if (CER) { const f = focusPool[k], c = CER.C.center; f.x = c.x; f.y = c.y; f.z = c.z; f.idx = CER.i0; f.under = false; f.camera = cams[k]; f.cover = 0; f.zoneW = 0; f.viewK = 0.45; focus.push(f); continue; }
       if (v.car) {
         const f = focusPool[k]; f.x = v.car.x; f.y = v.car.y; f.z = v.car.z; f.idx = v.car.idx; f.under = !!v.car.info.under; f.camera = cams[k];
         f.cover = S.track.cover ? S.track.cover[v.car.idx] : 0; f.zoneW = rigs[k].zw; f.viewK = rigs[k].dist / 42; // SCENIC §4.7
@@ -32834,6 +33457,8 @@ void main(){
     },
     camState(k = 0) { const r = rigs[k], u = cams[k].userData; return { dist: +r.dist.toFixed(2), base: +r.base.toFixed(2), pitch: +r.pitch.toFixed(3), zw: +r.zw.toFixed(3), zone: r.zone, viewK: +(u.viewK || 1).toFixed(3), fogK: +(u.fogK || 1).toFixed(3), sf: +r.sf.toFixed(2), ndc: [+(r.ndcX || 0).toFixed(2), +(r.ndcY || 0).toFixed(2)], lift: +r.lift.toFixed(2), liftF: +r.liftF.toFixed(2), grade: +r.gT.toFixed(3), gradeN: +r.gN.toFixed(3), relief: +r.rel.toFixed(2), crest: +r.cw.toFixed(2), edge: +r.ew.toFixed(2), fov: +cams[k].fov.toFixed(1), alt: +r.aw.toFixed(2), look: +(r.lookW || 0).toFixed(2), yaw: +(r.yawF || 0).toFixed(2), summit: +r.ow.toFixed(2) }; },
     toTitle, openShop, restartRun,
+    gp: { save: (n) => gpSave(n), load: gpLoad, info: gpInfo, clear: gpClear, resume: gpResume, KEY: GP_KEY }, // v3.4.1 (tools/champ-test.js)
+    cer: { get: () => CER, stop: cerStop, skip: cerSkip, final: (cup) => champFinal(cup || { standings: standings() }) }, // v3.4.1 ceremony (tools/champ-test.js)
     /* v3 online (tools/online-test.js): the Sfida del giorno of `now` (ms; default today) — {go}: skip the countdown */
     startDaily(o = {}) { if (o.now != null && O.Daily) { const d = O.Daily.today(o.now); O.Daily.today = () => d; } O.UI.hideAll && O.UI.hideAll(); S.mode = 'daily'; dailyBegin({}); startRace({}); if (o.go) { S.state = 'race'; S.countdown = 0; } return { daily: S.daily, mode: S.mode, id: curDef().id, laps: S.track.laps }; },
     /* v2 feat (tools/feat-test.js): heavy damage on car ci (n hits, meshed at once), photo mode on / off, per-car trophy stats */

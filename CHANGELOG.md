@@ -1,5 +1,37 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3.4.1 — Il Gran Premio ha una fine, nitro che resta, nome in classifica
+
+### Italiano
+
+* **Il Gran Premio finisce davvero.** Dopo la dodicesima gara non si riparte più da capo all’infinito: c’è la
+  **premiazione** sul podio (i primi tre sui gradini, la Coppa Tonezzer che si alza sul vincitore, coriandoli, fuochi
+  d’artificio, la fanfara e il pubblico; un tasto per saltarla), poi la **classifica finale** con podio, vittorie, punti e
+  Crediti guadagnati. Da lì: **Menu principale** o **Nuovo Gran Premio**.
+* **Uscire dal Garage tra una gara e l’altra**: nuovo pulsante **Menu** (anche Esc o B sul gamepad), con una domanda di
+  conferma. Il Gran Premio **resta salvato**: lo ritrovi in «1 giocatore» (o «2 giocatori») → **Riprendi**, di nuovo nel Garage
+  prima della gara successiva. Anche «Esci» dal menu di pausa lo conserva (la gara lasciata a metà non conta).
+* **Nitro più chiaro**: le taniche che non accendi restano tue, **anche quelle raccolte in pista**; nel Gran Premio ogni gara
+  ne regala **2**; la scorta arriva al massimo a **12** (mai azzerata, nemmeno con salvataggi strani). I risultati mostrano
+  «Nitro: ×N avanzate · +2 in regalo · scorta ×N», il Garage «Nitro per la gara: ×4».
+* **Nome in classifica più facile da trovare**: alla prima classifica online il gioco ti chiede con che nome comparire
+  («Più tardi» per decidere dopo); in **Opzioni** c’è la riga «Nome in classifica» per cambiarlo quando vuoi.
+
+### English
+
+* **The Grand Prix really ends.** After the twelfth race it no longer starts over forever: there is an **award ceremony** on
+  the podium (the top three on the steps, the Tonezzer Cup rising over the winner, confetti, fireworks, the fanfare and the
+  crowd; any key skips it), then the **final standings** with the podium, wins, points and Credits earned. From there: **Main
+  menu** or **New Grand Prix**.
+* **Leave the Garage between races**: a new **Menu** button (also Esc or B on a gamepad) asks first. The Grand Prix **stays
+  saved**: find it under “1 player” (or “2 players”) → **Resume**, back in the Garage before the next race. “Quit” in the pause
+  menu keeps it too (the race left halfway doesn’t count).
+* **Clearer nitro**: the cans you don’t light stay yours, **picked-up ones included**; in the Grand Prix every race gives you
+  **2** more; the stock tops out at **12** (never reset, not even by odd saves). The results show “Nitro: ×N left over · +2
+  free · stock ×N”, the Garage “Nitro for the race: ×4”.
+* **Leaderboard name, easier to find**: the first time you make an online leaderboard the game asks which name to show (“Later”
+  to decide later); **Options** has a “Leaderboard name” row to change it any time.
+
 ## v3.4 — Rally a tappe, Eliminazione, classifiche online, cronoscalate più fluide
 
 ### Italiano
