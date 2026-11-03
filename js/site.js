@@ -138,6 +138,7 @@
     'tv.sound': '1:19 · with sound · “Toh-NAY-tser Racers”',
     'tv.dl': 'Download the trailer (MP4, 1080p)', 'tv.dlHref': 'video/tonezzer-racers-trailer-en.mp4',
     'tv.dlv': '15 s vertical cut',
+    'tv.v3': 'the v3 trailer', 'tv.v3Href': 'video/tonezzer-racers-trailer-v3-en.mp4',
     'tv.kit': 'press kit',
     'r.lead': 'Seven vehicles, one mud track and zero mercy. <b>Tonezzer Racers</b> is the spiritual heir to the off-road arcade racers of yesteryear, rebuilt voxel by voxel in high definition. <b>Version 3.5</b> reshapes all twelve circuits and adds stage rallies, elimination races, online leaderboards and a proper Cup ceremony, on top of version 3’s real night, weather, living terrain and Demolition Derby. Play instantly, in your browser, for free.',
     'f1.alt': 'The Cima delle Nuvole hill climb at sunset, with distant mountains and a pink sky',
