@@ -1,5 +1,54 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3.5 — Saliscendi: circuiti più vari
+
+### Italiano
+
+* **I dodici circuiti del Gran Premio cambiano carattere**: più salite e discese, dossi su cui si vola davvero, e cinque
+  piste con un tracciato nuovo. Ogni pista ha il suo momento forte:
+  * **Mesa Grande**: si sale su un altopiano più alto e se ne scende ripidi; **La Duna** prima dell'oasi fa decollare.
+  * **Tonezzer Ring**: la **Torre dei Neon**, tre tornanti fino a 15 m, poi giù in picchiata.
+  * **Tonezzer Stadium**: paraboliche alzate a 10 m come catini, il campo infossato sotto il ponte.
+  * **Palude Nera**: giù nella **Pozza** allagata, due gobbe a 20 m tra i pini e la **Discesa dei Pini**.
+  * **Bosco del Lupo**: nuovi **Tornanti del Lupo** in salita e **Il Salto del Lupo**, un dosso che vola in discesa.
+  * **Rallycross del Lago**: **Le Forcelle**, tre tornanti di ghiaia nel bosco; il **Dosso della Griglia** sull'asfalto e il
+    **Trampolino** che fa volare per 60–70 m.
+  * **Gola del Diavolo**: la salita di sempre, poi i nuovi **Tornanti del Ritorno** in discesa verso il ponte di 35 m.
+  * **Valle della Morte**: un tuffo di 33 m fino a **Badwater**, 25 m sotto il deserto, e su fino al passo.
+  * **Tre Archi**: montagne russe, tre archi alti 22 m e tre picchiate.
+  * **Rodeo di Mezzanotte**: **La Montagna**, 15 m di salita con il tornante in cima.
+  * **Passo della Neve**: la salita di sempre e la nuova **Pista Nera**, uno slalom tra le gobbe.
+  * **Canyon del Fuoco**: **Il Girone di Lava**, tornanti in discesa con un muro sopraelevato.
+* **La telecamera segue meglio i salti lunghi in discesa**: il camion resta nell'inquadratura fino all'atterraggio.
+* **La Tonezzer Special ha un motore nuovo**: un V12 a scarico aperto, cupo e pieno, che abbaia quando si dà gas e a ogni
+  cambiata, scoppietta forte in rilascio e ulula solo in cima ai giri — niente più fischio da frullino.
+* **Record nuovi**: con le piste cambiate i tempi sul giro ripartono da zero, sul dispositivo e nelle **classifiche online** (le
+  vecchie classifiche dei giri restano archiviate e non si vedono più). Cronoscalate (anche le due dei circuiti), rally e derby non
+  cambiano.
+
+### English
+
+* **The twelve Grand Prix circuits change character**: more climbs and drops, crests you really fly off, and five tracks with a
+  new layout. Every track has its big moment:
+  * **Mesa Grande**: a higher plateau and a steep way down; **The Dune** before the oasis launches you.
+  * **Tonezzer Ring**: the **Neon Tower**, three hairpins up to 15 m, then a dive.
+  * **Tonezzer Stadium**: banked bends raised to 10 m like bowls, a sunken infield under the bridge.
+  * **Black Swamp**: down into the flooded **Pozza**, twin humps at 20 m among the pines and the **Pine Descent**.
+  * **Wolf Wood**: new uphill **Wolf Hairpins** and the **Wolf Leap**, a downhill crest that flies.
+  * **Lakeside Rallycross**: **Le Forcelle**, three gravel hairpins in the woods; the **Grid Hump** on the tarmac and the **Ski
+    Jump** that flies you 60–70 m.
+  * **Devil’s Gorge**: the same climb, then the new downhill **Return Hairpins** to the 35 m bridge.
+  * **Death Valley**: a 33 m dive to **Badwater**, 25 m below the desert, and up to the pass.
+  * **Three Arches**: a roller coaster, three 22 m arches and three dives.
+  * **Midnight Rodeo**: **La Montagna**, a 15 m climb with the hairpin on top.
+  * **Snow Pass**: the same climb and the new **Black Run**, a slalom through the moguls.
+  * **Fire Canyon**: the **Lava Circle**, downhill hairpins with a banked wall.
+* **The camera follows long downhill jumps better**: the truck stays in the frame until it lands.
+* **The Tonezzer Special has a new engine**: an open-pipe V12, dark and full, that barks on the throttle and at every shift,
+  bangs on lift-off and only howls at the top of the revs — no more angle-grinder whine.
+* **Fresh records**: with the tracks changed, lap times start from zero, on your device and on the **online leaderboards** (the old
+  lap boards are archived and no longer shown). Hill climbs (the two circuit climbs too), rallies and the derby are unchanged.
+
 ## v3.4.1 — Il Gran Premio ha una fine, nitro che resta, nome in classifica
 
 ### Italiano

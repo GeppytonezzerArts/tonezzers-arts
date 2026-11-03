@@ -3168,7 +3168,7 @@ window.ORS = window.ORS || {};
       'The legendary hill climb: from Montevideo, above the rooftops of Trento, up through Sardagna, Candriai and Vaneze to Vason. Over forty hairpins.',
     // section sub-lines
     '18 m sotto il canyon': '18 m below the canyon', 'Acqua fino ai mozzi': 'Water up to the hubs', 'Acque scure tra i cipressi': 'Dark waters among the cypresses',
-    "Asfalto fino all'osservatorio": 'Tarmac up to the observatory', 'Collina di 16 m tra i pini': 'A 16 m hill among the pines', 'Collina di 9 m': 'A 9 m hill',
+    "Asfalto fino all'osservatorio": 'Tarmac up to the observatory', 'Collina di 16 m tra i pini': 'A 16 m hill among the pines', 'Collina di 9 m': 'A 9 m hill', 'Due gobbe a 20 m tra i pini': 'Twin humps at 20 m among the pines', 'Collina di 12 m': 'A 12 m hill', 'Tre tornanti fino a 15 m': 'Three hairpins up to 15 m', 'Alta 10 m sopra il campo': 'Raised 10 m above the infield', 'Tre curve secche in salita': 'Three tight bends uphill', 'Il dosso che vola': 'The hump that flies', 'Contropendenza e un salto': 'Off-camber and a leap', 'Tre curve in discesa, verso il ponte': 'Three bends downhill, to the bridge', 'Slalom tra le gobbe': 'Slalom through the moguls', 'Tre curve in discesa, il muro sopraelevato': 'Three bends downhill, the banked wall', 'Tre tornanti di ghiaia': 'Three gravel hairpins', 'Giù nella conca allagata': 'Down into the flooded hollow', '25 m sotto il deserto': '25 m below the desert',
     'Contropendenza e un gradino': 'Off-camber and a step', 'Curva che si stringe': 'A tightening bend', 'Dalla galleria al vuoto': 'From the tunnel to the drop',
     'Fango sulla corda': 'Mud on the inside line', 'Ghiaccio sulla cengia': 'Ice on the ledge', 'Ghiaia e radici': 'Gravel and roots',
     'Ghiaia sulla corda': 'Gravel on the inside line', 'Ghiaia tra abeti e larici': 'Gravel among firs and larches', 'Ghiaia, curva che si stringe': 'Gravel, a tightening bend',
@@ -5049,6 +5049,8 @@ void main() {
       this.HW = (def.width || 11) / 2;
       this.seed = def.seed || 1;
       this._centerline();
+      this.refErrors = [];
+      this._crisp();         // v3.5: sharper height keys on chosen stretches (camel-backs, ledges: real airtime off the road's own crests)
       this._frames();
       this._hash();
       this._crossings();
@@ -5060,7 +5062,7 @@ void main() {
         this._hash();
         this._crossings();
       }
-      this.refErrors = []; this.scenicErrors = []; this.scenicWarnings = [];
+      this.scenicErrors = []; this.scenicWarnings = [];
       this._bankWidth();     // + def.road ops (width, banking, camber per stretch)
       this.mode = def.mode === 'hill' ? 'hill' : 'race';
       if (this.mode === 'hill') this.laps = 1;
@@ -5114,8 +5116,24 @@ void main() {
         const t = (s - cum[j]) / Math.max(1e-9, cum[j + 1] - cum[j]), a = dense[j], b = dense[(j + 1) % m];
         cx[i] = a[0] + (b[0] - a[0]) * t; cz[i] = a[1] + (b[1] - a[1]) * t; cy[i] = a[2] + (b[2] - a[2]) * t;
       }
-      boxBlurCircular(cy, Math.max(2, Math.round(9 / this.ds)), 3);
+      this._cyRaw = Float64Array.from(cy); // v3.5: def.crisp re-blurs stretches of it with a shorter window (_crisp)
+      boxBlurCircular(cy, Math.max(2, Math.round((this.def.vSmooth > 0 ? +this.def.vSmooth : 9) / this.ds)), 3);
       this.cx = cx; this.cz = cz; this.cy = cy;
+    }
+
+    /* v3.5 "Saliscendi": def.crisp = [{from, to, w, ease}] (Refs) — the height keys of a stretch smoothed over ±w m (3 passes; default
+       road 9 m, def.vSmooth changes it for the whole lap) instead: sharp crests that launch a fast truck (their landings are checked
+       like built jumps: _jumps 'natural'), steep ledges, short dips. Blended in over `ease` m (default 12). */
+    _crisp() {
+      const ops = Array.isArray(this.def.crisp) ? this.def.crisp : []; if (!ops.length) return;
+      const N = this.N, ds = this.ds; this.crispW = new Float32Array(N);
+      ops.forEach((op, n) => {
+        if (!op || typeof op !== 'object') return;
+        const rg = this._range(op, 'crisp[' + n + ']'); if (!rg) return;
+        const o = { s0: rg[0], len: this._rel(rg[1], rg[0]) }, w = clamp(op.w != null ? +op.w : 3, 1.5, 9), sharp = Float64Array.from(this._cyRaw);
+        boxBlurCircular(sharp, Math.max(1, Math.round(w / ds)), 3);
+        for (let i = 0; i < N; i++) { const k = this._alongW(i * ds, o, op.ease != null ? +op.ease : 12); if (k > 0) { this.cy[i] += (sharp[i] - this.cy[i]) * k; this.crispW[i] = Math.max(this.crispW[i], k); } }
+      });
     }
 
     _frames() {
@@ -6187,9 +6205,8 @@ void main() {
       // v8: the braking margin after a landing uses the full brakes (CONST.DRIVE.brk by surface; engine braking and drag add ~6 m/s² on top) and the AI's corner model; take-offs up to CONST.AI.jumpV
       const N = this.N, ds = this.ds, G = CONST.G, LC = {}, LATJ = latRef(), BKJ = CONST.DRIVE && CONST.DRIVE.brk ? CONST.DRIVE.brk : 22, JV = CONST.AI ? CONST.AI.jumpV : 46;
       this.jumps = [];
-      for (const f of this.features) {
-        if (!JUMPY[f.type]) continue;
-        const sL = f.s0 + (LIP[f.type] || 0.5) * f.len, iL = this._idx(sL), d0 = f.lane ? f.lane * 0.5 * this.hw[iL] : 0;
+      const check = (f, sL, d0, type) => {
+        const iL = this._idx(sL);
         const y0 = this.surfaceY(sL, d0), gl = (y0 - this.surfaceY(sL - 1.2, d0)) / 1.2, ca = 1 / Math.sqrt(1 + gl * gl), sa = gl * ca;
         const fly = (v) => {
           let x = 0, y = y0, vx = v * ca, vy = v * sa, t = 0; const dt = 0.01;
@@ -6205,8 +6222,29 @@ void main() {
         let vSafe = 11;
         for (let v = 12; v <= JV; v++) { if (!ok(fly(v))) break; vSafe = v; }
         const vF = this.vFull[iL], chk = fly(Math.min(JV, vF * 1.12 + 1));
-        this.jumps.push({ f, type: f.type, s0: f.s0, lip: sL, iL, vSafe, vFull: vF, flight: chk.flight, air: chk.air, lat: chk.lat, he: chk.he, margin: chk.margin, deck: chk.deck, fair: ok(chk) });
+        this.jumps.push({ f, type, s0: f.s0, lip: sL, iL, vSafe, vFull: vF, flight: chk.flight, air: chk.air, lat: chk.lat, he: chk.he, margin: chk.margin, deck: chk.deck, fair: ok(chk) });
+      };
+      for (const f of this.features) {
+        if (!JUMPY[f.type]) continue;
+        const sL = f.s0 + (LIP[f.type] || 0.5) * f.len;
+        check(f, sL, f.lane ? f.lane * 0.5 * this.hw[this._idx(sL)] : 0, f.type);
       }
+      /* v3.5: the road's own crests that launch a truck flat out (feature-free road, v²·(−κv) > G over ±4 m at vFull × 1.12 + 1, the
+         speed the landing check uses): each is checked like a built jump from where the road first falls away faster than a flight
+         ('natural', f = a pseudo crest feature: the AI caps its take-off at vSafe − 1 like any jump). */
+      const i4 = Math.round(4 / ds), lip = new Uint8Array(N);
+      for (let i = 0; i < N; i++) {
+        const ft = this.feat(i * ds).type; if ((ft && JUMPY[ft]) || this.bridge[i] || this.flat[i]) continue;
+        const kv = (this.cy[(i + i4) % N] - 2 * this.cy[i] + this.cy[(i - i4 + N) % N]) / 16, v = this.vFull[i] * 1.12 + 1;
+        if (v * v * -kv > G) lip[i] = 1;
+      }
+      for (let i = 0; i < N; i++) if (lip[i] && !lip[(i - 1 + N) % N]) {
+        const sL = i * ds; if (this.mode === 'hill' && sL > this.finishS) continue;
+        check({ type: 'crest', natural: true, s0: sL - 8, len: 16, h: 0, lane: 0 }, sL, 0, 'natural');
+      }
+      // v3.5: the 40 m before each lip (built or natural), for the camera's flight framing (game.js CamRig airW)
+      this.jumpZone = new Uint8Array(N);
+      for (const j of this.jumps) for (let q = -40; q <= 0; q += ds) this.jumpZone[this._idx(j.lip + q)] = 1;
     }
 
     /* Starting grid: slot 0..7 -> {idx, d}. Two columns, rows 5.5 units apart behind the line. */
@@ -6260,6 +6298,18 @@ void main() {
       }
       { let worst = null; for (let i = 0; i < hillRun && i < N; i++) { const R = 1 / Math.max(1e-6, Math.abs(this.kappaS[i])); if (this.slope[i] < -0.15 && R < 25 && (!worst || this.slope[i] < worst[1])) worst = [i, this.slope[i], R]; }
         if (worst) warnings.push('descent grade ' + (-worst[1]).toFixed(2) + ' in a R' + worst[2].toFixed(0) + ' turn at s=' + (worst[0] * ds).toFixed(0) + ' (> 0.15 where R < 25)'); }
+      /* v3.5 "Saliscendi": the road's own vertical curve (feature-free road, the AI's ±4 m crest test of game.js aiProfile) at a stock
+         truck's flat-out speed: on a crest v²·(−κv) > G leaves the ground with no landing check (make it a built `crest` jump instead), in
+         a valley v²·κv over 1.2 G is a compression that bottoms the truck out (stats.vCurve: the worst of each, in G) */
+      { const i4 = Math.round(4 / ds), Gv = CONST.G; let up = 0, upAt = 0, dn = 0, dnAt = 0;
+        const flying = new Uint8Array(N); for (const j of this.jumps) for (let q = 0; q <= j.flight + 4; q += ds) flying[this._idx(j.lip + q)] = 1; // (under a flight: no compression)
+        for (let i = 0; i < hillRun && i < N; i++) {
+          const ft = this.feat(i * ds).type; if ((ft && JUMPY[ft]) || flying[i]) continue;
+          const kv = (this.cy[(i + i4) % N] - 2 * this.cy[i] + this.cy[(i - i4 + N) % N]) / 16, a = this.vFull[i] * this.vFull[i] * kv / Gv;
+          if (a > up) { up = a; upAt = i; } if (-a > dn) { dn = -a; dnAt = i; }
+        }
+        if (up > 1.2) warnings.push('compression at s=' + (upAt * ds).toFixed(0) + ' bottoms out a flat-out truck (' + up.toFixed(2) + ' G > 1.2)');
+        this._vCurve = { comp: +up.toFixed(2), crest: +dn.toFixed(2) }; }
       // a branch running alongside another next to a crossing silently joins its cluster -> a very long deck
       { let run = 0, maxRun = 0, start = 0; for (let k = 0; k < 2 * N; k++) { if (this.bridge[k % N]) { run++; if (run > maxRun) { maxRun = Math.min(run, N); start = k - run + 1; } } else run = 0; }
         if (maxRun * ds > 120) warnings.push('bridge deck ' + (maxRun * ds).toFixed(0) + ' m long at s=' + ((start % N) * ds).toFixed(0) + ' (branches run side by side near a crossing?)'); }
@@ -6321,7 +6371,7 @@ void main() {
         sections: this.sections.map((q) => q.id), zones: this.camZoneList.map((z) => ({ name: z.name, from: +(z.s0 / L).toFixed(3), to: +(z.s1 / L).toFixed(3), zoom: +(+z.cam.zoom).toFixed(2), pitch: z.cam.pitch, sub: z.sub })),
         zoneShare: +(share * 100).toFixed(1), zoomedPct: +(100 * zoomed / N).toFixed(1), shapeMs: this.shapeMs, capCutMax: +this.capCutMax.toFixed(1),
         jumps: this.jumps.map((j) => j.type + '@' + Math.round(j.s0) + ' ' + Math.round(j.vFull * 3.6) + '/' + Math.round(j.vSafe * 3.6) + 'kmh ' + Math.round(j.flight) + 'm'),
-        surfaces: [...new Set(this.features.filter((f) => f.surf).map((f) => SURF[f.surf].k))], road: this.roadOps.length };
+        surfaces: [...new Set(this.features.filter((f) => f.surf).map((f) => SURF[f.surf].k))], road: this.roadOps.length, vCurve: this._vCurve };
       { let am = 0; for (let i = 0; i < N; i++) if (this.alt[i] > am) am = this.alt[i]; stats.altMax = Math.round(am); stats.valleyY = Math.round(this.valleyY); stats.vistaMs = this.vistaMs; }
       if (this.mode === 'hill') { // hill climb run checks (docs/HILLCLIMB.md)
         const h = this.hill;
@@ -6668,16 +6718,92 @@ void main() {
   /* Scenic keys (docs/SCENIC.md §2): sections [{id, name, kind, from, to, sub, banner, cam, scenery, cover}], shape [ShapeOp],
      camClamp, zoneShare, bridges [{at, style}] (Phase 2), setpieces [{id, type, at, module, r, clear}] (Phase 2 dressing, passed
      through). Refs: lap fraction | '!label(+/-m)' | {section: id}. Fractions below are measured on the v4 geometry (SCENIC §5). */
+  /* v3.5 "Saliscendi": the two circuit climbs (`neve-cima`, `gola-salto`, also rally stages) keep the v3.4 loops of their circuits,
+     frozen here (`base` in their hill defs below): the circuits Passo della Neve and Gola del Diavolo can change shape without
+     touching a single metre of the climbs (runs, medals, challenges, records, online floors, world). */
+  const NEVE_CLIMB = {
+    id: 'neve', name: 'Passo della Neve', theme: 'snow', laps: 3, seed: 79, width: 11, bank: 1.1, pinStart: true, sheer: 0.35,
+    course: { at: [0, 0, 0], y: 0, path: '!under S25@0.5 S15@1.5 R15/90@3 !legs S55@15.1 L13/180@19.2 S15@22.5 R30/25@24 L30/25@25.5 S15@29.1 R18/180@34.8 S40@43.6 !h3 L14/180@48 S50@59 R16/180@64 S55@76.1 L14/180@80.5 !gal S55@93 R15/90@95 S20@99 R25/90@102 !cima S70@104 R30/90@102 !tramp S205@55 R30/90@46 S50@40 S25@37 !bridge S30@34 S30@31 L40/90@25 S?@19 !riva L30/90@11 S?@6 L25/90@2 S21@0.5 !start S34@0 S20@0' },
+    feats: [
+      { type: 'bumps', at: '!legs+16', len: 20, h: 0.5 }, { type: 'rocks', at: '!legs+52', len: 44, lane: 'L' }, { type: 'ice', at: '!h3-34', len: 50 },
+      { type: 'gravel', at: '!gal-96', len: 44 }, { type: 'crest', at: '!cima+26', h: 1.5 }, { type: 'double', at: '!tramp+40', h: 2.3 },
+      { type: 'table', at: '!tramp+100', h: 2.4 }, { type: 'bumps', at: '!tramp+166', len: 26, h: 0.6, period: 4 }, { type: 'mud', at: '!bridge+76' },
+      { type: 'ice', at: '!riva-10', len: 52 },
+    ],
+    road: [
+      { from: '!legs+152', to: '!legs+209', bank: 2.2 }, // La Parabolica
+      { from: '!h3+94', to: '!h3+144', bank: -0.6 }, // the off-camber R16
+      { from: '!cima-10', to: '!cima+60', width: 0.88 }, // the summit ridge
+      { from: '!tramp+15', to: '!tramp+200', width: 1.2 }, // the piste
+    ],
+    sections: [
+      { id: 'parabolica', name: 'La Parabolica Tonezzer', kind: 'veloce', from: '!legs+152', to: '!legs+209', sub: 'Il tornante sopraelevato' },
+      { id: 'tornanti', name: "I Tornanti dell'Aquila", kind: 'tornanti', from: '!legs+200', to: '!gal+40', cam: { zoom: 1.6, pitch: 1.04, poi: [45, -170], frame: 0.3 } },
+      { id: 'lastra', name: 'La Lastra di Ghiaccio', kind: 'fondo', from: '!h3-34', to: '!h3+44' },
+      { id: 'galleria', name: 'La Galleria del Passo', kind: 'galleria', from: '!gal+3', to: '!gal+52', cover: { type: 'gallery', clear: 6.5, open: 'S' } },
+      { id: 'cima', name: 'La Cima', kind: 'cresta', from: '!cima-25', to: '!tramp+15', cam: { zoom: 1.9, pitch: 0.84, poi: [60, -330], frame: 0.35 } },
+      { id: 'trampolino', name: 'La Discesa del Trampolino', kind: 'discesa', from: '!tramp+20', to: '!tramp+200', banner: true },
+      { id: 'viadotto', name: 'Il Viadotto', kind: 'ponte', from: '!bridge', to: '!bridge+60', banner: true },
+      { id: 'riva', name: 'La Riva Gelata', kind: 'fondo', from: '!riva-10', to: '!riva+42' },
+    ],
+    shape: [
+      { op: 'peak', at: [50, -420], r: 95, h: 60 }, { op: 'peak', at: [-75, -380], r: 65, h: 45 }, // backdrop north of the summit
+      { op: 'drop', side: 'L', from: '!tramp+5', to: '!tramp+200', h: 22, gap: 3, width: 7, reach: 15, sheer: 0.3 }, // east of the descent
+      { op: 'peak', at: [230, -150], r: 110, h: -45, rough: 0.1 }, // the valley east of the descent
+      { op: 'basin', at: [-51, 50], r: 22, level: -1.0, frozen: true }, // "Lago Ghiacciato" in the SW loop
+    ],
+    bridges: [{ at: '!bridge', style: 'viaduct' }],
+    setpieces: [ // v7 art-pass requests (docs/SCENIC.md §8)
+      { id: 'rifugio', type: 'rifugio', module: 'props', at: '!cima+30', d: 22, r: 7 },
+      { id: 'funivia', type: 'cableCar', module: 'props', at: [50, -420], r: 8, area: true },
+      { id: 'torre', type: 'skiJumpTower', module: 'props', at: '!tramp+8', d: -22, r: 5 },
+      { id: 'pattinatori', type: 'skaters', module: 'props', at: [-51, 50], r: 20, area: true },
+      { id: 'paline', type: 'snowPoles', module: 'props', along: { from: '!legs', to: '!gal' } },
+    ],
+  };
+  const GOLA_CLIMB = {
+    id: 'gola', name: 'Gola del Diavolo', theme: 'canyon', laps: 3, seed: 37, width: 11, pinStart: true, sheer: 0.35,
+    course: { at: [0, 0, 90], y: 38, path: '!bridge S25@36 S100@14 R35/90@6 !floor S60@1 R18/90@0.5 S30@0 !creek L20/45 R20/90 L20/45@0 S? R25/90@0 S34 !start S26@0 !under S25@0 S25@1.5 !legs L18/90@3.5 S70@19 R14/180@22 S48@33 L20/180@36 S27@42 R40/20@45 L40/20@48 S26@54 R16/180@57 S80@75 L14/180@78 !summit S28@80 L60/15@80.5 R60/30@81 L60/15@80.5 S20@80 L20/90@79 !dive S80@60.5 L80/12@56.7 R80/12@52.9 S?@48.5 L20/90@46 S95@39 S25@38' },
+    feats: [
+      { type: 'bumps', at: '!legs+40', len: 22 }, { type: 'rocks', at: '!legs+96', len: 46, lane: 'R' }, { type: 'gravel', at: '!legs+278', len: 40 },
+      { type: 'kicker', at: '!summit+4', h: 1.2 }, { type: 'drop', at: '!dive+8', h: 1.6 }, { type: 'bumps', at: '!dive+92', len: 30, h: 0.8, period: 6 },
+      { type: 'table', at: '!dive+172', h: 2.4 }, { type: 'kicker', at: '!bridge+65', h: 0.8 } /* v8: was +70 / 1.1 */, { type: 'sand', at: '!floor+4', len: 50 },
+      { type: 'water', at: '!creek-24' }, { type: 'gravel', at: '!creek', len: 60 }, { type: 'mud', at: '!creek+64' },
+    ],
+    road: [
+      { from: '!legs+191', to: '!legs+253', bank: 2.2 }, // the banked L20
+      { from: '!legs+334', to: '!legs+385', bank: -0.6 }, // the off-camber R16
+      { from: '!summit', to: '!summit+112', width: 0.86 }, // the summit ridge
+      { from: '!start-24', to: '!under+30', width: 0.88 }, // the slot gorge
+    ],
+    sections: [
+      { id: 'letto', name: 'Il Letto del Torrente', kind: 'fondo', from: '!floor', to: '!creek+70', sub: 'Sabbia, guado e ghiaia' },
+      { id: 'tornanti', name: 'I Tornanti del Diavolo', kind: 'tornanti', from: '!legs+230', to: '!summit-10', cam: { zoom: 1.6, pitch: 1.0, poi: [-60, -100], frame: 0.3 } },
+      { id: 'cresta', name: 'La Cresta del Diavolo', kind: 'esse', from: '!summit', to: '!summit+110' },
+      { id: 'salto', name: 'Il Salto del Diavolo', kind: 'cresta', from: '!summit+55', to: '!dive+45', cam: { zoom: 1.75, pitch: 0.84, poi: [-40, -10], frame: 0.35 } },
+      { id: 'picchiata', name: 'La Picchiata', kind: 'discesa', from: '!dive+46', to: '!dive+180', banner: true },
+      { id: 'ponte', name: 'Il Ponte del Diavolo', kind: 'ponte', from: '!bridge-50', to: '!bridge+45', cam: { zoom: 1.6, pitch: 0.92, poi: [0, 20], frame: 0.3 } },
+    ],
+    shape: [
+      { op: 'wall', side: 'both', from: '!start-24', to: '!under+30', h: 12, gap: 2.5, width: 5, sheer: 0.25 }, // slot gorge on the N-S floor road
+      { op: 'drop', side: 'W', from: '!dive', to: '!dive+110', h: 20, gap: 3, width: 8, reach: 15, sheer: 0.3 }, // the abyss outside the dive
+      { op: 'peak', at: [-200, -60], r: 95, h: -40, rough: 0.1 }, // ... and the gorge it falls into
+      { op: 'peak', at: [-80, -250], r: 70, h: 40 }, // behind the top switchbacks
+    ],
+    bridges: [{ at: '!bridge', style: 'stone' }],
+    setpieces: [{ id: 'cascataRossa', type: 'waterfall', at: [100, 82], module: 'world', r: 3, clear: 6 },
+      { id: 'miniera', type: 'mineEntrance', module: 'props', at: [-66, -124], r: 6, area: true }, { id: 'pericolo', type: 'warningSigns', module: 'props', along: { from: '!summit', to: '!dive+60' } },
+      { id: 'muri', type: 'retainingWalls', module: 'world', along: { from: '!legs', to: '!summit' } }],
+  };
   const T = [
     // 1 · Deserto, facile. Figure 8 around two mesas: the NE diagonal climbs over the viaduct onto an 18 m mesa top (table on
     // the plateau), the east side drops south toward the camera, oasis splash in the west hairpin, underpass dug to -3 m.
     {
       id: 'mesa', name: 'Mesa Grande', theme: 'desert', laps: 3, seed: 11, width: 12, pinStart: true,
-      course: { at: [0, 0, 40], y: 9, path: '!bridge S25@10 S25@14 R40/50@22 S120@26 R40/90@23 S?@19 R40/90@12 S70@1.5 L25/40@0.5 R25/40@0 S20 R40/50@-1 S25@-3 !under S25@-3 S25@-3 S25@-1.5 L40/50@0 S66 !start S24 L30/90 S30@-1.5 L30/90@-1.5 S?@0 L40/50@2 S25@5 S25@9' },
+      course: { at: [0, 0, 40], y: 9, path: '!bridge S25@16 S25@21 R40/50@27 S120@30 R40/90@28.5 S?@25 R40/90@18 S70@3 L25/40@1 R25/40@0 S20@-0.5 R40/50@-2.5 S25@-5 !under S25@-6 S25@-4.5 S25@-1 L40/50@4 S30@2 S36@0 !start S24@0 L30/90@-1 S30@-1.5 L30/90@-1.5 S4@-1.2 !dune S26@2 S14@0.2 S?@1 L40/50@3 S25@7 S25@11' },
       feats: [
         { type: 'water', at: 0.0708 },
         { type: 'rocks', at: 0.0985, len: 40, lane: 'L' },
-        { type: 'double', at: 0.1531, h: 2.2 },
         { type: 'sand', at: 0.2219, len: 44 },
         { type: 'tarmac', at: 0.3961, len: 112 },
         { type: 'table', at: 0.4066, h: 2.8 },
@@ -6686,22 +6812,25 @@ void main() {
         { type: 'gravel', at: 0.7194, len: 40 },
         { type: 'crest', at: 0.9423, h: 1.7 },
       ],
+      crisp: [{ from: '!dune+14', to: '!dune+38', w: 2.5, ease: 9 }], // v3.5: La Duna, a sharp dune crest with real air
       road: [
         { from: 0.507, to: 0.5673, bank: -0.6 },
         { from: 0.3941, to: 0.5051, width: 1.35 },
         { from: 0.7194, to: 0.7577, width: 0.86 },
       ],
       sections: [
-        { id: 'viadotto', name: 'Il Viadotto', kind: 'ponte', from: 0.27, to: 0.33, cam: { zoom: 1.35, pitch: 0.98 } },
+        { id: 'viadotto', name: 'Il Viadotto', kind: 'ponte', from: 0.27, to: 0.33, cam: { zoom: 1.3, pitch: 1.02 } },
         { id: 'belvedere', name: 'Il Belvedere della Mesa', sub: 'Il monumento a Tonezzer', kind: 'cresta', from: 0.38, to: 0.53, cam: { zoom: 1.7, pitch: 0.86, poi: [100, 0], frame: 0.3 } },
         { id: 'arco', name: "L'Arco di Pietra", kind: 'arco', from: 0.755, to: 0.768, cover: { type: 'arch' } },
         { id: 'oasi', name: 'L\'Oasi', kind: 'lago', from: 0.0574, to: 0.1435, sub: 'Guado e sassi sulla corda' },
+        { id: 'duna', name: 'La Duna', kind: 'salti', from: '!dune-10', to: '!dune+60', sub: 'Il dosso che vola' },
         { id: 'sabbia', name: 'La Trappola di Sabbia', kind: 'fondo', from: 0.2181, to: 0.2679 },
         { id: 'pista', name: 'La Pista sulla Mesa', kind: 'veloce', from: 0.3941, to: 0.5051, sub: 'Il vecchio asfalto' },
+        { id: 'discesa', name: 'La Discesa della Mesa', kind: 'discesa', from: 0.592, to: 0.648 },
         { id: 'gradino', name: 'Il Gradino della Mesa', kind: 'salti', from: 0.6505, to: 0.7079 },
       ],
       shape: [
-        { op: 'drop', side: 'R', from: 0.392, to: 0.507, h: 10, gap: 3, width: 4, sheer: 0.25 }, // sandstone cliff under the mesa road
+        { op: 'drop', side: 'R', from: 0.392, to: 0.507, h: 8, gap: 3, width: 4, sheer: 0.25 }, // sandstone cliff under the mesa road (v3.5: 8 m, the road itself is 4 m higher)
         { op: 'peak', at: [40, -112], r: 38, h: 30 }, { op: 'peak', at: [185, -118], r: 32, h: 24 }, // backdrop buttes (north)
         { op: 'basin', at: [-140, 8], r: 18, level: -2.0 }, // "L'Oasi": water in the 38 m clearing inside the west loop
       ],
@@ -6716,7 +6845,7 @@ void main() {
     // the descent, the east serpentine climbs to a 6.5 m hairpin, downhill table toward the camera. Both flat X stay level.
     {
       id: 'coyote', name: 'Tonezzer Ring', theme: 'night', laps: 3, seed: 23, width: 10.5, bank: 1.2, pinStart: true,
-      course: { at: [0, 0, 90], y: 0, path: '!xing S35@0 R15/90 S35@1 L15/180@1.5 S35@5 R15/180@6.5 S56@1.5 R18/90@1 S74@0 R18/90@0 S18.5 !start S52.5@0 !xing S30@0 L15/90@1.5 S35@5 R12/45 L12/45@7.5 S20@8.5 L15/90@9 S?@5.5 L15/90@3 S?@0' },
+      course: { at: [0, 0, 90], y: 0, path: '!xing S20@0 S15@0.3 R15/90@0.5 S15@0.5 S20@1.5 L15/180@7.5 S35@12.5 R15/180@15 S56@3 R18/90@1 S74@0.5 R18/90@0 S18.5@0 !start S52.5@0 !xing S30@0 L15/90@2.5 S35@8 R12/45@10 L12/45@11 S20@11.5 L15/90@11 S?@7 L15/90@5 S?@0 S30@0' },
       feats: [
         { type: 'bumps', at: 0.1413 },
         { type: 'step', at: 0.3337, h: 1.6 },
@@ -6725,7 +6854,7 @@ void main() {
         { type: 'gravel', at: 0.5601, len: 50 },
         { type: 'mud', at: 0.6281 },
         { type: 'sand', at: 0.67, len: 46, lane: 'R' },
-        { type: 'table', at: 0.7354, h: 2.4 },
+        { type: 'table', at: 0.7354, h: 1.7 },
         { type: 'double', at: 0.8479, h: 2.3 },
       ],
       road: [
@@ -6735,8 +6864,8 @@ void main() {
         { from: 0.3337, to: 0.4318, width: 1.25 },
       ],
       sections: [
-        { id: 'salto', name: 'Il Salto del Coyote', kind: 'discesa', from: 0.29, to: 0.40, sub: 'Collina di 9 m', cam: { zoom: 1.45, pitch: 0.98 } },
-        { id: 'neon', name: 'La Torre dei Neon', kind: 'stadio', from: 0.64, to: 0.79, sub: 'Serpentina sotto i riflettori', cam: { zoom: 1.5, pitch: 1.05, poi: [40, 30], frame: 0.3 } },
+        { id: 'salto', name: 'Il Salto del Coyote', kind: 'discesa', from: 0.29, to: 0.40, sub: 'Collina di 12 m', cam: { zoom: 1.45, pitch: 0.98 } },
+        { id: 'neon', name: 'La Torre dei Neon', kind: 'stadio', from: 0.64, to: 0.79, sub: 'Tre tornanti fino a 15 m', cam: { zoom: 1.4, pitch: 0.95, poi: [40, 30], frame: 0.3 } },
         { id: 'chicane', name: 'La Chicane', kind: 'esse', from: 0.1767, to: 0.2159 },
         { id: 'ghiaia', name: 'Il Tornante di Ghiaia', kind: 'fondo', from: 0.5561, to: 0.6255 },
         { id: 'arena', name: 'L\'Arena', kind: 'fondo', from: 0.6674, to: 0.7302, sub: 'Sabbia sulla corda' },
@@ -6748,7 +6877,7 @@ void main() {
     {
       id: 'stadio', name: 'Tonezzer Stadium', theme: 'night', laps: 3, seed: 401, width: 10.5, bank: 1.2, pinStart: true,
       course: { at: [0, 0, 90], y: 0, path:
-        '!start S?@0 L25/45@0.5 S70@7 !bridge S30@9 S70@3.5 !curva R25/135@0 S?@0 R18/90@0 !whoops S120@0 R25/45@0 S40@0 !ritmo S130@1 L16/40@1 R16/40@1 !onde L25/135@0 S150@0 !sabbia L18/90@0' },
+        '!start S?@0 L25/45@0.5 S70@11 !bridge S30@14 S35@12 S35@10 !curva R25/135@9.5 S?@4 R18/90@1 !whoops S120@-3 R25/45@-2.5 S40@-0.5 !ritmo S130@3 L16/40@5 R16/40@7 !onde L25/135@10 S50@6.5 S100@0.5 !sabbia L18/90@0' },
       feats: [
         { type: 'step', at: '!start+52', h: 1.4, h2: 2.2 },
         { type: 'table', at: '!bridge+34', h: 1.5 } /* v8: was +44 / 2.2 (a 57 m flight into the bend at 150 km/h) */,
@@ -6769,6 +6898,7 @@ void main() {
         { id: 'curva', name: 'La Curva Tonezzer', kind: 'veloce', from: '!curva', to: '!whoops', sub: 'La parabolica dello stadio' },
         { id: 'whoops', name: 'Le Whoops', kind: 'salti', from: '!whoops', to: '!whoops+60', sub: 'Gobbe sotto il ponte' },
         { id: 'ritmica', name: 'La Ritmica', kind: 'stadio', from: '!ritmo-10', to: '!onde', sub: 'Tre salti in fila', cam: { zoom: 1.5, pitch: 1.05, poi: [110, -120], frame: 0.35 } },
+        { id: 'catino', name: 'Il Catino', kind: 'veloce', from: '!onde', to: '!onde+58', sub: 'Alta 10 m sopra il campo' },
         { id: 'onde', name: 'Le Onde', kind: 'salti', from: '!onde+60', to: '!sabbia-12' },
         { id: 'sabbia', name: 'La Curva di Sabbia', kind: 'fondo', from: '!sabbia-12', to: '!start-8' },
       ],
@@ -6786,10 +6916,10 @@ void main() {
     // a 16 m wooded hill (whoops on the descent to the finish).
     {
       id: 'palude', name: 'Palude Nera', theme: 'swamp', laps: 3, seed: 41, width: 11.5, bank: 0.7, pinStart: true,
-      course: { at: [0, 0, 45], y: 0, path: 'S30@0 S40.7@0 !xing S28.3@0 L30/45@1 S30@4 R25/60@7 S?@9 L20/150@12 S20@14 L25/60@15 R25/120@16 L25/60@15 S10@14 L20/90@12 S20@9 L30/45@6 S40@1.5 S19@0 !start S11@0 S42@0 !xing S68.5@0 R30/45@0 S30@-0.5 L20/60@-1 R20/150@-1 S20@-1 L20/60 R20/120 L20/60@-0.5 S?@0 R25/90 S30@0 R30/45@0 S40@0' },
+      course: { at: [0, 0, 45], y: 0, path: 'S30@0 S40.7@0 !xing S28.3@0 L30/45@1.5 S30@5 R25/60@9 S?@13 L20/150@17 S20@20 L25/60@21 R25/120@15 L25/60@20 S10@19.5 L20/90@16.5 S20@12.5 L30/45@7.5 S40@1.5 S19@0 !start S11@0 S42@0 !xing S25@0 S25@1.5 S18.5@2 R30/45@-1.2 S30@-2 L20/60@-0.5 R20/150@0.5 S20@-0.5 L20/60@-0.5 R20/120@-0.5 L20/60@-0.5 S?@1 R25/90@1.5 S30@2 R30/45@1.5 S40@1.5' },
       feats: [
         { type: 'ramp', at: 0.0638, h: 1.2 }, // v8: was 0.0735 / 2.2 (at 150 km/h the 58 m flight landed in the bend)
-        { type: 'water', at: 0.145 },
+        { type: 'water', at: 0.1505 },
         { type: 'mud', at: 0.1895, len: 48, lane: 'R' },
         { type: 'mud', at: 0.2417 },
         { type: 'bumps', at: 0.4109, len: 20, h: 0.4, period: 2.5 },
@@ -6806,9 +6936,11 @@ void main() {
       ],
       sections: [
         { id: 'lago', name: 'Il Lago Nero', kind: 'lago', from: 0.22, to: 0.33, sub: 'Acque scure tra i cipressi', cam: { zoom: 1.4, pitch: 0.95, poi: [44, 44], frame: 0.35 } },
-        { id: 'collina', name: 'La Collina dei Pini', kind: 'bosco', from: 0.67, to: 0.86, sub: 'Collina di 16 m tra i pini', cam: { zoom: 1.5, pitch: 1.04, poi: [75, -150], frame: 0.3 }, scenery: [{ type: 'forest', side: 'N', depth: 40, density: 0.9 }] },
+        { id: 'collina', name: 'La Collina dei Pini', kind: 'bosco', from: 0.67, to: 0.86, sub: 'Due gobbe a 20 m tra i pini', cam: { zoom: 1.5, pitch: 1.04, poi: [75, -150], frame: 0.3 }, scenery: [{ type: 'forest', side: 'N', depth: 40, density: 0.9 }] },
+        { id: 'pozza', name: 'La Pozza', kind: 'lago', from: 0.125, to: 0.168, sub: 'Giù nella conca allagata' },
         { id: 'canneto', name: 'Il Canneto', kind: 'fondo', from: 0.1837, to: 0.2417, sub: 'Fango sulla corda' },
         { id: 'sentiero', name: 'Il Sentiero dei Pini', kind: 'bosco', from: 0.6709, to: 0.7444 },
+        { id: 'discesa', name: 'La Discesa dei Pini', kind: 'discesa', from: 0.872, to: 0.935 },
         { id: 'onde', name: 'Le Onde', kind: 'salti', from: 0.9377, to: 0.9667, sub: 'Le gobbe del traguardo' },
       ],
       shape: [{ op: 'basin', at: [44, 44], r: 32, level: -1.6 }], // "Lago Nero": the 56 m clearing in the south lobe
@@ -6819,14 +6951,15 @@ void main() {
     // 5 · Bosco alpino (new). North-south figure 8, every corner R >= 29: forest S-bends, the climb to the 36 m Belvedere, the
     // southbound descent with a downhill double, the timber bridge over the forest road, the creek and the ford.
     {
-      id: 'bosco', name: 'Bosco del Lupo', theme: 'alpine', laps: 3, seed: 113, width: 11, bank: 1.0, pinStart: true,
-      course: { at: [0, 0, 225], y: 20, path: '!bridge S100@10 L40/45@8 S80@1 L40/90@0 S30@0 !start S?@0 L40/90@0.5 S20@1 !esse L30/40@2 R30/80@4 L30/40@5 S25.3@5.5 L40/45@5 S?@4.5 !under S90@22 R40/45@27 S47.15@38 !bel R50/40@41 R16/50@44 S92.03@47 !bel2 R20/60@46.5 R50/30@46 S50@37 R40/45@31 !disc S100@20' },
+      id: 'bosco', name: 'Bosco del Lupo', theme: 'alpine', laps: 3, seed: 113, width: 11, bank: 1.0, pinStart: true, zoneShare: 0.45,
+      course: { at: [0, 0, 225], y: 20, path: '!bridge S50@12 S50@15 L40/45@13 S40@6 S40@1 L40/90@0 S30@0 !start S?@0 L40/90@0.5 S20@1.5 !esse L30/40@4 R30/80@8.5 L30/40@5.5 S25.3@3 L40/45@6.5 S?@4.5 !under S16@6 L16/90@9 !lupo S30@13.5 R16/180@17 S30@21 L16/90@23.5 S10@24 R40/45@28 S47.15@38 !bel R50/40@41 R16/50@44 S92.03@47 !bel2 R20/60@46.5 R50/30@46 S20@45.8 !salto S30@40.2 R40/45@33.5 !disc S50@26 S50@20' },
       feats: [
-        { type: 'gravel', at: '!esse', len: 84 }, { type: 'mud', at: '!under-46', len: 20 }, { type: 'bumps', at: '!under+35', len: 22, h: 0.45, period: 2.5 },
-        { type: 'rocks', at: '!bel+5', len: 45, lane: 'R' }, { type: 'table', at: '!bel+52', h: 2.6 }, { type: 'drop', at: '!bel2+50', h: 1.8 },
+        { type: 'gravel', at: '!esse', len: 84 }, { type: 'mud', at: '!under-46', len: 20 }, { type: 'bumps', at: '!lupo+130', len: 20, h: 0.45, period: 2.5 },
+        { type: 'rocks', at: '!bel+5', len: 45, lane: 'R' }, { type: 'table', at: '!bel+52', h: 2.6 }, 
         { type: 'crest', at: '!disc+12', h: 1.4 }, { type: 'bumps', at: '!disc+30', len: 14, h: 0.6, period: 4.5 }, // v7: rollers on the descent { type: 'bumps', at: '!bridge+46', len: 36, h: 0.8, period: 5.5 },
-        { type: 'kicker', at: '!bridge+134', h: 1.3 }, { type: 'water', at: '!bridge+190' },
+        { type: 'kicker', at: '!bridge+134', h: 1.3 }, { type: 'water', at: '!bridge+214' },
       ],
+      crisp: [{ from: '!salto-14', to: '!salto+6', w: 3, ease: 6 }], // v3.5: a sharp crest at the top of the drop: the truck flies off it
       road: [
         { from: '!esse-10', to: '!esse+110', width: 0.85 }, // the forest path
         { from: '!bel2', to: '!bel2+22', bank: -0.6, ease: 8 }, // La Curva Storta: off-camber
@@ -6834,9 +6967,11 @@ void main() {
       ],
       sections: [
         { id: 'sentiero', name: 'Il Sentiero nel Bosco', kind: 'bosco', from: '!esse-28', to: '!esse+100', sub: 'Ghiaia tra abeti e larici', cam: { zoom: 1.45, pitch: 1.04 }, scenery: [{ type: 'forest', side: 'both', depth: 35, density: 0.85 }] },
+        { id: 'tornanti', name: 'I Tornanti del Lupo', kind: 'tornanti', from: '!under+12', to: '!lupo+118', sub: 'Tre curve secche in salita', cam: { zoom: 1.25, pitch: 1.15 }, scenery: [{ type: 'open', side: 'both' }] },
+        { id: 'salto', name: 'Il Salto del Lupo', kind: 'salti', from: '!salto-14', to: '!salto+34', sub: 'Il dosso che vola' },
         { id: 'chiocciola', name: 'La Chiocciola', kind: 'tornanti', from: '!bel-10', to: '!bel+49', sub: 'Curva che si stringe' },
         { id: 'belvedere', name: 'Il Belvedere Tonezzer', kind: 'cresta', from: '!bel+26', to: '!bel2+46', cam: { zoom: 2.0, pitch: 0.82, poi: [12, -100], frame: 0.35 } },
-        { id: 'storta', name: 'La Curva Storta', kind: 'esse', from: '!bel2', to: '!bel2+47', sub: 'Contropendenza e un gradino' },
+        { id: 'storta', name: 'La Curva Storta', kind: 'esse', from: '!bel2', to: '!bel2+47', sub: 'Contropendenza e un salto' },
         { id: 'ponte', name: 'Il Ponte di Legno', kind: 'ponte', from: '!disc+30', to: '!bridge+23', cam: { zoom: 1.45, pitch: 0.98 } },
         { id: 'onde', name: 'Le Onde del Lupo', kind: 'salti', from: '!bridge+40', to: '!bridge+170' },
         { id: 'guado', name: 'Il Guado', kind: 'lago', from: '!bridge+186', to: '!bridge+215', sub: 'Il torrente', banner: true },
@@ -6857,15 +6992,16 @@ void main() {
     {
       id: 'rally', name: 'Rallycross del Lago', theme: 'alpine', laps: 3, seed: 419, width: 11, bank: 1.0, pinStart: true, sheer: 0.45,
       course: { at: [0, 0, 90], y: 2, path:
-        '!start S?@2 L20/90@2.5 !salita S80@9 !bosco R40/60@12 L40/60@15 S60@20 L25/90@22 !cima S60@24 L30/90@24 !trampolino S40@24 S90@8 R30/90@4 !piana S100@2 R60/30@2 L60/30@2 !lago L25/90@1 S?@0.6 L25/90@1.5 S60@2' },
+        '!start S60@4 !dosso S12@5.2 S18@3.6 S?@2.5 L20/90@3 !salita S8@3.8 R16/90@5 !forc S25@7.5 L16/180@10 S25@12.5 R16/90@14 S8@14.5 !bosco R40/60@16.5 L40/60@20.5 S60@26 L25/90@27 !cima S60@30 L30/90@32 !trampolino S40@32 S90@12 R30/90@5 !piana S100@2 R60/30@2 L60/30@2 !lago L25/90@1 S?@0.6 L25/90@1.5 S60@2' },
       feats: [
-        { type: 'tarmac', at: '!start-50', len: 230 }, { type: 'crest', at: '!start+100', h: 1.2 },
-        { type: 'gravel', at: '!salita', len: 110 }, { type: 'rocks', at: '!bosco+70', len: 40, lane: 'L' }, { type: 'crest', at: '!bosco+98', h: 1.3 },
-        { type: 'bumps', at: '!cima+8', len: 30, h: 0.45, period: 2.5 },
+        { type: 'tarmac', at: '!start-50', len: 230 }, 
+        { type: 'gravel', at: '!salita', len: 160 }, { type: 'rocks', at: '!bosco+70', len: 40, lane: 'L' }, { type: 'crest', at: '!cima+2', h: 1.3 },
+        { type: 'bumps', at: '!cima+34', len: 26, h: 0.45, period: 2.5 },
         { type: 'ramp', at: '!trampolino+26', h: 2.2 },
         { type: 'tarmac', at: '!piana-20', len: 150 }, { type: 'gravel', at: '!piana+130', len: 60 },
         { type: 'sand', at: '!lago-6', len: 40 }, { type: 'water', at: '!lago+44', len: 18 }, { type: 'mud', at: '!lago+66', len: 16 },
       ],
+      crisp: [{ from: '!dosso+2', to: '!dosso+22', w: 2.5, ease: 6 }], // v3.5: Il Dosso della Griglia, the hump on the tarmac flies
       road: [
         { from: '!start-40', to: '!start+150', width: 1.3 }, // the tarmac start straight
         { from: '!bosco-10', to: '!cima+70', width: 0.88 }, // the forest stage
@@ -6874,7 +7010,8 @@ void main() {
       ],
       sections: [
         { id: 'griglia', name: 'La Griglia d\'Asfalto', kind: 'veloce', from: '!start+20', to: '!salita-20' },
-        { id: 'bosco', name: 'Il Bosco del Rally', kind: 'bosco', from: '!salita', to: '!cima+60', sub: 'Ghiaia e radici', scenery: [{ type: 'forest', side: 'both', depth: 40, density: 0.85 }] },
+        { id: 'forcelle', name: 'Le Forcelle', kind: 'tornanti', from: '!salita', to: '!forc+108', sub: 'Tre tornanti di ghiaia', cam: { zoom: 1.5, pitch: 0.95, poi: [250, -60], frame: 0.2 } },
+        { id: 'bosco', name: 'Il Bosco del Rally', kind: 'bosco', from: '!bosco-10', to: '!cima+60', sub: 'Ghiaia e radici', scenery: [{ type: 'forest', side: 'both', depth: 40, density: 0.85 }] },
         { id: 'trampolino', name: 'Il Trampolino', kind: 'discesa', from: '!trampolino', to: '!piana', sub: 'Il salto verso il lago', cam: { zoom: 1.5, pitch: 0.95, poi: [70, -120], frame: 0.3 } },
         { id: 'piana', name: 'La Piana Tonezzer', kind: 'veloce', from: '!piana', to: '!lago-10' },
         { id: 'guado', name: 'Il Guado del Lago', kind: 'lago', from: '!lago', to: '!lago+90', sub: 'Sabbia, acqua e fango', cam: { zoom: 1.4, pitch: 0.95, poi: [-150, -30], frame: 0.3 } },
@@ -6901,12 +7038,12 @@ void main() {
     // third leg, a narrow esse along the summit ridge with a kicker, the dive broken by a kink with a ledge drop and rollers before the
     // hairpin, a table after it, a kicker after the bridge (it lands before the bend now), sand in the creek bed, gravel in the esses.
     {
-      id: 'gola', name: 'Gola del Diavolo', theme: 'canyon', laps: 3, seed: 37, width: 11, pinStart: true, sheer: 0.35,
-      course: { at: [0, 0, 90], y: 38, path: '!bridge S25@36 S100@14 R35/90@6 !floor S60@1 R18/90@0.5 S30@0 !creek L20/45 R20/90 L20/45@0 S? R25/90@0 S34 !start S26@0 !under S25@0 S25@1.5 !legs L18/90@3.5 S70@19 R14/180@22 S48@33 L20/180@36 S27@42 R40/20@45 L40/20@48 S26@54 R16/180@57 S80@75 L14/180@78 !summit S28@80 L60/15@80.5 R60/30@81 L60/15@80.5 S20@80 L20/90@79 !dive S80@60.5 L80/12@56.7 R80/12@52.9 S?@48.5 L20/90@46 S95@39 S25@38' },
+      id: 'gola', name: 'Gola del Diavolo', theme: 'canyon', laps: 3, seed: 37, width: 11, pinStart: true, sheer: 0.35, zoneShare: 0.45,
+      course: { at: [0, 0, 90], y: 38, path: '!bridge S25@36 S100@14 R35/90@6 !floor S60@1 R18/90@0.5 S30@0 !creek L20/45 R20/90 L20/45@0 S? R25/90@0 S34 !start S26@0 !under S25@0 S25@1.5 !legs L18/90@3.5 S70@19 R14/180@22 S48@33 L20/180@36 S27@42 R40/20@45 L40/20@48 S26@54 R16/180@57 S80@75 L14/180@78 !summit S28@80 L60/15@80.5 R60/30@81 L60/15@80.5 S20@80 L20/90@79 !dive S80@60.5 L80/12@56.7 R80/12@52.9 S?@48.5 L20/90@46 S12@45 R16/90@44 !ritorno S25@42 L16/180@40.5 S25@39 R16/90@38.5 S19@38.5 S25@38' },
       feats: [
         { type: 'bumps', at: '!legs+40', len: 22 }, { type: 'rocks', at: '!legs+96', len: 46, lane: 'R' }, { type: 'gravel', at: '!legs+278', len: 40 },
-        { type: 'kicker', at: '!summit+4', h: 1.2 }, { type: 'drop', at: '!dive+8', h: 1.6 }, { type: 'bumps', at: '!dive+92', len: 30, h: 0.8, period: 6 },
-        { type: 'table', at: '!dive+172', h: 2.4 }, { type: 'kicker', at: '!bridge+65', h: 0.8 } /* v8: was +70 / 1.1 */, { type: 'sand', at: '!floor+4', len: 50 },
+        { type: 'kicker', at: '!summit+4', h: 1.2 }, { type: 'drop', at: '!dive+8', h: 1.6 }, { type: 'table', at: '!dive+38', h: 1.4 } /* v3.5 circuit */, { type: 'bumps', at: '!dive+92', len: 30, h: 0.8, period: 6 },
+        { type: 'gravel', at: '!ritorno-6', len: 110 } /* v3.5 circuit: I Tornanti del Ritorno */, { type: 'kicker', at: '!bridge+65', h: 0.8 } /* v8: was +70 / 1.1 */, { type: 'sand', at: '!floor+4', len: 50 },
         { type: 'water', at: '!creek-24' }, { type: 'gravel', at: '!creek', len: 60 }, { type: 'mud', at: '!creek+64' },
       ],
       road: [
@@ -6921,6 +7058,7 @@ void main() {
         { id: 'cresta', name: 'La Cresta del Diavolo', kind: 'esse', from: '!summit', to: '!summit+110' },
         { id: 'salto', name: 'Il Salto del Diavolo', kind: 'cresta', from: '!summit+55', to: '!dive+45', cam: { zoom: 1.75, pitch: 0.84, poi: [-40, -10], frame: 0.35 } },
         { id: 'picchiata', name: 'La Picchiata', kind: 'discesa', from: '!dive+46', to: '!dive+180', banner: true },
+        { id: 'ritorno', name: 'I Tornanti del Ritorno', kind: 'tornanti', from: '!ritorno-26', to: '!ritorno+104', sub: 'Tre curve in discesa, verso il ponte', cam: { zoom: 1.3, pitch: 1.1 }, scenery: [{ type: 'open', side: 'both' }] },
         { id: 'ponte', name: 'Il Ponte del Diavolo', kind: 'ponte', from: '!bridge-50', to: '!bridge+45', cam: { zoom: 1.6, pitch: 0.92, poi: [0, 20], frame: 0.3 } },
       ],
       shape: [
@@ -6938,14 +7076,13 @@ void main() {
     // splash at the lowest point), 0.20 climb over the bridge, 0.18 climb to the 24 m pass, southbound descent home.
     {
       id: 'valle', name: 'Valle della Morte', theme: 'desert', laps: 3, seed: 53, width: 12, bank: 0.9, pinStart: true,
-      course: { at: [0, 0, 20], y: 5, path: '!bridge S30@10 S50@12 R40/70@22 S100@30 R35/90@29 S30@25 L30/60@20 R30/150@12 S73@8 !start S47@8 R40/30@7 S50@-1 !under S30@-6 S30@-9 S40@-12 L20/120@-13 S?@-15 L20/90@-15 S?@-14 L25/70@-9 S45@0 S25@5' },
+      course: { at: [0, 0, 20], y: 5, path: '!bridge S30@4 S50@14 R40/70@23 S100@33 R35/90@33 S30@31 L30/60@26 R30/150@14 S73@8 !start S47@4.5 R40/30@1.5 S50@-6.5 !under S30@-12 S30@-16.5 S40@-21 L20/120@-23 S?@-25 L20/90@-24 S?@-17 L25/70@-12 S45@-5 S25@-1.5' },
       feats: [
         { type: 'crest', at: 0.0699, h: 1.6 },
         { type: 'sand', at: 0.1778, len: 40 },
         { type: 'ramp', at: 0.2648, h: 2.4 },
-        { type: 'bumps', at: 0.3117 },
-        { type: 'water', at: 0.3747 },
-        { type: 'crest', at: 0.5455, h: 1.6 },
+        { type: 'bumps', at: 0.3647, h: 0.5 },
+        { type: 'water', at: 0.2958 },
         { type: 'double', at: 0.6494, h: 2.4 },
         { type: 'gravel', at: 0.7323, len: 56 },
         { type: 'mud', at: 0.7893 },
@@ -6962,14 +7099,14 @@ void main() {
         { id: 'picchiata', name: 'La Picchiata', kind: 'discesa', from: 0.07, to: 0.18, cam: { zoom: 1.45, pitch: 0.95, poi: [-60, 30], frame: 0.25 } },
         { id: 'cresta', name: 'La Cresta del Vento', kind: 'cresta', from: 0.60, to: 0.77, cam: { zoom: 1.75, pitch: 0.84, poi: [-60, 30], frame: 0.3 } },
         { id: 'conca', name: 'La Conca di Sabbia', kind: 'fondo', from: 0.1748, to: 0.2618 },
-        { id: 'badwater', name: 'Badwater', kind: 'lago', from: 0.3647, to: 0.3996, sub: 'La pozza di sale', banner: true },
+        { id: 'badwater', name: 'Badwater', kind: 'lago', from: 0.2858, to: 0.3207, sub: '25 m sotto il deserto', banner: true },
         { id: 'ghiaia', name: 'La Curva Tonezzer', kind: 'fondo', from: 0.8392, to: 0.9292, sub: 'Ghiaia sulla corda' },
       ],
       shape: [
         { op: 'wall', side: 'N', from: 0.63, to: 0.73, h: 12, gap: 4, width: 8, sheer: 0.4 }, // canyon backdrop behind the pass
         { op: 'drop', side: 'S', from: 0.64, to: 0.76, h: 10, gap: 3, width: 10 }, // dune slip face toward the camera
         { op: 'wall', side: 'R', from: 0.068, to: 0.178, h: 9, gap: 3, width: 5 }, // "Il Canalone" (NE side of the NW dive)
-        { op: 'flat', at: [-62, 32], r: 25, y: -15.5, edge: 6, kind: 'salt' }, // "Badwater" salt pan
+        { op: 'flat', at: [-62, 32], r: 25, y: -25.4, edge: 6, kind: 'salt' }, // "Badwater" salt pan
       ],
       setpieces: [ // v7 art-pass requests (docs/SCENIC.md §8)
         { id: 'carro', type: 'wagonSkulls', module: 'props', along: { from: 0.07, to: 0.18 }, side: 'R' },
@@ -6986,11 +7123,11 @@ void main() {
     // the table, a step-up, mud, the ford and "Il Gradino", a ledge drop before the start.
     {
       id: 'archi', name: 'Tre Archi', theme: 'canyon', laps: 3, seed: 131, width: 11, bank: 1.0, pinStart: true,
-      course: { at: [0, 0, 0], y: 19, path: 'S90.139@16 !s1 S48@9.5 S50@9.5 !start S58@2 S35.464@6 !lA L50/90@11 L30/90@15 L16/60@19 S83.177@16 !s2 S95 !w2 L50/15 R50/30 L50/15 S9.23619@2 S52@6 !lB L30/120@15 L30/120@19 S52@16 !s3 S95 !w3 L50/15 R50/30 L50/15 S9.23619@2 S68.357@6 !lC L26/100@12 R26/40@14 L30/180@19' },
+      course: { at: [0, 0, 0], y: 19, path: 'S90.139@21 !s1 S48@14 S50@11 !start S58@0 S35.464@4 !lA L50/90@13 L30/90@19.5 L16/60@24 S83.177@21 !s2 S47.5@13.5 S47.5@6 !w2 L50/15@2 R50/30@0 L50/15@-1 S9.23619@-1.5 S52@3 !lB L30/120@14.5 L30/120@24 S52@21 !s3 S47.5@13.5 S47.5@6 !w3 L50/15@2.5 R50/30@0.5 L50/15@-1 S9.23619@-1.5 S68.357@5 !lC L26/100@14 R26/40@18.5 L30/180@24' },
       feats: [
-        { type: 'gravel', at: '!lA+16', len: 112 }, { type: 'kicker', at: '!s2-80', h: 1.3 }, { type: 'table', at: '!s2+44', h: 2.0 } /* v8: was 2.6 */,
-        { type: 'rocks', at: '!lB+10', len: 100, lane: 'L', split: 1 }, { type: 'step', at: '!s3+70', h: 1.6 } /* v8: was +50 */,
-        { type: 'mud', at: '!s3+102', len: 20 }, { type: 'sand', at: '!lC-6', len: 46 }, { type: 'water', at: '!s1-78', len: 16 },
+        { type: 'gravel', at: '!lA+16', len: 112 }, { type: 'kicker', at: '!s2-80', h: 1.3 }, { type: 'table', at: '!s2+42', h: 1.2 } /* v3.5: on the dive off the arch (v8: 2.0) */,
+        { type: 'rocks', at: '!lB+10', len: 100, lane: 'L', split: 1 }, { type: 'crest', at: '!s3+42', h: 1.0 } /* v3.5: the dive off the second arch (was a step-up at +70) */,
+        { type: 'mud', at: '!lB+108', len: 20 }, { type: 'sand', at: '!lC-6', len: 46 }, { type: 'water', at: '!s1-78', len: 16 },
         { type: 'drop', at: '!s1+42', h: 1.8 },
       ],
       road: [
@@ -7019,7 +7156,7 @@ void main() {
     // a 12 m R14 hairpin and comes back with a downhill double. Water moved onto the flat before the X (SCENIC §5.8).
     {
       id: 'rodeo', name: 'Rodeo di Mezzanotte', theme: 'night', laps: 3, seed: 67, width: 10.5, bank: 1.2, pinStart: true,
-      course: { at: [0, 0, 90], y: 0, path: 'S15@0 R20/45@0 S27@0 !xing S27@0 L20/45@1.5 S20@4 L20/45@6.5 S12@8 S15@9 !bridge S15@9 S12@8 R20/45@6.5 S15@6 L14/90@6.5 S45@11 R14/180@12 S35@5 S22@4 !start S38@4 R14/90@3 S?@2 R20/45@0 S12@-1.5 S15@-2 !under S15@-2 S12@-1.5 L20/45@0 S20@0.5 L20/45@0 S27@0 !xing S27@0 R20/45@0 S15@0 L14/90@0.5 S20@2 R14/180@3 S?@1 R14/90@0 S28@0' },
+      course: { at: [0, 0, 90], y: 0, path: 'S15@0 R20/45@0 S27@0 !xing S27@0 L20/45@2 S20@5 L20/45@7.5 S12@9 S15@10 !bridge S15@10 S12@9 R20/45@7.5 S15@7 L14/90@7.5 S45@12 R14/180@13 S35@6 S22@4 !start S38@4 R14/90@2.5 S?@0.5 R20/45@-1 S12@-2.5 S15@-3 !under S15@-3 S12@-2.5 L20/45@-1 S20@0 L20/45@0 S27@0 !xing S27@0 R20/45@0.5 S15@3 L14/90@7 S20@11 R14/180@16 S?@3 R14/90@1 S28@0' },
       feats: [
         { type: 'ramp', at: 0.0575, h: 2.2 }, // v8: 10 m earlier (was 0.0686)
         { type: 'mud', at: 0.2103 },
@@ -7040,7 +7177,7 @@ void main() {
       sections: [
         { id: 'cavalcavia', name: 'Il Cavalcavia', kind: 'ponte', from: 0.70, to: 0.80, cam: { zoom: 1.4, pitch: 1.05, poi: [135, 25], frame: 0.3 } },
         { id: 'ruota', name: 'La Ruota Panoramica', kind: 'stadio', from: 0.82, to: 0.92, sub: 'La ruota da 30 m', cam: { zoom: 1.5, pitch: 0.95, poi: [168, -52], frame: 0.5 } },
-        { id: 'montagna', name: 'La Montagna', kind: 'salita', from: 0.342, to: 0.4372 },
+        { id: 'montagna', name: 'La Montagna', kind: 'salita', from: 0.342, to: 0.4372, cam: { zoom: 1.3, pitch: 0.95 } },
         { id: 'asfalto', name: 'Il Rettilineo Tonezzer', kind: 'veloce', from: 0.4372, to: 0.5147 },
         { id: 'arena', name: 'L\'Arena di Sabbia', kind: 'fondo', from: 0.88, to: 0.9409 },
       ],
@@ -7058,18 +7195,18 @@ void main() {
     // moguls at the bottom; ice on the lake shore.
     {
       id: 'neve', name: 'Passo della Neve', theme: 'snow', laps: 3, seed: 79, width: 11, bank: 1.1, pinStart: true, sheer: 0.35,
-      course: { at: [0, 0, 0], y: 0, path: '!under S25@0.5 S15@1.5 R15/90@3 !legs S55@15.1 L13/180@19.2 S15@22.5 R30/25@24 L30/25@25.5 S15@29.1 R18/180@34.8 S40@43.6 !h3 L14/180@48 S50@59 R16/180@64 S55@76.1 L14/180@80.5 !gal S55@93 R15/90@95 S20@99 R25/90@102 !cima S70@104 R30/90@102 !tramp S205@55 R30/90@46 S50@40 S25@37 !bridge S30@34 S30@31 L40/90@25 S?@19 !riva L30/90@11 S?@6 L25/90@2 S21@0.5 !start S34@0 S20@0' },
+      course: { at: [0, 0, 0], y: 0, path: '!under S25@0.5 S15@1.5 R15/90@3 !legs S55@15.1 L13/180@19.2 S15@22.5 R30/25@24 L30/25@25.5 S15@29.1 R18/180@34.8 S40@43.6 !h3 L14/180@48 S50@59 R16/180@64 S55@76.1 L14/180@80.5 !gal S55@93 R15/90@95 S20@99 R25/90@102 !cima S70@104 R30/90@102 !tramp S110@78 !nera R40/30@73.4 L40/60@64.2 R40/30@59.6 S15@56.3 R30/90@46 S50@40 S25@37 !bridge S30@34 S30@31 L40/90@25 S?@19 !riva L30/90@11 S?@6 L25/90@2 S21@0.5 !start S34@0 S20@0' },
       feats: [
         { type: 'bumps', at: '!legs+16', len: 20, h: 0.5 }, { type: 'rocks', at: '!legs+52', len: 44, lane: 'L' }, { type: 'ice', at: '!h3-34', len: 50 },
-        { type: 'gravel', at: '!gal-96', len: 44 }, { type: 'crest', at: '!cima+26', h: 1.5 }, { type: 'double', at: '!tramp+40', h: 2.3 },
-        { type: 'table', at: '!tramp+100', h: 2.4 }, { type: 'bumps', at: '!tramp+166', len: 26, h: 0.6, period: 4 }, { type: 'mud', at: '!bridge+76' },
+        { type: 'gravel', at: '!gal-96', len: 44 }, { type: 'crest', at: '!cima+26', h: 1.5 }, { type: 'double', at: '!tramp+26', h: 1.8 },
+        { type: 'bumps', at: '!nera+6', len: 70, h: 0.55, period: 4.5 } /* v3.5 circuit: moguls on La Pista Nera */, { type: 'mud', at: '!bridge+76' },
         { type: 'ice', at: '!riva-10', len: 52 },
       ],
       road: [
         { from: '!legs+152', to: '!legs+209', bank: 2.2 }, // La Parabolica
         { from: '!h3+94', to: '!h3+144', bank: -0.6 }, // the off-camber R16
         { from: '!cima-10', to: '!cima+60', width: 0.88 }, // the summit ridge
-        { from: '!tramp+15', to: '!tramp+200', width: 1.2 }, // the piste
+        { from: '!tramp+15', to: '!nera+90', width: 1.2 }, // the piste
       ],
       sections: [
         { id: 'parabolica', name: 'La Parabolica Tonezzer', kind: 'veloce', from: '!legs+152', to: '!legs+209', sub: 'Il tornante sopraelevato' },
@@ -7077,13 +7214,14 @@ void main() {
         { id: 'lastra', name: 'La Lastra di Ghiaccio', kind: 'fondo', from: '!h3-34', to: '!h3+44' },
         { id: 'galleria', name: 'La Galleria del Passo', kind: 'galleria', from: '!gal+3', to: '!gal+52', cover: { type: 'gallery', clear: 6.5, open: 'S' } },
         { id: 'cima', name: 'La Cima', kind: 'cresta', from: '!cima-25', to: '!tramp+15', cam: { zoom: 1.9, pitch: 0.84, poi: [60, -330], frame: 0.35 } },
-        { id: 'trampolino', name: 'La Discesa del Trampolino', kind: 'discesa', from: '!tramp+20', to: '!tramp+200', banner: true },
+        { id: 'trampolino', name: 'La Discesa del Trampolino', kind: 'discesa', from: '!tramp+20', to: '!nera-4', banner: true },
+        { id: 'nera', name: 'La Pista Nera', kind: 'esse', from: '!nera', to: '!nera+90', sub: 'Slalom tra le gobbe' },
         { id: 'viadotto', name: 'Il Viadotto', kind: 'ponte', from: '!bridge', to: '!bridge+60', banner: true },
         { id: 'riva', name: 'La Riva Gelata', kind: 'fondo', from: '!riva-10', to: '!riva+42' },
       ],
       shape: [
         { op: 'peak', at: [50, -420], r: 95, h: 60 }, { op: 'peak', at: [-75, -380], r: 65, h: 45 }, // backdrop north of the summit
-        { op: 'drop', side: 'L', from: '!tramp+5', to: '!tramp+200', h: 22, gap: 3, width: 7, reach: 15, sheer: 0.3 }, // east of the descent
+        { op: 'drop', side: 'L', from: '!tramp+5', to: '!nera+90', h: 22, gap: 3, width: 7, reach: 15, sheer: 0.3 }, // east of the descent
         { op: 'peak', at: [230, -150], r: 110, h: -45, rough: 0.1 }, // the valley east of the descent
         { op: 'basin', at: [-51, 50], r: 22, level: -1.0, frozen: true }, // "Lago Ghiacciato" in the SW loop
       ],
@@ -7100,42 +7238,43 @@ void main() {
     // rock arch, the 270-degree spiral climbs 3 -> 21 m around the pinnacle and flies over its own entry on a 19 m bridge,
     // the 28 m NW summit, "La Discesa Infernale" southbound. Table moved onto the flat pit floor, whoops onto the climb out.
     {
-      id: 'fuoco', name: 'Canyon del Fuoco', theme: 'canyon', laps: 3, seed: 97, width: 11, bank: 1.2, pinStart: true,
-      course: { at: [0, 0, 90], y: 0, path: '!xing S30@0 S20@-2 R30/90@-6 S35@-11 L20/60@-14 R25/150@-18 S?@-18 R25/90@-16 S?@0 S30@0 !xing S30@0 S40@0 L20/90@1 S10@1.5 !under S30@3 L30/270@18 S20@20 !bridge S20@21 S30@22 L20/90@24 S55@27 L25/90@28 S100@8 L25/90@3 S52 !start S23@0 S30@0' },
+      id: 'fuoco', name: 'Canyon del Fuoco', theme: 'canyon', laps: 3, seed: 97, width: 11, bank: 1.2, pinStart: true, zoneShare: 0.45,
+      course: { at: [0, 0, 90], y: 0, path: '!xing S30@0 S20@-2 R30/90@-6 S35@-11 L20/60@-14 R25/150@-18 S?@-18 R25/90@-16 S?@0 S30@0 !xing S30@0 S40@0 L20/90@1 S10@1.5 !under S30@3 L30/270@18 S20@20 !bridge S20@21 S30@22.5 L20/90@25 S55@29 L25/90@30 S14@27.5 R16/90@25 !girone S25@21.5 L16/180@16.5 S25@13 R16/90@11 S22@10 L25/90@4.5 S52 !start S23@0 S30@0' },
       feats: [
-        { type: 'water', at: 0.0642 },
-        { type: 'mud', at: 0.1337 },
-        { type: 'sand', at: 0.1812, len: 60 },
-        { type: 'table', at: 0.2392, h: 2.8 },
-        { type: 'bumps', at: 0.3298 },
-        { type: 'water', at: 0.4397 },
-        { type: 'gravel', at: 0.5382, len: 130 },
-        { type: 'rocks', at: 0.5628, len: 60, lane: 'L' },
-        { type: 'drop', at: 0.7502, h: 2.0 },
-        { type: 'double', at: 0.8355, h: 2.5 },
-        { type: 'bumps', at: 0.8953 },
-        { type: 'crest', at: 0.9586, h: 1.5 },
+        { type: 'water', at: 0.0597 },
+        { type: 'mud', at: 0.1242 },
+        { type: 'sand', at: 0.1684, len: 60 },
+        { type: 'table', at: 0.2223, h: 2.8 },
+        { type: 'bumps', at: 0.3065 },
+        { type: 'water', at: 0.4086 },
+        { type: 'gravel', at: 0.5001, len: 130 },
+        { type: 'rocks', at: 0.5230, len: 60, lane: 'L' },
+        { type: 'drop', at: 0.6972, h: 2.0 },
+        { type: 'bumps', at: 0.9027 },
+        { type: 'crest', at: 0.9615, h: 1.5 },
       ],
       road: [
-        { from: 0.4723, to: 0.5004, bank: 2.0 },
-        { from: 0.7968, to: 0.8319, bank: -0.6 },
-        { from: 0.3474, to: 0.3913, width: 0.86 },
+        { from: '!girone+30', to: '!girone+72', bank: 2.4, ease: 10 }, // v3.5: Il Girone di Lava, a banked wall in the hairpin
+        { from: 0.4389, to: 0.4650, bank: 2.0 },
+        { from: 0.7405, to: 0.7731, bank: -0.6 },
+        { from: 0.3228, to: 0.3636, width: 0.86 },
       ],
       sections: [
-        { id: 'fossa', name: 'La Fossa', kind: 'gola', from: 0.13, to: 0.27, sub: '18 m sotto il canyon', cam: { zoom: 1.5, pitch: 0.90, poi: [60, 100], frame: 0.3 } },
-        { id: 'porta', name: 'La Porta del Fuoco', kind: 'arco', from: 0.362, to: 0.372, cover: { type: 'arch' } },
-        { id: 'spirale', name: 'La Spirale del Pinnacolo', kind: 'spirale', from: 0.53, to: 0.70, cam: { zoom: 1.7, pitch: 1.12, poi: [-60, -60], frame: 0.45 } },
-        { id: 'infernale', name: 'La Discesa Infernale', kind: 'discesa', from: 0.83, to: 0.93, banner: true },
-        { id: 'fondo', name: 'Il Fondo della Fossa', kind: 'fondo', from: 0.1759, to: 0.2392, sub: 'Sabbia nella buca' },
+        { id: 'fossa', name: 'La Fossa', kind: 'gola', from: 0.1208, to: 0.2509, sub: '18 m sotto il canyon', cam: { zoom: 1.5, pitch: 0.90, poi: [60, 100], frame: 0.3 } },
+        { id: 'porta', name: 'La Porta del Fuoco', kind: 'arco', from: 0.3364, to: 0.3457, cover: { type: 'arch' } },
+        { id: 'spirale', name: 'La Spirale del Pinnacolo', kind: 'spirale', from: 0.4925, to: 0.6505, cam: { zoom: 1.7, pitch: 1.12, poi: [-60, -60], frame: 0.45 } },
+        { id: 'girone', name: 'Il Girone di Lava', kind: 'tornanti', from: '!girone-20', to: '!girone+110', sub: 'Tre curve in discesa, il muro sopraelevato', cam: { zoom: 1.5, pitch: 0.95, poi: [-120, -40], frame: 0.2 } },
+        { id: 'infernale', name: 'La Discesa Infernale', kind: 'discesa', from: 0.7713, to: 0.9349, banner: true },
+        { id: 'fondo', name: 'Il Fondo della Fossa', kind: 'fondo', from: 0.1635, to: 0.2223, sub: 'Sabbia nella buca' },
       ],
       shape: [
         { op: 'peak', at: [-60, -60], r: 14, h: 15, rough: 0.05 }, // "Il Pinnacolo", a hoodoo inside the spiral
-        { op: 'wall', side: 'E', from: 0.15, to: 0.25, h: 12, gap: 3, width: 5, sheer: 0.3 }, // the pit's outer wall
+        { op: 'wall', side: 'E', from: 0.1394, to: 0.2323, h: 12, gap: 3, width: 5, sheer: 0.3 }, // the pit's outer wall
         { op: 'flat', at: [42, 86], r: 18, y: 0, edge: 3 }, // a butte in the pit loop
       ],
       bridges: [{ at: '!bridge', style: 'steel' }],
       setpieces: [{ id: 'braciere', type: 'brazier', at: [-60, -60], module: 'props', r: 1, clear: 6 },
-        { id: 'forno', type: 'lavaCracks', module: 'world', along: { from: 0.13, to: 0.27 } }, { id: 'calore', type: 'heatShimmer', module: 'fx', along: { from: 0.13, to: 0.27 } }],
+        { id: 'forno', type: 'lavaCracks', module: 'world', along: { from: 0.1208, to: 0.2509 } }, { id: 'calore', type: 'heatShimmer', module: 'fx', along: { from: 0.1208, to: 0.2509 } }],
     },
   ];
 
@@ -7749,12 +7888,12 @@ void main() {
       ],
     },
     // E · the climbs of two circuits, start line to summit (their own loop, start gantry, sections and zones)
-    { from: 'neve', id: 'neve-cima', name: 'Salita al Passo della Neve', baseAlt: 1820, finish: '!cima+10', zoneShare: 0.5,
+    { from: 'neve', base: NEVE_CLIMB, id: 'neve-cima', name: 'Salita al Passo della Neve', baseAlt: 1820, finish: '!cima+10', zoneShare: 0.5,
       blurb: 'Dal via del circuito alla Cima: sei rampe al 23 % e la galleria.',
       medals: { bronze: 35.5, silver: 31.5, gold: 29, platinum: 27.5 },
       checkpoints: [{ at: '!legs+152', name: 'La Parabolica' }, { at: '!h3', name: 'La Lastra' }, { at: '!gal', name: 'La Galleria' }],
       challenges: [{ id: 'nevecima-tempo', type: 'time', value: 28, reward: 300 }, { id: 'nevecima-muri', type: 'noWall', reward: 200 }, { id: 'nevecima-nonitro', type: 'noNitro', time: 29, reward: 300 }] },
-    { from: 'gola', id: 'gola-salto', name: 'Salita della Gola del Diavolo', baseAlt: 640, finish: '!summit+62', zoneShare: 0.5,
+    { from: 'gola', base: GOLA_CLIMB, id: 'gola-salto', name: 'Salita della Gola del Diavolo', baseAlt: 640, finish: '!summit+62', zoneShare: 0.5,
       blurb: 'Fuori dal canyon per quattro rampe fino al ciglio del Salto.',
       medals: { bronze: 27.5, silver: 24.5, gold: 23, platinum: 21.5 },
       checkpoints: [{ at: '!legs+90', name: 'Primo tornante' }, { at: '!legs+330', name: 'Terzo tornante' }],
@@ -7924,7 +8063,7 @@ void main() {
     return { len: Math.round(len), frac: fr, climb: Math.round(climb * aK), y0: P[0][2] * aK, y1: Math.round(y1 * aK * 10) / 10, maxGrade: Math.round(g * 100) / 100, profile: aK === 1 ? prof : prof.map((v) => Math.round(v * aK * 10) / 10) };
   };
   O.HILLS = H.map((h) => {
-    if (h.from) { const base = O.TRACKS.find((t) => t.id === h.from); if (!base) { console.error('tracks-data: hill ' + h.id + ': unknown circuit ' + h.from); return null; } h = Object.assign({}, base, h); }
+    if (h.from) { const base = h.base || O.TRACKS.find((t) => t.id === h.from); if (!base) { console.error('tracks-data: hill ' + h.id + ': unknown circuit ' + h.from); return null; } h = Object.assign({}, base, h); delete h.base; } // v3.5: base = the frozen climb loop
     h.mode = 'hill'; h.laps = 1;
     if (!expand(h)) return null;
     try { h.hillInfo = hillInfo(h); } catch (e) { console.error('tracks-data: hill ' + h.id + ': ' + e.message); return null; }
@@ -9072,7 +9211,7 @@ void main() {
       dims: { len: 4.05, wid: 2.75, wb: 2.6, tw: 2.3, wr: 0.92, wrF: 0.92 },
       look: { paint: '#2a9d5c', acc: '#f2c22e', stripe: 'flame', rims: 'chrome', fin: 'gloss' },
       eng: { kind: 'monster', pitch: 0.72, gears: 3 },
-      ai: 1, pace: 1.047, aiTop: 0.942,
+      ai: 1, pace: 1.047, aiTop: 0.962, // v3.5: 0.942 → 0.962 (the hairpin stacks of the new layouts: its slow steering lost 2.4 % on 6 circuits)
     },
     {
       id: 'special', price: 0, tier: 1.8, unlock: 'special',
@@ -9761,7 +9900,7 @@ window.ORS.ONLINE_CONFIG = {
    Pure logic (no DOM): tools/online-test.js runs it in node with a fake fetch / localStorage and a mock server.
 
    Boards (ids, also the server's regex): 'hill:<course>:<vehicle>' and 'hill:<course>:all' (the server fills the overall board from
-   each vehicle submission), 'lap:<circuit>' (best lap of a race), 'daily-YYYY-MM-DD' (Sfida del giorno, js/daily.js),
+   each vehicle submission), 'lap2:<circuit>' (best lap of a race; v3.5: the circuits' new layouts, the old 'lap:' boards are retired), 'daily-YYYY-MM-DD' (Sfida del giorno, js/daily.js),
    v3.4 'rally:<event>' (Rally a tappe, js/rally.js: the total time with the penalties, splits = the cumulative stage ends).
    Player: an anonymous random id (uuid, localStorage 'ors3d-player-v1', never shown) + an editable name (2–16 characters, basic
    profanity filter; the server checks again). The server derives a public id from the uuid; the rows it returns carry `me`.
@@ -9778,9 +9917,12 @@ window.ORS.ONLINE_CONFIG = {
 'use strict';
 (function (O) {
   const G = typeof window !== 'undefined' ? window : globalThis;
-  const PKEY = 'ors3d-player-v1', LKEY = 'ors3d-online-v2' /* v8: the trucks' speeds and the hill courses changed: older local bests are not comparable */, VERSION = '3.4' /* the run's game version (the server checks its format) */, DOWN_MS = 60000, CACHE_MS = 20000;
+  const PKEY = 'ors3d-player-v1', LKEY = 'ors3d-online-v2' /* v8: the trucks' speeds and the hill courses changed: older local bests are not comparable */, VERSION = '3.5' /* the run's game version (the server checks its format) */, DOWN_MS = 60000, CACHE_MS = 20000;
   let TIMEOUT = 8000; // ms per request (tests: _timeout)
-  const BOARD_RE = /^(hill:[a-z0-9-]{1,24}:[a-z]{2,12}|lap:[a-z0-9-]{1,24}|rally:[a-z0-9-]{1,24}|daily-\d{4}-\d{2}-\d{2})$/; // (v3.4: rally)
+  /* (v3.4: rally) v3.5 "Saliscendi": the circuits' laps are on 'lap2:<circuit>' boards (new elevation profiles: the v3.4 times are not
+     comparable). The old 'lap:' boards are retired: not a board here any more, so this device's old 'lap:' bests drop out of the local
+     store when it loads and a queued old entry is never sent (the server refuses them too: supabase/schema.sql). */
+  const BOARD_RE = /^(hill:[a-z0-9-]{1,24}:[a-z]{2,12}|lap2:[a-z0-9-]{1,24}|rally:[a-z0-9-]{1,24}|daily-\d{4}-\d{2}-\d{2})$/;
   let store = null;
   try { store = G.localStorage || null; } catch (e) { store = null; }
   const rd = (k) => { try { const v = store ? store.getItem(k) : null; return v ? JSON.parse(v) : null; } catch (e) { return null; } };
@@ -9994,7 +10136,7 @@ window.ORS.ONLINE_CONFIG = {
     if (flushing || !canTry()) return 0;
     flushing = true; let n = 0;
     try {
-      const q = localList().filter((e) => e.q && !e.board.endsWith(':all')).sort((a, b) => b.d - a.d).slice(0, max || 3);
+      const q = localList().filter((e) => e.q && !e.board.endsWith(':all') && !/^lap:/.test(e.ref || '')).sort((a, b) => b.d - a.d).slice(0, max || 3);
       for (const e of q) {
         const j = await adapter().submit(payload(e.board, { time: e.t, veh: e.veh, ups: e.ups, splits: e.sp, ref: e.ref, laps: e.laps })).catch(() => null);
         if (!j) break;
@@ -10020,7 +10162,7 @@ window.ORS.ONLINE_CONFIG = {
     configured, enabled, status, player, setName, cleanName, nameProblem, submit, top, around, rankOf, flush, localBest, localList, noteLocal,
     board: {
       hill: (course, veh) => 'hill:' + course + ':' + (veh || 'all'),
-      lap: (track) => 'lap:' + track,
+      lap: (track) => 'lap2:' + track, // v3.5 (the v3.4 'lap:' boards are retired)
       daily: (date) => 'daily-' + date,
       rally: (ev) => 'rally:' + ev, // v3.4 Rally a tappe
     },
@@ -10183,7 +10325,7 @@ window.ORS.ONLINE_CONFIG = {
     idx = Math.max(0, ((a.kind === 'hill' ? O.HILLS : O.TRACKS) || []).indexOf(def)); // (the index in O.HILLS / O.TRACKS: a.list may be a filtered prefix)
     const d = {
       date, board: 'daily-' + date, kind: a.kind, idx, id: def.id, name: def.name, veh: a.veh, cond: a.cond, nitro: c.nitro, pen: c.pen,
-      laps: a.kind === 'circuit' ? LAPS : 0, ref: (a.kind === 'hill' ? 'hill:' : 'lap:') + def.id, weather: wl ? wKey(wl[Math.floor(a.wr * wl.length)]) : null,
+      laps: a.kind === 'circuit' ? LAPS : 0, ref: (a.kind === 'hill' ? 'hill:' : 'lap2:') + def.id /* v3.5: the circuits' lap limits are 'lap2:' */, weather: wl ? wKey(wl[Math.floor(a.wr * wl.length)]) : null,
     };
     return (memo[date] = d);
   }
@@ -10337,12 +10479,13 @@ window.ORS.ONLINE_CONFIG = {
 
    v4 "audio vero" (user: "vorrei che gli effetti audio fossero meno arcade"): the sound effects are physically inspired.
    • Engines: a source-filter model per vehicle. The source is one engine cycle (two crank turns) of exhaust pressure pulses in
-     the real firing pattern (cross-plane V8 banks, even 4 / 10 cylinders, boxer with unequal headers), with per-cylinder
+     the real firing pattern (cross-plane V8 banks, even 4 cylinders, boxer with unequal headers, V12 banks), with per-cylinder
      amplitude / timing spread, played as a band-limited PeriodicWave at rpm / 120 Hz (firing harmonic = rpm × cyl / 120);
      on-load and overrun waves are crossfaded by the load. Cycle-to-cycle jitter + idle lope on detune and level. The filter
      is the exhaust: a pipe comb (feedback delay), muffler / tailpipe formants (fixed Hz, they do not track rpm), a load
      low-pass; plus combustion / intake noise and valvetrain ticks amplitude-modulated at the firing rate, a sub rumble,
-     turbo spool + blow-off with flutter (rally), Roots supercharger whine (monster), straight-cut gear whine (special).
+     turbo spool + blow-off with flutter (rally), Roots supercharger whine (monster); the Special (v3.5) is a deep V12
+     (uneven banks / collectors: low-mid weight under the firing note; open pipes: barks and deep bangs).
      Gearboxes: torque-converter autos (slurred shifts), a manual (long cut, clunk, blip on downshifts), sequentials (short
      ignition cut, crack); rev limiter fuel-cut stutter; overrun crackle and backfires.
      AI trucks: virtual engines; the nearest AI_VOICES get a pooled lightweight voice with distance attenuation, air
@@ -10510,7 +10653,12 @@ window.ORS.ONLINE_CONFIG = {
   /* One engine cycle (720° of crank) of exhaust pressure: a blow-down pulse per firing (fast rise, decay, a little ring, a
      scavenging undershoot), at the firing angles of the layout, each cylinder slightly different (amplitude, timing).
      variant 0 / 1: the two banks of a cross-plane V8 (own bank loud, the other through the crossover), or for even-firing
-     engines 0 = on load (sharp, strong), 1 = overrun (soft, uneven, weak combustion). */
+     engines 0 = on load (sharp, strong), 1 = overrun (soft, uneven, weak combustion).
+     v3.5 'v12' (the Special): 12 even firings, the two banks through unequal headers (bank 2 later by bankLag firing intervals,
+     bankAmp quieter) → a strong half-firing (bank) order, each bank's 3-into-1 collectors alternating (colAmp: the quarter-
+     firing order, a deep burble), + spread (extra per-cylinder unevenness → low cycle orders: rumble);
+     optional pulse shaping for any kind: rise (softer blow-down = fewer highs), ring (× the pulse ring), ringW (its weight),
+     roll (harmonic roll-off order per cylinder, default 34). */
   function engineWave(P, variant, seed) {
     const N = 4096, H = 1400, x = new Float32Array(N), im = new Float32Array(N), n = P.cyl;
     let s = (seed * 9301 + 49297) % 233280; const r = () => { s = (s * 9301 + 49297) % 233280; return s / 233280; };
@@ -10519,16 +10667,17 @@ window.ORS.ONLINE_CONFIG = {
       let amp = 0.88 + 0.24 * r(), pos = (k + (r() - 0.5) * 0.05) / n;
       if (P.fire === 'xplane') amp *= bank[k] === variant ? 1 : 0.42;
       if (P.fire === 'boxer') { if (k & 1) { amp *= 0.72; pos += 0.035 / n * 4; } }
+      if (P.fire === 'v12') { amp += (P.spread || 0) * (r() - 0.5); if (k & 1) { amp *= P.bankAmp || 1; pos += (P.bankLag || 0) / n; } if (k & 2) amp *= P.colAmp || 1; }
       if (off) amp *= 0.3 + 0.45 * r();
-      const rise = off ? 0.07 : 0.022, dec = off ? 0.16 : 0.24, ring = 1.4 + r() * 0.5 + (P.fire === 'xplane' ? 0.2 : 0);
+      const rise = off ? 0.07 : P.rise || 0.022, dec = off ? 0.16 : 0.24, ring = (1.4 + r() * 0.5 + (P.fire === 'xplane' ? 0.2 : 0)) * (P.ring || 1), rw = P.ringW != null ? P.ringW : 0.6;
       for (let i = 0; i < N; i++) {
         let ph = i / N - pos; if (ph < 0) ph += 1;
         const tau = ph * n; if (tau > 3) continue; // in firing intervals
-        x[i] += amp * ((1 - Math.exp(-tau / rise)) * Math.exp(-tau / dec) * (Math.cos(2 * Math.PI * ring * tau) * 0.6 + 0.55) - 0.16 * Math.exp(-tau / 0.9) * (1 - Math.exp(-tau / 0.3)));
+        x[i] += amp * ((1 - Math.exp(-tau / rise)) * Math.exp(-tau / dec) * (Math.cos(2 * Math.PI * ring * tau) * rw + 0.55) - 0.16 * Math.exp(-tau / 0.9) * (1 - Math.exp(-tau / 0.3)));
       }
     }
     fft(x, im);
-    const re = new Float32Array(H + 1), imo = new Float32Array(H + 1), kc = 34 * n;
+    const re = new Float32Array(H + 1), imo = new Float32Array(H + 1), kc = (P.roll || 34) * n;
     for (let k = 1; k <= H; k++) { const roll = 1 / (1 + (k / kc) * (k / kc)); re[k] = x[k] * roll; imo[k] = -im[k] * roll; }
     return ctx.createPeriodicWave(re, imo);
   }
@@ -11280,8 +11429,13 @@ window.ORS.ONLINE_CONFIG = {
      idle / max rpm; comb (s) + fb: the exhaust pipe resonance (round trip); f1 / f2: muffler and tailpipe formants (Hz); bright
      (load low-pass ×); sub (rumble ×); intake / mech (combustion-intake noise, valvetrain ×); lope (idle hunting, a big cam);
      irr (cycle jitter ×); turbo (spool whistle + blow-off valve with flutter); sc (Roots supercharger whine); gw (straight-cut
-     gear whine); pops (overrun crackle ×); box: 'auto' (torque converter: slurred shifts), 'manual' (long cut, a clunk, a blip
-     on downshifts), 'seq' (sequential: a short ignition cut, a crack); cut (s); mass (heavier = deeper impacts). */
+     gear whine; no kind uses it since v3.5); pops (overrun crackle ×); box: 'auto' (torque converter: slurred shifts), 'manual' (long
+     cut, a clunk, a blip on downshifts), 'seq' (sequential: a short ignition cut, a crack); cut (s); mass (heavier = deeper impacts).
+     Optional voicing (v3.5, the Special; absent = the v4 behaviour): fire 'v12' + spread / bankAmp / bankLag / colAmp (engineWave),
+     rise / ring / ringW / roll (pulse shape, harmonic roll-off), drv (tanh drive ×: smoother), subDiv (sub rumble = firing ÷ subDiv)
+     + subFade (how much it fades with the revs, 0.75), ifq (intake band ×), popF / popA / popD / popLo (crackle band / level /
+     length / low thump ×: deeper, fuller bangs), howl (load low-pass opening above 68 % revs), bark (open pipes: an exhaust swell
+     + low punch on a tip-in, after an upshift, on a downshift blip, which also bangs). */
   const ENG_KINDS = {
     v8: { lvl: 1, cyl: 8, fire: 'xplane', idle: 760, max: 6000, comb: 0.0085, fb: 0.45, f1: 125, f2: 430, bright: 1, sub: 1, intake: 0.8, mech: 0.5, lope: 0.45, irr: 1, pops: 0.7, box: 'auto', cut: 0.22, mass: 1, seed: 11 },
     i4old: { lvl: 0.8, cyl: 4, fire: 'even', idle: 650, max: 4300, comb: 0.0065, fb: 0.5, f1: 165, f2: 540, bright: 0.72, sub: 0.75, intake: 1.2, mech: 1.5, lope: 0.9, irr: 1.7, pops: 0.25, box: 'manual', cut: 0.36, mass: 1, seed: 23 },
@@ -11289,7 +11443,7 @@ window.ORS.ONLINE_CONFIG = {
     turbo4: { lvl: 0.52, cyl: 4, fire: 'even', idle: 900, max: 7200, comb: 0.006, fb: 0.42, f1: 180, f2: 640, bright: 1.15, sub: 0.6, intake: 0.5, mech: 0.6, lope: 0.2, irr: 0.8, turbo: 1, pops: 1.3, box: 'seq', cut: 0.08, mass: 0.9, seed: 41 },
     bigv8: { lvl: 1, cyl: 8, fire: 'xplane', idle: 700, max: 5600, comb: 0.011, fb: 0.5, f1: 100, f2: 340, bright: 0.85, sub: 1.35, intake: 0.9, mech: 0.5, lope: 0.65, irr: 1.1, pops: 0.8, box: 'auto', cut: 0.25, mass: 1.25, seed: 53 },
     monster: { lvl: 0.88, cyl: 8, fire: 'xplane', idle: 760, max: 5200, comb: 0.013, fb: 0.5, f1: 86, f2: 290, bright: 0.78, sub: 1.7, intake: 0.7, mech: 0.6, lope: 1.3, irr: 1.3, sc: 1, pops: 1, box: 'auto', cut: 0.28, mass: 1.6, seed: 67 },
-    special: { lvl: 0.8, cyl: 10, fire: 'even', idle: 1000, max: 8200, comb: 0.004, fb: 0.38, f1: 260, f2: 950, bright: 1.4, sub: 0.7, intake: 1.1, mech: 0.6, lope: 0.15, irr: 0.7, gw: 1, pops: 0.9, box: 'seq', cut: 0.06, mass: 1.1, seed: 79 },
+    special: { lvl: 0.8, cyl: 12, fire: 'v12', idle: 600, max: 5200, comb: 0.0095, fb: 0.35, f1: 105, f2: 480, bright: 0.62, sub: 1.2, subDiv: 2, subFade: 0.5, intake: 0.8, ifq: 0.55, mech: 0.35, lope: 0.2, irr: 0.8, pops: 2, popF: 0.42, popA: 3.5, popD: 1.6, popLo: 2.2, bark: 1.4, box: 'seq', cut: 0.07, mass: 1.15, seed: 79, spread: 0.9, bankAmp: 0.4, colAmp: 0.55, bankLag: 0.02, rise: 0.035, ring: 0.6, ringW: 0.3, roll: 10, drv: 0.75, howl: 1 },
   };
   for (const k in ENG_KINDS) ENG_KINDS[k].key = k;
   // gear ratios (× speed / top = rpm share): top speed in top gear ≈ 92 % of the range (headroom for nitro, descents, the limiter)
@@ -11327,7 +11481,7 @@ window.ORS.ONLINE_CONFIG = {
     if (this.panner) { this.panner.pan.value = this.pan; this.panner.connect(M.engine); }
     const out = this.out = G(L, 0, this.panner || M.engine);
     // exhaust: cycle waves → drive → tanh → pipe comb → muffler / tailpipe formants → load low-pass → level
-    const am = G(L, 1, out), exh = this.exh = G(L, 0.3, am); // am: cycle-to-cycle level jitter (±15 %)
+    const am = this.am = G(L, 1, out), exh = this.exh = G(L, 0.3, am); // am: cycle-to-cycle level jitter (±15 %; + the bark swell)
     const lp = this.lp = F(L, 'lowpass', 600, 0.7, exh);
     const pk2 = PK(L, P.f2, 2.2, 5, lp), pk1 = PK(L, P.f1, 1.1, 7, pk2);
     const lt = light(); this.lite = lt;
@@ -11452,6 +11606,7 @@ window.ORS.ONLINE_CONFIG = {
       if (this.prevNitro && !nitro) this.pops(t, 2 + ((rnd() * 2) | 0), 0.9);
       if (surf === 2 && this.surf !== 2 && speed > 6 && !paused) SFX.splash({ impact: speed, id: this.id, human: true });
     }
+    if (!ai && P.bark) { if (thrIn < 0.2) this.lift = 1; else if (this.lift && thrIn > 0.7) { this.lift = 0; this.bark(t, 1); } } // open-pipe bark on a tip-in
     this.prevThr = thrIn; this.prevNitro = nitro;
     this.surf = surf; this.speed = speed; this.air = air;
     const sc = s.slide != null || s.brake != null ? clamp((+s.brake || 0) * speed / 28 + Math.max(0, (+s.slide || 0) - 2.5) / 7, 0, 1) : clamp(+s.scrub || 0, 0, 1);
@@ -11462,7 +11617,16 @@ window.ORS.ONLINE_CONFIG = {
     const P = this.P;
     if (P.box === 'manual') { this.knock(t + 0.03, 0.35); if (dir < 0) this.knock(t + P.cut * 0.5, 0.2); }
     else if (P.box === 'seq' && dir > 0 && this.thr > 0.7) { if (rnd() < 0.5 * P.pops) this.pops(t, 1, 0.55); this.knock(t + 0.005, 0.12); }
+    if (P.bark) { // v3.5 open pipes: a bark when the power comes back after an upshift; a blipped downshift barks and bangs
+      if (dir > 0 && this.thr > 0.5) this.bark(t + P.cut, 0.75);
+      else if (dir < 0) { this.bark(t + 0.01, 0.6); if (rnd() < 0.7) this.pops(t + P.cut * 0.8, 1 + ((rnd() * 2) | 0), 0.6); }
+    }
     if (P.turbo && dir > 0 && this.boost > 0.45) this.bov(t, this.boost * 0.7);
+  };
+  Engine.prototype.bark = function (t, k) { // a short swell of the exhaust level + a low punch (persistent nodes; kinds with P.bark)
+    const P = this.P, g = this.am.gain, b = P.bark * k;
+    g.setTargetAtTime(1 + b, t, 0.006); g.setTargetAtTime(1, t + 0.05, 0.08);
+    if (t >= this.lastPopT) { const f = this.thump.frequency, tg = this.thumpG.gain; f.setValueAtTime(62, t); f.exponentialRampToValueAtTime(38, t + 0.12); hit(tg, t, 0.22 * b, 0.004, 0.06); this.lastPopT = t + 0.1; }
   };
   Engine.prototype.knock = function (t, a) { // a drivetrain clunk on the thump voice (persistent nodes)
     const f = this.thump.frequency, g = this.thumpG.gain; t = Math.max(t, this.lastPopT);
@@ -11482,13 +11646,13 @@ window.ORS.ONLINE_CONFIG = {
     const P = this.P, r = this.rpm, ld = Math.min(1.2, this.load), n = this.nit, tc = 0.03, cl = this.climb, air = this.air, speed = this.speed, surf = this.surf;
     const cyc = this.cycleHz(), fire = cyc * P.cyl, on = clamp(ld, 0, 1), over = r > 0.3 && ld < 0.15 ? 1 : 0;
     this.set(0, this.oA.frequency, cyc, t, tc); this.set(1, this.oB.frequency, cyc, t, tc);
-    this.set(2, this.sub.frequency, P.fire === 'xplane' ? fire / 2 : fire, t, tc); this.set(3, this.fire.frequency, fire, t, tc);
+    this.set(2, this.sub.frequency, fire / (P.subDiv || (P.fire === 'xplane' ? 2 : 1)), t, tc); this.set(3, this.fire.frequency, fire, t, tc);
     if (P.fire !== 'xplane') { this.set(4, this.gA.gain, 0.25 + 0.75 * on, t, 0.04); this.set(5, this.gB.gain, 0.75 * (1 - on), t, 0.04); }
-    this.set(6, this.drive.gain, (0.75 + 1.1 * ld + 0.4 * n) * (0.85 + 0.3 * r), t, tc);
-    this.set(7, this.lp.frequency, (380 + 500 * r + ld * (350 + 1700 * r) + 900 * n) * P.bright, t, tc);
+    this.set(6, this.drive.gain, (0.75 + 1.1 * ld + 0.4 * n) * (0.85 + 0.3 * r) * (P.drv || 1), t, tc);
+    this.set(7, this.lp.frequency, (380 + 500 * r + ld * (350 + 1700 * r) + 900 * n + (P.howl ? P.howl * ld * Math.max(0, r - 0.68) * 7000 : 0)) * P.bright, t, tc);
     this.set(8, this.exh.gain, (0.16 + 0.34 * ld + 0.2 * r) * (1 - 0.25 * over), t, tc);
-    this.set(9, this.subG.gain, (0.16 + 0.16 * ld) * (1 - 0.75 * Math.min(1, r)) * P.sub, t, tc);
-    this.set(10, this.bpI.frequency, 450 + 1900 * r + 400 * n, t, tc);
+    this.set(9, this.subG.gain, (0.16 + 0.16 * ld) * (1 - (P.subFade != null ? P.subFade : 0.75) * Math.min(1, r)) * P.sub, t, tc);
+    this.set(10, this.bpI.frequency, (450 + 1900 * r + 400 * n) * (P.ifq || 1), t, tc);
     this.set(11, this.intG.gain, (0.012 + ld * (0.06 + 0.22 * r) + 0.12 * n + 0.03 * cl) * P.intake, t, tc);
     if (this.mechG) this.set(12, this.mechG.gain, (0.012 + 0.03 * r) * P.mech, t, 0.05);
     this.set(13, this.ld.gain, 10 * P.lope * Math.max(0, 1 - r * 4), t, 0.1);         // idle lope fades as the revs rise
@@ -11559,12 +11723,12 @@ window.ORS.ONLINE_CONFIG = {
   Engine.prototype.pops = function (t0, count, amp) {
     if (!this.built) return;
     let t = Math.max(t0 + 0.02, this.lastPopT + 0.06);
-    const pg = this.popG.gain, tg = this.thumpG.gain;
+    const P = this.P, pg = this.popG.gain, tg = this.thumpG.gain;
     for (let i = 0; i < count; i++) {
-      const a = amp * (0.35 + 0.65 * rnd()) * 0.8, d = 0.02 + rnd() * 0.035;
-      this.bpP.frequency.setValueAtTime(600 + rnd() * 1800, t); this.thump.frequency.setValueAtTime(45 + rnd() * 40, t);
+      const a = amp * (0.35 + 0.65 * rnd()) * 0.8 * (P.popA || 1), d = (0.02 + rnd() * 0.035) * (P.popD || 1);
+      this.bpP.frequency.setValueAtTime((600 + rnd() * 1800) * (P.popF || 1), t); this.thump.frequency.setValueAtTime(45 + rnd() * 40, t);
       pg.setValueAtTime(0, t); pg.linearRampToValueAtTime(a, t + 0.0015); pg.exponentialRampToValueAtTime(0.001, t + d); pg.setValueAtTime(0, t + d + 0.002);
-      tg.setValueAtTime(0, t); tg.linearRampToValueAtTime(a * 0.5, t + 0.003); tg.exponentialRampToValueAtTime(0.001, t + d + 0.03); tg.setValueAtTime(0, t + d + 0.035);
+      tg.setValueAtTime(0, t); tg.linearRampToValueAtTime(a * 0.5 * (P.popLo || 1), t + 0.003); tg.exponentialRampToValueAtTime(0.001, t + d + 0.03); tg.setValueAtTime(0, t + d + 0.035);
       this.lastPopT = t + d + 0.04;
       t = this.lastPopT + rnd() * rnd() * 0.15;
     }
@@ -11638,7 +11802,7 @@ window.ORS.ONLINE_CONFIG = {
     const P = e.P, r = e.rpm, ld = clamp(e.load, 0, 1.2), d = e.d, dop = clamp(SOUND_C / (SOUND_C + e.vr), 0.75, 1.35);
     const att = 1 / (1 + Math.pow(d / 12, 1.35)), edge = clamp((AI_RANGE - d) / 30, 0, 1);
     this.set(0, this.osc.frequency, e.cycleHz() * dop, t, 0.03);
-    this.set(1, this.drv.gain, (0.8 + 1.1 * ld) * (0.85 + 0.3 * r), t, 0.03);
+    this.set(1, this.drv.gain, (0.8 + 1.1 * ld) * (0.85 + 0.3 * r) * (P.drv || 1), t, 0.03);
     this.set(2, this.out.gain, e.vol * P.lvl * att * edge * (0.3 + 0.45 * ld + 0.25 * r), t, 0.05);
     this.set(3, this.lp.frequency, clamp((260 + 600 * r + ld * (400 + 1600 * r)) * P.bright / (1 + d / 70), 160, 9000), t, 0.05);
     this.set(4, this.rlp.frequency, clamp((SURF_SND[e.surf] || SURF_SND[0]).rf * 2 + 20 * e.speed, 200, 2400) / (1 + d / 90), t, 0.1);
@@ -31111,7 +31275,10 @@ void main(){
       const want = this.force ? 1 : settings.scenic === 0 || S.state === 'countdown' || car.wrongT > 0.5 ? 0 : Z.w * (settings.scenic === 1 ? 0.5 : 1);
       // airborne: follow 40 % of the jump height, so a truck flying toward the camera (downhill jumps) stays inside the frame
       // v6: higher flights (faster trucks) follow more of the height, so the truck stays inside the frame at the top of a big jump
-      const hA = car.air ? Math.max(0, car.y - car.groundY) : 0, gy = car.air ? car.groundY + (0.4 + 0.35 * smooth(2.5, 7, hA)) * hA : car.y;
+      // v3.5: a long flight over falling ground (a crest at the top of a drop: 6-15 m above the road under it) follows nearly all of
+      // the height, and the downhill vertical look-ahead backs off while airborne (airW), so the truck stays in frame to the landing
+      const hA = car.air ? Math.max(0, car.y - car.groundY) : 0, gy = car.air ? car.groundY + (0.4 + 0.35 * smooth(2.5, 7, hA) + 0.17 * smooth(6, 12, hA)) * hA : car.y;
+      this.airW = !this.init ? 0 : damp(this.airW || 0, car.air ? smooth(0.8, 4, hA) : tr.jumpZone && tr.jumpZone[car.idx] && sp > 22 ? 0.6 : 0, car.air ? 7 : 1.5, dt); // (eases in over the 40 m before a lip)
       const spWant = 1 + CF.spK * spF * (q === 'low' ? CF.lowK : 1) * (split ? CF.lowK : 1); // v6: pull back at high speed (×1.16 at 40 m/s: the look-ahead the faster trucks need)
       if (!this.init) { this.zw = want; this.sf = 1; this.vLook = 0; this.lift = 0; this.groundY = gy; this.yaw = car.h + Math.PI; this.spK = spWant; this.gT = gA; this.gN = gNT; this.rel = relT; this.cw = 0; this.ew = 0; this.kick = this.kickV = 0; this.liftF = 0; }
       else { const nz = damp(this.zw, want, want > this.zw ? ZONE.rise : ZONE.fall, dt); this.zw = clamp(nz, this.zw - ZONE.slew * dt, this.zw + ZONE.slew * dt); }
@@ -31197,8 +31364,13 @@ void main(){
       const cy = Math.cos(this.yawF), syw = Math.sin(this.yawF), uxs = ux * cy + uz * syw, uzs = -ux * syw + uz * cy; // velocity in screen axes (right, down)
       // 2. look-ahead lead shrinks while zoomed out (zones and altitude framing)
       // v6: the up/down-screen caps grow with speed (×1.5 at 40 m/s; sideways the 16:9 frame is wide enough) and a crest adds a look over the top
-      const L = (Math.min(sp * 0.55, (chase ? 4 : (6 * Math.max(0, -uzs) + 15 * Math.max(0, uzs)) * (1 + CF.leadK * spF) + 11 * this.wK * Math.abs(uxs))) + CF.crestLead * this.cw * (1 - lw)) * (1 - 0.5 * zw) * (1 - CA.lead * aw) * (1 - ow);
-      let tx = car.x + ux * L + car.vx * 0.2 * (1 - ow), tz = car.z + uz * L + car.vz * 0.2 * (1 - ow);
+      const L = (Math.min(sp * 0.55, (chase ? 4 : (6 * Math.max(0, -uzs) + 15 * Math.max(0, uzs) * (1 - 0.55 * (this.airW || 0)) * (0.7 + 0.3 * this.sf)) * (1 + CF.leadK * spF) + 11 * this.wK * Math.abs(uxs))) + CF.crestLead * this.cw * (1 - lw)) * (1 - 0.5 * zw) * (1 - CA.lead * aw) * (1 - ow);
+      // v3.5: the down-screen lead also backs off with the safe frame (sf, step 8: a fast truck coming toward the camera on the
+      // reshaped circuits sat at the top edge, NDC 0.84, in Tre Archi's last lobe)
+      // v3.5: flying toward the camera (down-screen) the lead backs off (airW): nothing to brake for in the air, and the truck's height
+      // already lifts it up-screen — the long downhill flights stayed at the top edge of the frame
+      const vlK = 0.2 * (1 - ow) * (1 - 0.5 * (this.airW || 0) * clamp(uzs, 0, 1));
+      let tx = car.x + ux * L + car.vx * vlK, tz = car.z + uz * L + car.vz * vlK;
       /* v6 edge look-down: on an exposed road (altitude weight) with the truck on the drop side near the edge, the camera tilts down
          and shifts toward the drop (scenic weight; not in the look-out, which already faces the view) */
       { let et = 0;
@@ -31257,7 +31429,7 @@ void main(){
       if (!this.init) { this.tgt.set(tx, gy, tz); this.init = true; }
       // 3. vertical look-ahead (every setting): see more of the hill you are about to drive
       this.groundY = damp(this.groundY, gy, 4, dt);
-      const dyA = clamp(0.35 * (tr.elevAt(s + Math.sign(vAlong) * L) - tr.elevAt(s)), -5, 5);
+      const dyA0 = clamp(0.35 * (tr.elevAt(s + Math.sign(vAlong) * L) - tr.elevAt(s)), -5, 5), dyA = dyA0 < 0 ? dyA0 * (1 - 0.8 * this.airW) : dyA0; // v3.5: less look-down while flying
       this.vLook = damp(this.vLook, dyA, 2, dt);
       // (deviation: the safe-frame factor also backs off the downhill part, which lifts a truck diving toward the camera up-screen)
       this.tgt.x = damp(this.tgt.x, tx, 5, dt); this.tgt.z = damp(this.tgt.z, tz, 5, dt); this.tgt.y = this.groundY + 1.2 + (this.vLook < 0 ? this.vLook * (0.4 + 0.6 * this.sf) : this.vLook);
@@ -32272,7 +32444,7 @@ void main(){
     else if (w.id === 3) note += O.t('note.baron') + ' ';
     if (lost.length) note += (solo ? O.t('note.last') : O.t('note.lastP', { names: lost.join(O.t('and')) })) + ' ';
     try { // the stored record only counts human times, so it is a personal record, not the track's
-      const key = 'ors3d-best-v9-' + S.track.def.id, best = +localStorage.getItem(key) || 0; hadRec = best > 0;
+      const key = 'ors3d-best-v10-' + S.track.def.id /* v3.5: v10 (the circuits' new elevation profiles: v9 bests are not comparable) */, best = +localStorage.getItem(key) || 0; hadRec = best > 0;
       const hb = S.finishOrder.filter((c) => c.human).map((c) => c.time).sort((a, b) => a - b)[0];
       if (hb && (!best || hb < best)) { localStorage.setItem(key, hb); note += O.t('note.newPb', { t: O.fmtTime(hb) }); newRec = true; O.Audio.announce('record'); }
       else if (best) note += O.t('note.pb', { t: O.fmtTime(best) });
@@ -32563,7 +32735,7 @@ void main(){
      day as mode 'daily' (a 2-lap solo copy of the circuit: curDef → O.Daily.def; startRace treats it like the school: no rivals) with
      endDaily. dailyResult: one attempt per finished / abandoned run at the results (best kept locally), the day's credits once
      (O.Daily.reward → a line in the Crediti box), the run submitted to the board 'daily-<date>'. onlineHill / onlineLap: player 1's
-     finished run / best lap to 'hill:<course>:<vehicle>' / 'lap:<circuit>' (O.Online.submit: local board always, online when
+     finished run / best lap to 'hill:<course>:<vehicle>' / 'lap2:<circuit>' (v3.5) (O.Online.submit: local board always, online when
      configured); the results show the rank when the promise resolves (js/ui-online.js). Nothing here touches the network itself. */
   function dailyBegin(cfg) {
     if (!O.Daily) { S.mode = 'champ'; return; }
@@ -32619,7 +32791,7 @@ void main(){
     if (!O.Online || S.mode === 'school') return null;
     const c = rk.find((q) => q.human && q.id === 0); if (!c || !(c.bestLap > 0)) return null;
     const ups = O.Veh.upCount(c.prof.veh, c.prof.gl), board = O.Online.board.lap(S.track.def.id);
-    return { board, kind: 'lap', course: S.track.def.id, veh: c.prof.veh, promise: O.Online.submit(board, { time: c.bestLap, veh: c.prof.veh, ups, splits: c.lapTimes.slice(0, 12), ref: 'lap:' + S.track.def.id, laps: c.lapTimes.length }) };
+    return { board, kind: 'lap', course: S.track.def.id, veh: c.prof.veh, promise: O.Online.submit(board, { time: c.bestLap, veh: c.prof.veh, ups, splits: c.lapTimes.slice(0, 12), ref: O.Online.board.lap(S.track.def.id), laps: c.lapTimes.length }) };
   }
   /* the local boards start from the hill records already on this device (once; local only: they are not uploaded, their garage
      set-up is unknown) — the Classifiche page then shows a returning player's bests even before the leaderboard goes online */
@@ -32715,7 +32887,7 @@ void main(){
     setTimeout(() => {
       startRace({ attract: true });
       O.UI.setLoading(false);
-      O.UI.showTitle({ page: o && o.page ? o.page : 'main', hills: hillList(), ghost: S.ghostOn, settings: { ...settings }, tracks: O.TRACKS.map((t, i) => ({ idx: i, id: t.id, name: t.name, theme: t.theme, themeName: O.I18N.theme(t.theme), laps: t.laps || 3, length: Math.round((t.courseInfo && t.courseInfo.L) || 0), best: (() => { try { return +localStorage.getItem('ors3d-best-v9-' + t.id) || 0; } catch (e) { return 0; } })() })), difficulties: Object.keys(DIFF).map((k) => ({ key: k, name: O.t('diff.' + k) })), qualities: ['auto', 'low', 'medium', 'high'].map((k) => ({ key: k, name: O.t('q.' + k) })) });
+      O.UI.showTitle({ page: o && o.page ? o.page : 'main', hills: hillList(), ghost: S.ghostOn, settings: { ...settings }, tracks: O.TRACKS.map((t, i) => ({ idx: i, id: t.id, name: t.name, theme: t.theme, themeName: O.I18N.theme(t.theme), laps: t.laps || 3, length: Math.round((t.courseInfo && t.courseInfo.L) || 0), best: (() => { try { return +localStorage.getItem('ors3d-best-v10-' + t.id) || 0; } catch (e) { return 0; } })() })), difficulties: Object.keys(DIFF).map((k) => ({ key: k, name: O.t('diff.' + k) })), qualities: ['auto', 'low', 'medium', 'high'].map((k) => ({ key: k, name: O.t('q.' + k) })) });
       O.Audio.music('menu'); O.Audio.crowd(0.25); O.Audio.announce('title');
     }, 30);
   }
