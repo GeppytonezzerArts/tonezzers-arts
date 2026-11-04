@@ -226,6 +226,8 @@ html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: non
 #ui .tc-sel .ic { width: 17px; height: 17px; }
 #ui .tc-name { padding: 0 3px; font: 400 16px/1.15 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #ui .tc-gl { margin-top: -2px; padding: 0 3px; font: italic 600 13px/1.15 var(--body); color: var(--sand); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } /* English gloss of the Italian track name */
+/* v3.5.1: phones, portrait and landscape (narrow cards): the names wrap instead of being cut («Rodeo di Mezz…», «Passo dello Stamb…»), a little smaller */
+@media (max-width: 600px), (max-height: 500px) { #ui .tc-name { font-size: 14px; line-height: 1.08; white-space: normal; overflow-wrap: break-word; } #ui .tc-gl { white-space: normal; } }
 #ui .tc-l1, #ui .tc-l2, #ui .tc-rec { display: flex; align-items: center; gap: 6px; padding: 0 3px; font: 600 15px/1.2 var(--body); color: var(--paper2); white-space: nowrap; overflow: hidden; }
 #ui .tc-l1 i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--tc); box-shadow: 0 0 0 2px rgba(0, 0, 0, .35); }
 #ui .tc-l1 .sep { opacity: .5; }
@@ -2153,6 +2155,7 @@ html, body { height: 100%; margin: 0; overflow: hidden; overscroll-behavior: non
 }
 @media (max-width: 760px) { #ui .etable th:nth-child(n+3), #ui .etable td:nth-child(n+3) { display: none; } }
 @media (max-width: 520px) { #ui .lbt.rec .ln .ups { display: none; } }
+@media (max-width: 600px), (max-height: 500px) { #ui .rcard .tc-onl, #ui .rcard .tc-onl span { white-space: normal; } } /* v3.5.1: phones: the online line wraps («no time of yours yet» was cut) */
 
 </style>
 <div id="game"></div>
@@ -3094,7 +3097,7 @@ window.ORS = window.ORS || {};
     'rly.res.final': ['Classifica finale', 'Final standings'], 'rly.res.win': ['Vinci il rally!', 'Rally winner!'], 'rly.res.podium': ['Sul podio!', 'On the podium!'],
     'rly.res.wins': [(v) => v.n === 1 ? '1 prova vinta' : v.n + ' prove vinte', (v) => v.n === 1 ? '1 stage win' : v.n + ' stage wins'],
     'rly.res.penTot': [(v) => 'Penalità ' + v.s + ' s', (v) => 'Penalties ' + v.s + ' s'], 'rly.res.repairs': [(v) => v.n === 1 ? '1 riparazione' : v.n + ' riparazioni', (v) => v.n === 1 ? '1 repair' : v.n + ' repairs'],
-    'rly.res.rec': ['Nuovo record del rally!', 'New rally record!'], 'rly.res.menu': ['Rally', 'Rallies'], 'rly.res.retry': ['Ricorri', 'Run it again'],
+    'rly.res.rec': ['Nuovo record del rally!', 'New rally record!'], 'rly.res.first': ['Primo totale registrato', 'First total recorded'], 'rly.res.menu': ['Rally', 'Rallies'], 'rly.res.retry': ['Ricorri', 'Run it again'],
     'rly.note.won': [(v) => 'Rally vinto con ' + v.n + (v.n === 1 ? ' prova vinta' : ' prove vinte') + ': degno di Tonezzer!', (v) => 'Rally won with ' + v.n + (v.n === 1 ? ' stage win' : ' stage wins') + ': worthy of Tonezzer!'],
     'rly.note.podium': [(v) => v.p + ' posto finale: ' + v.name + ' vince con ' + v.d + ' s di vantaggio.', (v) => v.p + ' place overall: ' + v.name + ' wins by ' + v.d + ' s.'],
     'rly.note.off': [(v) => v.name + ' vince il rally; ti mancano ' + v.d + ' s. Il Garage può aiutarti.', (v) => v.name + ' wins the rally, ' + v.d + ' s ahead of you. The Garage can help.'],
@@ -4499,7 +4502,7 @@ radiance *= orsWx2.y;
   /* ================= 3. live state ================= */
   let capsDone = false;
   let R = null; // the attached race: {scene, track, theme, cond, qk, ...}
-  const ST = { night: 0, rain: 0, snow: 0, fog: 0, wet: 0, cover: 0, flash: 0, tod: 'day', wx: 'clear', on: false };
+  const ST = { night: 0, rain: 0, snow: 0, fog: 0, wet: 0, cover: 0, flash: 0, gold: 0, tod: 'day', wx: 'clear', on: false }; // (v3.5.1 gold: the ceremony's golden hour, post.js)
   const tmpC = new THREE.Color(), tmpC2 = new THREE.Color(), V3 = new THREE.Vector3(), V3b = new THREE.Vector3(), M4 = new THREE.Matrix4();
   const hexC = (h) => new THREE.Color(h);
 
@@ -4681,7 +4684,7 @@ void main() {
       envShare: theme.world && theme.world.env != null ? theme.world.env : 0.5,
     };
     ST.tod = cond.tod; ST.wx = cond.wx; ST.on = true;
-    ST.night = cond.tod === 'night' ? 1 : cond.n0 != null ? cond.n0 : 0; ST.rain = ST.snow = ST.fog = ST.wet = ST.cover = 0; ST.flash = 0;
+    ST.night = cond.tod === 'night' ? 1 : cond.n0 != null ? cond.n0 : 0; ST.rain = ST.snow = ST.fog = ST.wet = ST.cover = 0; ST.flash = 0; ST.gold = 0;
     const k0 = cond.sched[0]; ST.rain = k0.rain; ST.snow = k0.snow; ST.fog = k0.fog;
     ST.wet = ST.rain > 0 ? 0.75 * ST.rain : 0; ST.cover = ST.snow > 0 ? (track.theme === 'snow' ? 0.55 : 0.18) : 0;
     // night lights handed over by props (floodlight towers, lamp posts) + fires
@@ -4704,7 +4707,7 @@ void main() {
   function detach() {
     if (!R) return;
     for (const k of ['probeA', 'probeB', 'rainM', 'snowM', 'splM']) { const m = R[k]; if (!m) continue; R.scene.remove(m); m.geometry.dispose(); if (m.material) m.material.dispose(); }
-    R = null; clearLive(); ST.on = false; ST.night = ST.rain = ST.snow = ST.fog = ST.wet = ST.cover = ST.flash = 0; ST.tod = 'day'; ST.wx = 'clear';
+    R = null; clearLive(); ST.on = false; ST.night = ST.rain = ST.snow = ST.fog = ST.wet = ST.cover = ST.flash = ST.gold = 0; ST.tod = 'day'; ST.wx = 'clear';
     try { if (O.Audio && O.Audio.weather) O.Audio.weather(null); } catch (e) { /* audio is optional */ }
   }
   function clearLive() { ULN.value[0] = 0; UW.value.fill(0); UW2.value[0] = UW2.value[1] = 1; UFL.value.fill(0); USK.value.fill(0); }
@@ -4727,7 +4730,8 @@ void main() {
     const rt = S && S.raceTime != null && S.state !== 'attract' ? S.raceTime : R.t;
     // night level (dusk slides into night along the race), weather intensities, wetness and snow cover (they lag)
     const c = R.cond;
-    if (c.tod === 'dusk') { const u = clamp(rt / Math.max(30, c.D * 0.85), 0, 1); ST.night = clamp((c.n0 || 0) + c.duskEnd * Math.pow(u, 1.25), 0, 1); }
+    if (R.cer) ST.night = R.cer === 'night' ? 1 : c.tod === 'dusk' ? CER_DUSK_N : 0; // v3.5.1 the ceremony's sky (ceremony())
+    else if (c.tod === 'dusk') { const u = clamp(rt / Math.max(30, c.D * 0.85), 0, 1); ST.night = clamp((c.n0 || 0) + c.duskEnd * Math.pow(u, 1.25), 0, 1); }
     const w = sampleSched(rt);
     if (dt > 0) {
       const k = 1 - Math.exp(-dt / 1.5);
@@ -4778,8 +4782,11 @@ void main() {
   const cMoon = O.col(O.TOD.night.moon.color), cHemiN = O.col(O.TOD.night.hemi.sky), cHemiNG = O.col(O.TOD.night.hemi.ground);
   const WXC = {}; for (const k in O.WXLOOK) WXC[k] = { sky: hexC(O.WXLOOK[k].sky), skyN: hexC(O.WXLOOK[k].skyN), hemi: O.col(O.WXLOOK[k].hemi) };
   const FLASHC = new THREE.Color(0.62, 0.68, 0.95);
+  // v3.5.1 the ceremony's golden hour over a day-built world: the dusk palette of O.TOD (sky, fog and the visible sun in display colours, lights linear)
+  const DK = O.TOD.dusk, cDuskTop = hexC(DK.sky.top), cDuskHor = hexC(DK.sky.horizon), cDuskBot = hexC(DK.sky.bottom), cDuskFog = hexC(DK.fog), cDuskSunD = hexC(DK.sun.color);
+  const cDuskSun = O.col(DK.sun.color), cDuskHemi = O.col(DK.hemi.sky), cDuskHemiG = O.col(DK.hemi.ground), CER_GLOW = DK.glow, CER_DUSK_N = 0.06;
   function applyLook() {
-    const r = R, n = ST.night, low = r.qk === 'low', duskB = r.cond.tod === 'dusk';
+    const r = R, n = ST.night, low = r.qk === 'low', duskB = r.cond.tod === 'dusk', gw = r.cer === 'gold' && !r.theme.night ? 1 : 0; // (gw: v3.5.1 ceremony golden hour, a day-built world)
     const wr = ST.rain, ws = ST.snow, wf = ST.fog, over = sm(0, 0.55, Math.max(wr, ws * 0.9, wf));
     const lookOf = wf >= wr && wf >= ws ? 'fog' : ws > wr ? 'snow' : 'rain', L = O.WXLOOK[lookOf], LC2 = WXC[lookOf];
     // sky colours (display): build-time sky -> night sky by n (dusk races), -> overcast by the weather, + the flash
@@ -4787,6 +4794,7 @@ void main() {
       const s0 = r.sky0;
       SKY.top.copy(s0.top); SKY.hor.copy(s0.hor); SKY.bot.copy(s0.bot); SKY.fog.copy(s0.fog);
       if (duskB) { const q = sm(0, 1, n); SKY.top.lerp(cNightTop, q); SKY.hor.lerp(cNightHor, q); SKY.bot.lerp(cNightBot, q); SKY.fog.lerp(cNightHor, q); }
+      if (gw > 0) { SKY.top.lerp(cDuskTop, gw); SKY.hor.lerp(cDuskHor, gw); SKY.bot.lerp(cDuskBot, gw); SKY.fog.lerp(cDuskFog, gw); } // v3.5.1 ceremony: golden hour over a day-built world
       const ov = tmpC.copy(LC2.sky).lerp(LC2.skyN, sm(0.2, 0.8, Math.max(n, r.theme.night && !duskB ? 1 : 0)));
       SKY.top.lerp(ov, over * 0.85); SKY.hor.lerp(ov, over * 0.9); SKY.bot.lerp(ov, over * 0.8); SKY.fog.lerp(ov, over * 0.92);
       if (ST.flash > 0) { const f = Math.min(1, ST.flash) * 0.55; SKY.top.lerp(FLASHC, f); SKY.hor.lerp(FLASHC, f * 0.8); SKY.fog.lerp(FLASHC, f * 0.5); }
@@ -4797,6 +4805,10 @@ void main() {
         u.uGlowA.value.set(0.85 * (1 - sm(0.1, 0.7, n)) * (1 - over), 0.5 * (1 - sm(0.05, 0.5, n)) * (1 - over), 5.5, 0);
         // the visible sun sinks under the horizon as night falls (the light keeps its direction: shadows stay put)
         u.uSunDir.value.copy(s0.sunDir); u.uSunDir.value.y = s0.sunDir.y - 0.32 * sm(0, 0.6, n); u.uSunDir.value.normalize();
+      } else if (gw > 0) { // (v3.5.1 golden hour: the sunset glow, the visible sun low over the horizon; the light keeps its direction like a dusk race's)
+        u.uGlowA.value.set(lerp(s0.glow.x, CER_GLOW[0], gw), lerp(s0.glow.y, CER_GLOW[1], gw), lerp(s0.glow.z, CER_GLOW[2], gw), 0);
+        u.uSunDir.value.copy(s0.sunDir); u.uSunDir.value.y = lerp(s0.sunDir.y, Math.min(s0.sunDir.y, 0.13), gw); u.uSunDir.value.normalize();
+        u.uSunCol.value.copy(s0.sunCol).lerp(cDuskSunD, gw);
       } else if (r.sky0.glow) u.uGlowA.value.copy(r.sky0.glow).multiplyScalar(1 - over);
       if (r.stars) r.stars.visible = n > 0.55 && over < 0.6;
     }
@@ -4808,16 +4820,18 @@ void main() {
     if (r.sun && r.sun0) {
       tmpC.copy(r.sun0.c); let i = r.sun0.i;
       if (duskB) { tmpC.lerp(cMoon, sm(0.2, 0.9, n)); i = lerp(i, (low ? O.TOD.night.moon.low : O.TOD.night.moon.intensity) * (r.theme.nightAmbK || 1), sm(0.05, 0.85, n)); }
+      if (gw > 0) { tmpC.lerp(cDuskSun, gw); i = lerp(i, i * O.TOD.dusk.sun.intensity / Math.max(0.5, r.base.sun.intensity), gw); } // v3.5.1 golden hour
       const nk = Math.max(n, r.theme.night && !duskB ? 1 : 0), sunK = lerp(L.sunK, 0.62, nk); // (moonlight under clouds dims less: the night stays readable)
       r.sun.color.copy(tmpC); r.sun.intensity = i * (1 - (1 - sunK) * over);
     }
     if (r.hemi && r.hemi0) {
       const h0 = r.hemi0; r.hemi.color.copy(h0.sky); r.hemi.groundColor.copy(h0.gnd); let i = h0.i;
       if (duskB) { const q = sm(0.1, 0.9, n); r.hemi.color.lerp(cHemiN, q); r.hemi.groundColor.lerp(cHemiNG, q); i = lerp(i, (low ? O.TOD.night.hemi.low : O.TOD.night.hemi.intensity) * (r.theme.nightAmbK || 1), q); }
+      if (gw > 0) { r.hemi.color.lerp(cDuskHemi, gw); r.hemi.groundColor.lerp(cDuskHemiG, gw); i = lerp(i, i * O.TOD.dusk.hemi.intensity / Math.max(0.2, r.base.hemi.intensity), gw); } // v3.5.1 golden hour
       r.hemi.color.lerp(LC2.hemi, over * 0.5); r.hemi.intensity = i * (1 + (L.hemiK - 1) * over);
     }
     // env (PMREM built with the build-time sky light): dims with the night level of a dusk race and under clouds
-    const envK = (duskB ? lerp(1, 0.32, sm(0.1, 0.9, n)) : 1) * (1 - 0.25 * over);
+    const envK = (duskB ? lerp(1, 0.32, sm(0.1, 0.9, n)) : 1) * (1 - 0.25 * over) * (1 - 0.3 * gw); // (golden hour: less of the day sky's blue ambient)
     r.envK = envK;
     if (r.water.length) { const sk = r.sun && r.sun0 ? r.sun.intensity / Math.max(0.01, r.sun0.i) : 1; for (const w of r.water) { w.u.uSkyTop.value.copy(w.top).multiplyScalar(envK); w.u.uSkyHor.value.copy(w.hor).multiplyScalar(envK); w.u.uAmb.value.copy(w.amb).multiplyScalar(envK); w.u.uSunCol.value.copy(w.sun).multiplyScalar(sk); } }
     const fl = Math.min(1.5, ST.flash) * (low ? 0.8 : 1.3);
@@ -4825,6 +4839,23 @@ void main() {
     { const h = SKY.hor, sk = 0.12 * envK; USK.value[0] = h.r * h.r * sk; USK.value[1] = h.g * h.g * sk; USK.value[2] = h.b * h.b * sk; USK.value[3] = R.t * 0.4; } // display -> ~linear
     // light pools (towers, lamps) come on at dusk; particle ambient
     r.lampK = r.theme.night ? (duskB ? 0.35 + 0.65 * sm(0.1, 0.7, n) : 1) : 0;
+  }
+
+  /* v3.5.1 the end-of-Gran-Premio ceremony (game.js cerStart): whatever the last race had, the podium stands under a clear sky — a
+     clear night after a night race (fireworks over the stars), else the golden hour: a dusk race's sunset held at its start, a day
+     race's world turned golden live (the dusk palette for the sky, the sun's colour and strength, the sky light; the visible sun low
+     with the sunset glow; the light keeps its direction, as in a dusk race, so the baked shading and the shadows stay right). The rain,
+     snow, fog and lightning stop at once (the ceremony cuts in), the road dries to a sheen. Undone by the next race's attach. */
+  function ceremony() {
+    if (!R) return null;
+    const c = R.cond;
+    R.cer = c.tod === 'night' ? 'night' : 'gold';
+    c.sched = [{ t: 0, rain: 0, snow: 0, fog: 0 }]; c.change = null; c.changeT = -1;
+    ST.rain = ST.snow = ST.fog = ST.flash = 0; ST.wet = Math.min(ST.wet, 0.25); R.flashT = 9; R.thunder.length = 0; R.annCh = R.annN = 1;
+    ST.night = R.cer === 'night' ? 1 : c.tod === 'dusk' ? CER_DUSK_N : 0;
+    ST.gold = R.cer === 'gold' && !R.theme.night ? 1 : 0;
+    applyLook();
+    return R.cer;
   }
 
   /* splashes: tiny voxel rings on the ground around the followed trucks */
@@ -4945,7 +4976,7 @@ void main() {
     force(k) { dailyKey = k == null ? null : parseKey(k) ? String(k) : null; return dailyKey; },
     get forced() { return dailyKey; },
     name(k, theme) { const c = parseKey(k); return c ? O.t('cond.tod.' + (theme === 'night' ? 'night' : c.tod)) + ' · ' + O.t('cond.wx.' + c.wx) : ''; }, // (the stadium circuits: always night)
-    pick, themeFor, attach, detach, update,
+    pick, themeFor, attach, detach, update, ceremony, // (v3.5.1 ceremony: the Gran Premio's podium sky)
     gripK, resK, aiK,
     get lampI() { return LAMPI; }, set lampI(v) { LAMPI = +v || 0; },
     // the race's conditions for the countdown line: ' · Notte · Pioggia' ('' on a clear day)
@@ -14885,7 +14916,7 @@ float trkEnv = trkSlot > 2.5 ? 1.1 : trkSlot > 1.5 ? uFin.z : trkSlot > 0.5 ? 0.
   const RG0 = [16, 16, 128, 128]; // render region (one merged mesh) per LOD: near 16 m, far 128 m ('low'; v6 HD tiers: 32 m near)
   const WC = 0.5;               // water surface voxels (lakes, pools, water features): 0.5 m on every tier
   const ALIGN = B * 16;         // domain origin alignment: every LOD lattice nests
-  const VB = 0.25;              // bridge voxel size (xz); height quantum Q
+  let VB = 0.25;                // bridge voxel size (xz); height quantum Q (v3.5.1: 0.5 on 'low', set per build: the tier's finest ground cell)
   const WATER_DROP = 0.06;      // water surface sits this far under its voxel level plane
   // per-theme voxel look: albedo tint of the ground material (ACES bleaches bright sand/snow), track shade factor,
   // edge-line darkness, per-voxel jitter
@@ -15145,6 +15176,7 @@ if (uShmB.w > 0.5) { vec2 osv = orsShm(vOrsW); float ohl = osv.y < 1.0 ? mix(1.0
   function build(ctx) {
     const { scene, renderer, track, theme } = ctx;
     const quality = ctx.quality || O.QUALITY.medium, qk = ctx.qualityKey || 'medium';
+    VB = qk === 'low' ? 0.5 : 0.25; // v3.5.1: bridge decks / parapets on 'low' in the 0.5 m cells of its finest ground (the 250k budget: Tre Archi's arches)
     // v2 art pass: per-track art variant (themes.js O.artTheme): 'volcano' (a canyon course with a lava basin: basalt, ash and
     // sulphur palette, lava lake / flows / glow) and 'dusk' (the alpine paths at sunset: sky glow, cloud sea, lit lamps)
     const ART = O.artTheme ? O.artTheme(track) : track.theme, VOLC = ART === 'volcano', DUSK = track.theme === 'dusk';
@@ -17449,7 +17481,8 @@ if (uShmB.w > 0.5) { vec2 osv = orsShm(vOrsW); float ohl = osv.y < 1.0 ? mix(1.0
           // rock legs are as wide as the deck plus a rough margin; it never comes lower than 6.5 m over a road below
           const yl = Math.min(groundLevel(frameAt(sA).x, frameAt(sA).z), groundLevel(frameAt(sB).x, frameAt(sB).z)) * Q - 1;
           let yh = -1e9; for (let s2 = sA; s2 <= sB; s2 += 2) yh = Math.max(yh, botAt(s2) * Q, edgeY(s2, 1) + 1, edgeY(s2, -1) + 1);
-          strip(sA - 3, sB + 3, 4.2, yl, yh + 0.5, 0.5, (s2, d, x, z) => {
+          const AV = qk === 'low' ? 1.0 : 0.5; // v3.5.1: 'low' builds the rock in 1 m voxels, the cell of its ground at that range (Tre Archi's three arches: the 250k budget)
+          strip(sA - 3, sB + 3, 4.2, yl, yh + AV, AV, (s2, d, x, z) => {
             const u = (s2 - (sA + sB) / 2) / (span / 2 + 3), hw = track.hwAt(s2), ad = Math.abs(d), nz = NZ.n2(s2 * 0.13, d * 0.2 + 3.3);
             if (ad > hw + 1.1 + 1.4 * (0.5 + 0.5 * nz) + 1.5 * smooth(0.5, 1, Math.abs(u))) return null;
             const sc2 = clamp(s2, sA, sB), outer = ad > hw + 0.85;
@@ -17459,7 +17492,7 @@ if (uShmB.w > 0.5) { vec2 osv = orsShm(vOrsW); float ohl = osv.y < 1.0 ? mix(1.0
             const rb = roadBelow(x, z); if (rb > -1e8) yI = Math.max(yI, rb + 6.5);
             const wob = 0.4 * NZ.n2(x * 0.06, z * 0.06), lk = lightK(x, z);
             return [Math.max(yI, gl - Q), top, (y) => { const band = Math.floor((y + wob) / 0.5); return sh(WALL.strata[((band % WALL.strata.length) + WALL.strata.length) % WALL.strata.length], lk * (y < yI + 0.3 ? 0.78 : 1)); }];
-          }, geos, 0.5);
+          }, geos, AV);
         } else {
           const spacing = st === 'timber' ? 6 : st === 'viaduct' ? 14 : st === 'stone' ? 13 : 11;
           const np = Math.max(1, Math.floor((span - 10) / spacing) + 1), pierS = [];
@@ -17558,18 +17591,29 @@ if (uShmB.w > 0.5) { vec2 osv = orsShm(vOrsW); float ohl = osv.y < 1.0 ? mix(1.0
           const lk = lightK(cx0, cz0), low = lo - 1;
           mapMesh(A, () => sh(cPier, lk * 0.95), (k, l) => sh((l - low) * Q < 0.5 ? cPier2 : cPier, lk), () => low, geos);
         }
-        const geo = V.merge(geos); for (const gg of geos) gg.dispose();
+        /* v3.5.1 'low': the bridge in 32 m chunks (its deck tiles, piers and rock grouped by position), so the frustum culls the parts
+           out of view (one merged mesh was drawn whole whenever its 40-80 m bounding sphere touched the view: Tre Archi's three
+           arches, ~25-30k triangles each, drawn from far off-screen). The HD tiers keep one mesh (their draw-call budget). */
+        const bins = new Map();
+        if (qk === 'low') { const bc = new THREE.Vector3(); for (const gg of geos) { if (!gg.boundingBox) gg.computeBoundingBox(); gg.boundingBox.getCenter(bc); const key = Math.floor(bc.x / 32) + ',' + Math.floor(bc.z / 32); if (!bins.has(key)) bins.set(key, []); bins.get(key).push(gg); } }
+        else bins.set('all', geos);
+        const parts = []; for (const list of bins.values()) { parts.push(V.merge(list)); for (const gg of list) gg.dispose(); }
+        const bb3 = new THREE.Box3(); for (const g3 of parts) { if (!g3.boundingBox) g3.computeBoundingBox(); bb3.union(g3.boundingBox); }
+        const bsph = parts.length === 1 && parts[0].boundingSphere ? parts[0].boundingSphere : bb3.getBoundingSphere(new THREE.Sphere());
         const bm = keep(V.material({ transparent: true, roughness: 0.82 })), bg = keep(V.glossMaterial({ transparent: true })), bl = keep(V.glowMaterial({ transparent: true, intensity: 2.2 }));
         bm.shadowSide = bg.shadowSide = THREE.DoubleSide;
         const mats = [bm, bl, bg, bm];
-        const mesh = new THREE.Mesh(geo, geo.groups.length ? mats : bm); mesh.castShadow = true; mesh.receiveShadow = true; mesh.renderOrder = -1; mesh.matrixAutoUpdate = false;
-        mesh.userData.kind = 'bridge';
-        const br = { fade: [1, 1], center: geo.boundingSphere.center.clone(), radius: geo.boundingSphere.radius, mats: [bm, bg, bl], style: st };
-        mesh.onBeforeRender = function (r, s2, camera) {
+        const br = { fade: [1, 1], center: bsph.center.clone(), radius: bsph.radius, mats: [bm, bg, bl], style: st };
+        const fadeFn = function (r, s2, camera) {
           let f = 1; for (let k = 0; k < camList.length; k++) if (camList[k] === camera) f = br.fade[k];
           for (const m of br.mats) { m.opacity = f; m.depthWrite = f > 0.97; }
         };
-        group.add(mesh); bridges.push(br);
+        for (const geo of parts) {
+          const mesh = new THREE.Mesh(geo, geo.groups.length ? mats : bm); mesh.castShadow = true; mesh.receiveShadow = true; mesh.renderOrder = -1; mesh.matrixAutoUpdate = false;
+          mesh.userData.kind = 'bridge'; mesh.onBeforeRender = fadeFn;
+          group.add(mesh);
+        }
+        bridges.push(br);
         decks.push({ x0: M.x0, z0: M.z0, nx: M.nx, nz: M.nz, top: M.top, kind: M.kind });
       }
     }
@@ -22738,7 +22782,7 @@ if (uShmB.w > 0.5) { float osv = orsShmV(${wv}); reflectedLight.directDiffuse *=
        linden low, spruce / fir / larch high) and the water (willows, cypresses, cottonwoods, palms). Trees take the tallest
        size that fits the camera-side room (track.capY, SCENIC §3.3); the sightline cutaway dithers anything left in the way. */
     // tile sizes per tier: bigger tiles on the tiers with the larger triangle budgets (fewer draw calls)
-    const FT = qk === 'high' ? { tree: 64, treeF: 128, shrub: 64, grass: 40 } : qk === 'low' ? { tree: 48, treeF: 96, shrub: 48, grass: 32 } : { tree: 48, treeF: 96, shrub: 64, grass: 40 };
+    const FT = qk === 'high' ? { tree: 64, treeF: 128, shrub: 64, grass: 40 } : qk === 'low' ? { tree: 48, treeF: 48, shrub: 48, grass: 32 } : { tree: 48, treeF: 96, shrub: 64, grass: 40 };
     // v5 ambient FX spots handed to O.FX through ctx.floraFx: leafy crowns (falling leaves) and flowery ground (butterflies, pollen)
     const fxLeaf = [], fxMeadow = [];
     const FLOOR_A = [T('mossLog', 0), T('mossLog', 1), T('shroom', 0), T('shroom', 1), T('shroom', 2), T('rock', 3, 0.8), T('rock', 5, 1.6), T('stump')];
@@ -28002,8 +28046,9 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
      d = game.js champFinal: {standings [{place, name, color, human, pts, wins, veh, out}], champion, humanWon, me [human rows], races,
      ct (CT this Gran Premio paid), diff, twoP}; onDone('menu' | 'again'). Podium, the Coppa Tonezzer, the final table, the season's
      numbers; «Menu principale» (default, Esc) or «Nuovo Gran Premio». */
-  function showChampEnd(d, onDone) {
-    d = d || {};
+  let gpEndLast = null; // v3.5.1: {d, onDone} of the final standings on screen (re-rendered on a language switch)
+  function showChampEnd(d, onDone, relang) {
+    d = d || {}; gpEndLast = { d, onDone };
     ['results', 'shop', 'pause', 'ask'].forEach((n) => closeOv(n));
     const host = ov('over'), st = d.standings || [], w = d.champion || st[0] || {}, me = (d.me || [])[0], solo = !d.twoP;
     const vn = (id) => { const V = O.Veh && O.Veh.byId ? O.Veh.byId[id] : null; return V ? V.short || V.name : ''; };
@@ -28024,18 +28069,19 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       '<p class="gp-note">' + $t('gp.end.note') + '</p>' +
       '<footer class="sign-f"><button class="btn ghost" data-act="again">' + icon('reset') + $t('gp.end.again') + '</button><span class="gohint"></span><button class="btn go" data-act="menu" data-default>' + icon('back') + $t('gp.end.menu') + '</button></footer></section>';
     let done = false;
-    const fin = (a) => { if (done) return; done = true; closeOv('over'); if (onDone) onDone(a); };
+    const fin = (a) => { if (done) return; done = true; gpEndLast = null; closeOv('over'); if (onDone) onDone(a); };
     host._act = { menu: () => fin('menu'), again: () => fin('again') }; host._back = host._act.menu; host._radio = {}; host._keys = null;
     openOv('over'); focusDefault(host); host.scrollTop = 0;
+    if (relang) return;
     animate($(host, '.sign'), [{ opacity: 0, transform: 'translateY(30px) scale(.97)' }, { opacity: 1, transform: 'none' }], { duration: 420, easing: 'cubic-bezier(.2,.8,.3,1)' });
     if (d.humanWon) setTimeout(() => toast($t('toast.cup')), 600);
   }
   /* v3.4.1: the ceremony's overlay (game.js cerStart): transparent over the 3D podium — «CAMPIONE!» / «GRAN PREMIO FINITO», the
      Coppa line, the champion's name, points and wins, the studio's crest; any key / click / tap / gamepad A (the focused full-screen
      button) or Esc / B skips. d = {win, name, champ, color, pts, wins, races, diff, me {place, pts, wins}, twoP} */
-  let cerKey = null;
-  function showCeremony(d, onSkip) {
-    d = d || {};
+  let cerKey = null, cerLast = null; // (v3.5.1 cerLast: {d, onSkip} while the ceremony's overlay is up: re-rendered on a language switch)
+  function showCeremony(d, onSkip, relang) {
+    d = d || {}; cerLast = { d, onSkip };
     clearBanners(); ['results', 'shop', 'pause', 'ask'].forEach((n) => closeOv(n));
     const host = ov('cer');
     const stats = $t('cer.stats', { pts: I.num(d.pts | 0), wins: d.wins | 0, races: d.races | 0 });
@@ -28048,16 +28094,18 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       '<div class="cer-brand">' + crestImg('sm') + '<span>Tonezzer Racers · © ' + STUDIO + '</span></div>' +
       '<div class="cer-hint">' + esc($t(COARSE.matches ? 'cer.skipT' : 'cer.skip')) + '</div></div>';
     let done = false, t0 = performance.now();
-    const fin = () => { if (done) return; done = true; if (onSkip) onSkip(); };
+    const fin = () => { if (done) return; done = true; cerLast = null; if (onSkip) onSkip(); };
     host._act = { skip: fin }; host._back = fin; host._radio = {}; host._keys = null;
     if (cerKey) removeEventListener('keydown', cerKey, true);
     cerKey = (e) => { if (e.repeat || /^(Shift|Control|Alt|Meta|F\d+)/.test(e.code) || performance.now() - t0 < 500) return; if (isOpen('cer') && activeOv() === host) fin(); };
     addEventListener('keydown', cerKey, true);
     openOv('cer'); focusDefault(host);
+    if (relang) return;
     animate($(host, '.cer-h'), [{ opacity: 0, transform: 'scale(2.2)', letterSpacing: '.3em' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 350, easing: 'cubic-bezier(.2,1.25,.4,1)', fill: 'backwards' });
     animate($(host, '.cer-bot'), [{ opacity: 0, transform: 'translateY(40px)' }, { opacity: 1, transform: 'none' }], { duration: 600, delay: 1300, easing: 'cubic-bezier(.2,.8,.3,1)', fill: 'backwards' });
   }
   function hideCeremony() {
+    cerLast = null;
     if (cerKey) { removeEventListener('keydown', cerKey, true); cerKey = null; }
     closeOv('cer', true);
   }
@@ -28150,6 +28198,13 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       else { const f = $(OV.title, '.t-lang ' + '[aria-checked=true]'); if (f && page === 'main') f.focus({ preventScroll: true }); }
     }
     if (isOpen('pause')) pausePage(OV.pause._page || 'main', fl);
+    // v3.5.1: the end of the Gran Premio (the ceremony's overlay, the final standings) follows the language too (no animations replayed)
+    if (cerLast && isOpen('cer')) showCeremony(cerLast.d, cerLast.onSkip, true);
+    if (gpEndLast && isOpen('over') && $(OV.over, '.gp-end')) {
+      const fa = document.activeElement && OV.over.contains(document.activeElement) ? document.activeElement.dataset.act : null;
+      showChampEnd(gpEndLast.d, gpEndLast.onDone, true);
+      const fb = fa && $(OV.over, '[data-act=' + fa + ']'); if (fb) fb.focus({ preventScroll: true });
+    }
   });
 
   /* ---------------- boot splash: "Tonezzer's Arts presenta" → TONEZZER RACERS ----------------
@@ -29849,7 +29904,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
       r.times.map((t, j) => '<td class="rb' + (r.inc[j] ? ' inc' : '') + '"' + (r.inc[j] ? ' title="' + esc($t('rly.inc.' + r.inc[j].kind)) + ' +' + r.inc[j].s + ' s"' : '') + '>' + fmt(t) + '</td>').join('') +
       '<td class="rt">' + fmt(r.total) + '</td><td class="rb">' + (r.gap > 0 ? gapT(r.gap) : '<span class="r-lead">' + $t('rly.hud.lead') + '</span>') + '</td></tr>').join('');
     const info = '<p class="dinfo"><span>' + k.icon('star') + $t('rly.res.wins', { n: me ? me.wins : 0 }) + '</span><span>' + k.icon('reset') + $t('rly.res.penTot', { s: F.pen | 0 }) + '</span><span>' + k.icon('wrench') + $t('rly.res.repairs', { n: F.repairs | 0 }) + '</span>' +
-      (data.rec && data.rec.newBest ? '<span class="r-rec">' + k.icon('trophy') + $t('rly.res.rec') + '</span>' : data.rec && data.rec.prev > 0 ? '<span>' + k.icon('trophy') + $t('rly.best') + ' ' + fmt(data.rec.prev) + '</span>' : '') + '</p>';
+      (data.rec && data.rec.newBest && data.rec.prev > 0 ? '<span class="r-rec">' + k.icon('trophy') + $t('rly.res.rec') + ' <small>' + $t('rec.was', { t: fmt(data.rec.prev) }) + '</small></span>' : data.rec && data.rec.newBest ? '<span>' + k.icon('trophy') + $t('rly.res.first') + '</span>' /* v3.5.1: the first finish of an event is not a "new record" */ : data.rec && data.rec.prev > 0 ? '<span>' + k.icon('trophy') + $t('rly.best') + ' ' + fmt(data.rec.prev) + '</span>' : '') + '</p>';
     host.innerHTML = '<section class="sign xwide res rfin' + (won ? ' won' : '') + '"><div class="checker"></div>' +
       '<header class="sign-h row"><div><div class="kicker">' + ico('route') + $t('rly.res.final') + ' · ' + esc($t('diff.' + (data.diff || 'normal'))) + '</div><h2>' + esc(evName(ev.id)) + '</h2></div>' +
       (won ? '<div class="ribbon">' + k.icon('trophy') + $t('rly.res.win') + '</div>' : me && me.place <= 3 ? '<div class="ribbon soft">' + $t('rly.res.podium') + '</div>' : '') + '</header>' +
@@ -29993,6 +30048,7 @@ void main() { gl_FragColor = outColor(vec3(0.0), uCol, vA, 1.0); }`;
   function liveGrade(g0, W) {
     if (!W) return g0;
     const o = lerpGrade(g0, WGRADE.tod, Math.min(1, W.night), GB);
+    if (W.gold > 0.01) lerpGrade(o, GRADE.dusk, Math.min(1, W.gold) * 0.5, o); // v3.5.1: the ceremony's golden hour (js/weather.js ceremony)
     const wr = W.rain, ws = W.snow, wf = W.fog;
     if (wr > 0.01) lerpGrade(o, WGRADE.rain, Math.min(1, wr) * 0.8, o);
     if (ws > 0.01) lerpGrade(o, WGRADE.snowfall, Math.min(1, ws) * 0.7, o);
@@ -31439,6 +31495,21 @@ void main(){
          damped springs with speed / acceleration limits, so no weight, hand-over or clearance step can jerk the view (a calm drone);
          the circuits keep the v6 rig unchanged */
       const hillOut = S.mode === 'hill' && !chase && !att;
+      /* v3.5.1 (owner: "on a rally stage the look-out sometimes frames the car very small"): during a hill-climb run the truck is never
+         framed smaller than by the look-out's own widest framing (its distance cap and wider lens: ≥ ~62 % of the default size).
+         The camera-to-truck distance is what counts: the look-out's nudge toward the view and the look-ahead lead put the target
+         10-16 m beyond the truck, and a camera zone's pull-back or the altitude framing stacked on that (Passo della Neve's hairpin
+         zone with the swing in, the Colle del Falco look-out: the truck at 50-55 % of its size). The distance is capped so the
+         truck stays within that range (lens counted; measured from the zoom's own distance, without the speed pull-back), before the spring (no step: the
+         springs carry it); the summit view (ow) keeps its own wide shot. */
+      if (hillOut && ow < 1) {
+        const lens = q === 'low' ? LO.fovLow : LO.fov, kW = split ? LO.dHi2P : q === 'low' ? LO.dHiLow : LO.dHi;
+        const dMax = (ZOOMS[settings.zoom] || ZOOMS[1]) * this.distK * kW * Math.tan(((this.fov0 + lens) * Math.PI) / 360) / Math.tan(((this.fov0 + lens * Math.max(lw, ow) + fovX) * Math.PI) / 360);
+        const pA = this.outOn ? Math.max(pitch, this.sP.x) : pitch, cp = Math.cos(pA), ux = -Math.sin(lyaw) * cp, uy = Math.sin(pA), uz = Math.cos(lyaw) * cp; // target → camera (the pitch the camera has: its spring lags)
+        const dx = car.x - this.tgt.x, dy = car.y + 0.8 - this.tgt.y - (lw > 0.001 ? this.lift : this.liftF), dz = car.z - this.tgt.z, ud = ux * dx + uy * dy + uz * dz, disc = ud * ud - (dx * dx + dy * dy + dz * dz) + dMax * dMax;
+        const dCap = Math.max(base0 * 0.85, disc > 0 ? ud + Math.sqrt(disc) : 0); // (|dist·u + lift − d| ≤ dMax: the clearance lift counts too; at most 15 % closer than the default framing)
+        if (dist > dCap) dist = dCap + (dist - dCap) * ow;
+      }
       if (hillOut) {
         if (first || !this.outOn) { springSet(this.sP, pitch); springSet(this.sD, dist); }
         else { pitch = spring(this.sP, pitch, LO.outW, LO.outPR, LO.outPA, dt); dist = spring(this.sD, dist, LO.outW, LO.outDR * base0, LO.outDA * base0, dt); }
@@ -32533,6 +32604,7 @@ void main(){
     top.forEach((c, k) => { const sl = C.slots[k]; c.x = sl.x; c.z = sl.z; c.y = sl.y; c.groundY = sl.y; c.h = sl.h; c.vx = c.vz = 0; c.air = false; c.nitroT = 0; c.view.root.visible = true; });
     if (top[0]) C.roof = { monster: 2.9, trophy: 2.2, special: 2.0, buggy: 1.8 }[top[0].prof.veh] || 2.1; // the cup floats just over the winner's roof
     cerPose(top, 0);
+    if (O.Weather && O.Weather.ceremony) O.Weather.ceremony(); // v3.5.1: a golden-hour (or clear night) sky over the podium, whatever the last race had
     S.state = 'ceremony';
     CER = { C, top, d, t: 0, dur: d.humanWon ? CER_WIN : CER_LOSE, done: false, onDone, i0, said: false, conf: 0, pops: [], nit: 0 };
     cerViewport();

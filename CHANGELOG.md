@@ -1,5 +1,33 @@
 # Tonezzer Racers — Novità / What's new
 
+## v3.5.1 — Ritocchi: premiazione al tramonto, telecamera delle salite, rally
+
+### Italiano
+
+* **La premiazione del Gran Premio è sempre una festa**: il podio non si bagna più sotto la pioggia, la neve o la nebbia
+  dell’ultima gara. Si alza la Coppa all’**ora d’oro** del tramonto, o sotto un **cielo stellato** se l’ultima gara era di notte.
+  Se cambi lingua mentre è sullo schermo, la premiazione e la classifica finale si aggiornano subito.
+* **Cronoscalate e prove dei rally: la telecamera non allontana più troppo il mezzo.** Nelle viste panoramiche e nei tornanti
+  il tuo mezzo resta sempre ben visibile (prima a volte diventava piccolissimo, soprattutto sulla prima prova del Rally delle
+  Alpi). Le panoramiche restano, e la telecamera resta morbida come prima.
+* **Rally**: al primo arrivo in un rally i risultati dicono «Primo totale registrato» (non più «Nuovo record del rally»); il
+  record compare quando batti davvero il tuo totale migliore, con il tempo di prima.
+* **Qualità Bassa più leggera** sui ponti e sugli alberi lontani: **Tre Archi** scorre meglio sui telefoni.
+* **Telefoni**: i nomi dei circuiti e delle cronoscalate nelle schede vanno a capo invece di essere tagliati.
+
+### English
+
+* **The Grand Prix award ceremony is always a party**: the podium no longer gets the last race’s rain, snow or fog. The Cup is
+  lifted at the **golden hour** of sunset, or under a **starry sky** if the last race was at night. Switching language while it
+  is on screen updates the ceremony and the final standings at once.
+* **Hill climbs and rally stages: the camera no longer pulls too far from your vehicle.** In the panoramic views and the
+  hairpins your vehicle always stays clearly visible (it sometimes shrank to a speck, above all on the first stage of the Alpine
+  Rally). The vistas stay, and the camera is as smooth as before.
+* **Rally**: the first finish of a rally now says “First total recorded” (no longer “New rally record”); the record line shows up
+  when you really beat your best total, with the old time.
+* **Lighter Low quality** on bridges and far trees: **Three Arches** runs smoother on phones.
+* **Phones**: circuit and hill-climb names on the selection cards wrap instead of being cut off.
+
 ## v3.5 — Saliscendi: circuiti più vari
 
 ### Italiano
